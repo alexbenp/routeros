@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `routeros` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
 USE `routeros`;
--- MySQL dump 10.13  Distrib 5.6.24, for Win32 (x86)
+-- MySQL dump 10.13  Distrib 5.7.12, for Win32 (AMD64)
 --
--- Host: localhost    Database: routeros
+-- Host: 127.0.0.1    Database: routeros
 -- ------------------------------------------------------
--- Server version	5.6.26-log
+-- Server version	5.7.14-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -26,9 +26,9 @@ DROP TABLE IF EXISTS `estados_perfil`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `estados_perfil` (
   `estados_perfil_id` int(11) NOT NULL AUTO_INCREMENT,
-  `descripcion_perfil` varchar(45) NOT NULL,
+  `descripcion_estado` varchar(45) NOT NULL,
   PRIMARY KEY (`estados_perfil_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,6 +37,7 @@ CREATE TABLE `estados_perfil` (
 
 LOCK TABLES `estados_perfil` WRITE;
 /*!40000 ALTER TABLE `estados_perfil` DISABLE KEYS */;
+INSERT INTO `estados_perfil` VALUES (1,'ACTIVO'),(2,'INACTIVO'),(3,'BLOQUEADO');
 /*!40000 ALTER TABLE `estados_perfil` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -51,7 +52,7 @@ CREATE TABLE `estados_usuario` (
   `estados_usuario_id` int(11) NOT NULL AUTO_INCREMENT,
   `descripcion_estado` varchar(45) NOT NULL,
   PRIMARY KEY (`estados_usuario_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -60,6 +61,7 @@ CREATE TABLE `estados_usuario` (
 
 LOCK TABLES `estados_usuario` WRITE;
 /*!40000 ALTER TABLE `estados_usuario` DISABLE KEYS */;
+INSERT INTO `estados_usuario` VALUES (1,'ACTIVO'),(2,'INACTIVO'),(3,'BLOQUEADO');
 /*!40000 ALTER TABLE `estados_usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -155,11 +157,13 @@ CREATE TABLE `perfiles` (
   `perfil_id` int(10) NOT NULL AUTO_INCREMENT,
   `perfil` varchar(50) NOT NULL,
   `descripcion` varchar(100) NOT NULL,
-  `estado` varchar(1) DEFAULT NULL,
+  `estados_perfil_id` int(10) NOT NULL,
   `fecharegistro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`perfil_id`),
-  UNIQUE KEY `perfil_UNIQUE` (`perfil`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  UNIQUE KEY `perfil_UNIQUE` (`perfil`),
+  KEY `estados_perfil_fk1_idx` (`estados_perfil_id`),
+  CONSTRAINT `estados_perfil_fk1` FOREIGN KEY (`estados_perfil_id`) REFERENCES `estados_perfil` (`estados_perfil_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -168,6 +172,7 @@ CREATE TABLE `perfiles` (
 
 LOCK TABLES `perfiles` WRITE;
 /*!40000 ALTER TABLE `perfiles` DISABLE KEYS */;
+INSERT INTO `perfiles` VALUES (1,'Administrador','Perfil que Administra la Aplicación',1,'2016-08-18 03:56:14'),(2,'Usuario','Perfil usuario con permisos restringidos',1,'2016-08-18 03:56:55');
 /*!40000 ALTER TABLE `perfiles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -186,7 +191,7 @@ CREATE TABLE `usuarios` (
   `apellidos` varchar(100) DEFAULT NULL,
   `direccion` varchar(100) DEFAULT NULL,
   `telefono` varchar(50) DEFAULT NULL,
-  `estado` varchar(1) NOT NULL,
+  `estados_usuario_id` int(10) NOT NULL,
   `fecharegistro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `clave` varchar(50) NOT NULL,
   `correo` varchar(100) NOT NULL,
@@ -195,7 +200,8 @@ CREATE TABLE `usuarios` (
   UNIQUE KEY `correo_UNIQUE` (`correo`),
   UNIQUE KEY `usuario_UNIQUE` (`usuario`),
   KEY `fecha` (`fecharegistro`),
-  CONSTRAINT `estado_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `estados_usuario` (`estados_usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `estado_usuario_fk1_idx` (`estados_usuario_id`),
+  CONSTRAINT `estado_usuario_fk1` FOREIGN KEY (`estados_usuario_id`) REFERENCES `estados_usuario` (`estados_usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -225,4 +231,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-10  9:52:02
+-- Dump completed on 2016-08-17 23:17:08
