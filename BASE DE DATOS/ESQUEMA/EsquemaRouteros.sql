@@ -2,7 +2,7 @@ CREATE DATABASE  IF NOT EXISTS `routeros` /*!40100 DEFAULT CHARACTER SET utf8 CO
 USE `routeros`;
 -- MySQL dump 10.13  Distrib 5.7.12, for Win32 (AMD64)
 --
--- Host: 127.0.0.1    Database: routeros
+-- Host: localhost    Database: routeros
 -- ------------------------------------------------------
 -- Server version	5.7.14-log
 
@@ -16,6 +16,30 @@ USE `routeros`;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `estados_menu`
+--
+
+DROP TABLE IF EXISTS `estados_menu`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `estados_menu` (
+  `estados_menu_id` int(11) NOT NULL AUTO_INCREMENT,
+  `descripcion_estado` varchar(45) NOT NULL,
+  PRIMARY KEY (`estados_menu_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `estados_menu`
+--
+
+LOCK TABLES `estados_menu` WRITE;
+/*!40000 ALTER TABLE `estados_menu` DISABLE KEYS */;
+INSERT INTO `estados_menu` VALUES (1,'ACTIVO'),(2,'INACTIVO'),(3,'BLOQUEADO');
+/*!40000 ALTER TABLE `estados_menu` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `estados_perfil`
@@ -95,6 +119,70 @@ LOCK TABLES `ingresos` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `menus`
+--
+
+DROP TABLE IF EXISTS `menus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `menus` (
+  `menu_id` int(11) NOT NULL,
+  `nivel` int(11) NOT NULL,
+  `submenu_id` int(11) DEFAULT NULL,
+  `menu` varchar(45) COLLATE utf8_bin NOT NULL,
+  `ruta_url` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+  `orden` int(11) NOT NULL,
+  `fecharegistro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `estados_menu_id` int(11) NOT NULL,
+  PRIMARY KEY (`menu_id`),
+  KEY `estados_menu_idfk_idx` (`estados_menu_id`),
+  KEY `submenu_id_idx` (`submenu_id`),
+  CONSTRAINT `estados_menu_idfk` FOREIGN KEY (`estados_menu_id`) REFERENCES `estados_menu` (`estados_menu_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `submenu_id` FOREIGN KEY (`submenu_id`) REFERENCES `menus` (`menu_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Presenta los Menus que puede tener la aplicacion';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `menus`
+--
+
+LOCK TABLES `menus` WRITE;
+/*!40000 ALTER TABLE `menus` DISABLE KEYS */;
+INSERT INTO `menus` VALUES (1,1,NULL,'Inicio',NULL,1,'2016-08-22 04:50:17',1),(2,1,NULL,'Usuarios',NULL,2,'2016-08-22 04:50:17',1),(3,1,NULL,'Routers',NULL,3,'2016-08-22 04:50:17',1),(4,1,NULL,'Administración',NULL,4,'2016-08-22 04:50:17',1),(5,1,NULL,'Salir','salir.php',5,'2016-08-22 04:50:17',1),(6,2,2,'Registar Usuarios','registra_usuarios_router.php',1,'2016-08-22 05:00:17',1),(7,2,2,'Consultar Usuarios',NULL,2,'2016-08-22 05:00:17',1),(8,2,2,'Eliminar Usuarios','elimina_usuarios_router.php',3,'2016-08-22 05:00:17',1);
+/*!40000 ALTER TABLE `menus` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `menus_perfil`
+--
+
+DROP TABLE IF EXISTS `menus_perfil`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `menus_perfil` (
+  `menus_perfil_id` int(11) NOT NULL AUTO_INCREMENT,
+  `menu_id` int(11) NOT NULL,
+  `perfil_id` int(11) NOT NULL,
+  `estados_menu_id` int(11) NOT NULL,
+  PRIMARY KEY (`menus_perfil_id`),
+  KEY `perfil_id` (`perfil_id`),
+  KEY `pagina_id` (`menu_id`),
+  KEY `estados_menu_perfil_idfk_idx` (`estados_menu_id`),
+  CONSTRAINT `estados_menu_perfil_idfk` FOREIGN KEY (`estados_menu_id`) REFERENCES `estados_menu` (`estados_menu_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `menus_perfil`
+--
+
+LOCK TABLES `menus_perfil` WRITE;
+/*!40000 ALTER TABLE `menus_perfil` DISABLE KEYS */;
+INSERT INTO `menus_perfil` VALUES (1,1,1,1),(2,2,1,1),(3,3,1,1),(4,4,1,1),(5,5,1,1),(6,6,1,1),(7,7,1,1),(8,8,1,1),(9,1,2,1),(10,2,2,1),(11,5,2,1),(12,7,2,1);
+/*!40000 ALTER TABLE `menus_perfil` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `paginas`
 --
 
@@ -103,6 +191,7 @@ DROP TABLE IF EXISTS `paginas`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `paginas` (
   `pagina_id` int(11) NOT NULL AUTO_INCREMENT,
+  `nivel` int(11) NOT NULL,
   `descripcion_pagina` varchar(45) COLLATE utf8_bin DEFAULT NULL,
   `ruta_pagina` varchar(100) COLLATE utf8_bin NOT NULL,
   `estado` int(11) NOT NULL,
@@ -118,32 +207,6 @@ CREATE TABLE `paginas` (
 LOCK TABLES `paginas` WRITE;
 /*!40000 ALTER TABLE `paginas` DISABLE KEYS */;
 /*!40000 ALTER TABLE `paginas` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `paginas_perfil`
---
-
-DROP TABLE IF EXISTS `paginas_perfil`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `paginas_perfil` (
-  `paginas_perfil_id` int(11) NOT NULL AUTO_INCREMENT,
-  `pagina_id` int(11) NOT NULL,
-  `perfile_id` int(11) NOT NULL,
-  PRIMARY KEY (`paginas_perfil_id`),
-  KEY `perfil_id` (`perfile_id`),
-  KEY `pagina_id` (`pagina_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `paginas_perfil`
---
-
-LOCK TABLES `paginas_perfil` WRITE;
-/*!40000 ALTER TABLE `paginas_perfil` DISABLE KEYS */;
-/*!40000 ALTER TABLE `paginas_perfil` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -202,7 +265,7 @@ CREATE TABLE `usuarios` (
   KEY `fecha` (`fecharegistro`),
   KEY `estado_usuario_fk1_idx` (`estados_usuario_id`),
   CONSTRAINT `estado_usuario_fk1` FOREIGN KEY (`estados_usuario_id`) REFERENCES `estados_usuario` (`estados_usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -211,6 +274,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
+INSERT INTO `usuarios` VALUES (1,'ADMIN',NULL,'ADMINISTRADOR','ADMIN','PORTAL WEB','TELEFONO',1,'2016-08-22 04:30:18','CLAVE','corre@portalrouteros.com',1),(2,'USUARIO',NULL,'NOMBRE USUARIO','APELLIDO USUARIO','PORTAL ROUTEROS','TELEFONO',1,'2016-08-23 05:26:06','CLAVE','usuario@portalrouteros.com',2);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -231,4 +295,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-17 23:17:08
+-- Dump completed on 2016-08-23  0:28:41
