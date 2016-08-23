@@ -21,11 +21,11 @@ class routeros_api
     var $debug = false;      // Show debug information
     var $error_no;           // Variable for storing connection error number, if any
     var $error_str;          // Variable for storing connection error text, if any
-    var $attempts = 5;       // Connection attempt count
+    // var $attempts = 5;       // Connection attempt count
     var $connected = false;  // Connection state
-    var $delay = 3;          // Delay between connection attempts in seconds
+    // var $delay = 3;          // Delay between connection attempts in seconds
     //var $port = 8728;        // Port to connect to
-    var $timeout = 3;        // Connection attempt timeout and data read timeout
+    // var $timeout = 3;        // Connection attempt timeout and data read timeout
     var $socket;             // Variable for storing socket resource
     
     /**
@@ -77,13 +77,13 @@ class routeros_api
      *
      * @return boolean                If we are connected or not
      */
-    function connect($ip, $login, $password, $port)
+    function connect($ip, $login, $password, $port, $attempts, $delay, $timeout)
     {
-        for ($ATTEMPT = 1; $ATTEMPT <= $this->attempts; $ATTEMPT++) {
+        for ($ATTEMPT = 1; $ATTEMPT <= $attempts; $ATTEMPT++) {
             $this->connected = false;
             $this->debug('Connection attempt #' . $ATTEMPT . ' to ' . $ip . ':' . $port . '...');
-            if ($this->socket = @fsockopen($ip, $port, $this->error_no, $this->error_str, $this->timeout)) {
-                socket_set_timeout($this->socket, $this->timeout);
+            if ($this->socket = @fsockopen($ip, $port, $this->error_no, $this->error_str, $timeout)) {
+                socket_set_timeout($this->socket, $timeout);
                 $this->write('/login');
                 $RESPONSE = $this->read(false);
                 if ($RESPONSE[0] == '!done') {
@@ -102,7 +102,7 @@ class routeros_api
                 }
                 fclose($this->socket);
             }
-            sleep($this->delay);
+            sleep($delay);
         }
         if ($this->connected)
             $this->debug('Connected...');

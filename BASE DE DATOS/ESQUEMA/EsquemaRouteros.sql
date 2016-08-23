@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `routeros` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
 USE `routeros`;
--- MySQL dump 10.13  Distrib 5.7.12, for Win32 (AMD64)
+-- MySQL dump 10.13  Distrib 5.6.24, for Win32 (x86)
 --
 -- Host: localhost    Database: routeros
 -- ------------------------------------------------------
--- Server version	5.7.14-log
+-- Server version	5.6.26-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,6 +16,32 @@ USE `routeros`;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `configuraciones`
+--
+
+DROP TABLE IF EXISTS `configuraciones`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `configuraciones` (
+  `configuracion_id` int(11) NOT NULL AUTO_INCREMENT,
+  `descripcion` varchar(45) COLLATE utf8_bin NOT NULL,
+  `valor` varchar(45) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`configuracion_id`),
+  UNIQUE KEY `descripcion_UNIQUE` (`descripcion`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `configuraciones`
+--
+
+LOCK TABLES `configuraciones` WRITE;
+/*!40000 ALTER TABLE `configuraciones` DISABLE KEYS */;
+INSERT INTO `configuraciones` VALUES (1,'LLAVE','$UjhY&743*/4#r1+u38s');
+/*!40000 ALTER TABLE `configuraciones` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `estados_menu`
@@ -63,6 +89,30 @@ LOCK TABLES `estados_perfil` WRITE;
 /*!40000 ALTER TABLE `estados_perfil` DISABLE KEYS */;
 INSERT INTO `estados_perfil` VALUES (1,'ACTIVO'),(2,'INACTIVO'),(3,'BLOQUEADO');
 /*!40000 ALTER TABLE `estados_perfil` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `estados_router`
+--
+
+DROP TABLE IF EXISTS `estados_router`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `estados_router` (
+  `estados_router_id` int(11) NOT NULL AUTO_INCREMENT,
+  `descripcion_estado` varchar(45) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`estados_router_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `estados_router`
+--
+
+LOCK TABLES `estados_router` WRITE;
+/*!40000 ALTER TABLE `estados_router` DISABLE KEYS */;
+INSERT INTO `estados_router` VALUES (1,'ACTIVO'),(2,'INACTIVO'),(3,'BLOQUEADO');
+/*!40000 ALTER TABLE `estados_router` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -240,6 +290,42 @@ INSERT INTO `perfiles` VALUES (1,'Administrador','Perfil que Administra la Aplic
 UNLOCK TABLES;
 
 --
+-- Table structure for table `routers`
+--
+
+DROP TABLE IF EXISTS `routers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `routers` (
+  `router_id` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(45) COLLATE utf8_bin NOT NULL,
+  `version` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `ip` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `puerto` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `usuario` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `clave` blob,
+  `estados_router_id` int(11) NOT NULL,
+  `fechacreacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `reintentos_conexion` varchar(3) COLLATE utf8_bin NOT NULL DEFAULT '3' COMMENT 'attempts: Connection attempt count',
+  `retraso_conexion` varchar(3) COLLATE utf8_bin NOT NULL DEFAULT '3' COMMENT 'delay: Delay between connection attempts in seconds',
+  `tiempo_maximo_conexion` varchar(3) COLLATE utf8_bin NOT NULL DEFAULT '3' COMMENT 'timeout: Connection attempt timeout and data read timeout',
+  PRIMARY KEY (`router_id`),
+  KEY `estados_router_idfk_idx` (`estados_router_id`),
+  CONSTRAINT `estados_router_idfk` FOREIGN KEY (`estados_router_id`) REFERENCES `estados_router` (`estados_router_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `routers`
+--
+
+LOCK TABLES `routers` WRITE;
+/*!40000 ALTER TABLE `routers` DISABLE KEYS */;
+INSERT INTO `routers` VALUES (1,'Rounter Development','6.36','192.168.56.2','8728','admin','֟ԃ7 őϮ𷵈ƛ',1,'2016-08-23 18:03:22','3','3','3');
+/*!40000 ALTER TABLE `routers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `usuarios`
 --
 
@@ -256,7 +342,7 @@ CREATE TABLE `usuarios` (
   `telefono` varchar(50) DEFAULT NULL,
   `estados_usuario_id` int(10) NOT NULL,
   `fecharegistro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `clave` varchar(50) NOT NULL,
+  `clave` blob NOT NULL,
   `correo` varchar(100) NOT NULL,
   `perfil_id` int(10) NOT NULL,
   PRIMARY KEY (`usuario_id`),
@@ -274,7 +360,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'ADMIN',NULL,'ADMINISTRADOR','ADMIN','PORTAL WEB','TELEFONO',1,'2016-08-22 04:30:18','CLAVE','corre@portalrouteros.com',1),(2,'USUARIO',NULL,'NOMBRE USUARIO','APELLIDO USUARIO','PORTAL ROUTEROS','TELEFONO',1,'2016-08-23 05:26:06','CLAVE','usuario@portalrouteros.com',2);
+INSERT INTO `usuarios` VALUES (1,'ADMIN',NULL,'ADMINISTRADOR','ADMIN','PORTAL WEB','TELEFONO',1,'2016-08-22 04:30:18','󮼫AƬհfyϖ','corre@portalrouteros.com',1),(2,'USUARIO',NULL,'NOMBRE USUARIO','APELLIDO USUARIO','PORTAL ROUTEROS','TELEFONO',1,'2016-08-23 05:26:06','󮼫AƬհfyϖ','usuario@portalrouteros.com',2);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -295,4 +381,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-23  0:28:41
+-- Dump completed on 2016-08-23 15:43:55

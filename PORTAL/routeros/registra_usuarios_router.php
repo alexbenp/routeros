@@ -12,6 +12,9 @@ $ipRB="192.168.56.2"; //IP de tu RB.
 $Username="admin"; //Nombre de usuario con privilegios para acceder al RB
 $clave=""; //Clave del usuario con privilegios
 $api_puerto=8728; //Puerto que definimos el API en IP--->Services
+$attempts = 3; // Connection attempt count
+$delay = 3; // Delay between connection attempts in seconds
+$timeout = 3; // Connection attempt timeout and data read timeout
 
 $API = new routeros_api(); //Creamos un objeto de la clase API
 $API->debug = false; //Desactivamos el debug
@@ -57,7 +60,7 @@ if ($action=="")    /* display the contact form */
             <textarea id="comentario" class="input" name="comentario" rows="3" cols="30"></textarea><br /><br />
         </div>
 <?php 
-         if ($API->connect($ipRB , $Username , $clave, $api_puerto)) {
+         if ($API->connect($ipRB , $Username , $clave, $api_puerto,$attempts, $delay, $timeout)) {
 		$ARRAY = $API->comm("/system/resource/print");
 		$first = $ARRAY['0'];
 		$memperc = ($first['free-memory']/$first['total-memory']);
@@ -94,7 +97,7 @@ if ($action=="")    /* display the contact form */
 	
 <?php		
 		// ESTA PARTE SAQUE LA INFORMACION DE LOS USUARIO
-		if ($API->connect($ipRB , $Username , $clave, $api_puerto)) {
+		if ($API->connect($ipRB , $Username , $clave, $api_puerto,$attempts, $delay, $timeout)) {
                 $API->write('/ip/hotspot/user/getall');
                 $READ = $API->read(false);
                 $ARRAY = $API->parse_response($READ);
@@ -114,7 +117,7 @@ if ($action=="")    /* display the contact form */
 
 <?php
                 // ESTA PARTE SAQUE LA INFORMACION DE LOS USUARIO
-                if ($API->connect($ipRB , $Username , $clave, $api_puerto)) {
+                if ($API->connect($ipRB , $Username , $clave, $api_puerto,$attempts, $delay, $timeout)) {
                 $API->write('/ip/hotspot/user/profile/getall');
                 $READ = $API->read(false);
                 $ARRAY = $API->parse_response($READ);
@@ -131,7 +134,7 @@ if ($action=="")    /* display the contact form */
 
 <?php
                 $API->debug = false;
-                if ($API->connect($ipRB , $Username , $clave, $api_puerto)) {
+                if ($API->connect($ipRB , $Username , $clave, $api_puerto, $attempts, $delay, $timeout)) {
                 $API->write('/ip/hotspot/user/profile/getall');
                 $READ = $API->read(false);
                 $ARRAY = $API->parse_response($READ);
@@ -149,7 +152,7 @@ if ($action=="")    /* display the contact form */
 
 <?php
 		$API->debug = false;
-	        if ($API->connect($ipRB , $Username , $clave, $api_puerto)) {
+	        if ($API->connect($ipRB , $Username , $clave, $api_puerto, $attempts, $delay, $timeout)) {
 		$API->write('/ip/hotspot/user/getall');
    		$READ = $API->read(false);
 		$ARRAY = $API->parse_response($READ);
@@ -184,7 +187,7 @@ else    /* send the submitted data */
         //mail("youremail@yoursite.com", $subject, $message, $from); 
         
 	// Se creara perfil de usuario
-	if ($API->connect($ipRB , $Username , $clave, $api_puerto)) 
+	if ($API->connect($ipRB , $Username , $clave, $api_puerto, $attempts, $delay, $timeout)) 
 	{
 	
 	$API->comm("/ip/hotspot/user/profile/add",array("name" => $user_shared."u.".$rx."k.".$tx."k","rate-limit" => $rx."k/".$tx."k","shared-users" => $user_shared)); //Enviamos el comando y el true que significa enter
@@ -200,7 +203,7 @@ else    /* send the submitted data */
 	// fin de crear perfil de usuario
 
 	// Se crea Usuario
-	if ($API->connect($ipRB , $Username , $clave, $api_puerto)) 
+	if ($API->connect($ipRB , $Username , $clave, $api_puerto, $attempts, $delay, $timeout)) 
 	{
 		$API->comm("/ip/hotspot/user/add",array("name" => $name,"password" => $passwor,"limit-uptime" => $uptime,"comment" => $comentario,"profile" => $user_shared."u.".$rx."k.".$tx."k" )); //Enviamos el comando y el true que significa enter
 	$API->disconnect();
