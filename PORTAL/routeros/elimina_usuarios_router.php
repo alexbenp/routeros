@@ -24,7 +24,7 @@ $API->debug = false; //Desactivamos el debug
 if ($action=="")    /* display the contact form */ 
     { 
 ?> 
-    <form id="contact_form" action="#" method="POST" enctype="multipart/form-data"> 
+    <form class="contacto" id="contact_form" action="#" method="POST" enctype="multipart/form-data"> 
         
 	<div class="row">
 	    <label for="title1">Pagina de prueba de Borrado de Usuarios<label><br /><br />

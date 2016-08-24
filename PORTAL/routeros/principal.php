@@ -5,6 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 <link href="estilos/ingreso.css" rel="stylesheet" type="text/css">
 <link href="estilos/menu.css" rel="stylesheet" type="text/css">
+<link href="estilos/formulario.css" rel="stylesheet" type="text/css">
 </head>
 <body> 
 <?php 			 
