@@ -116,24 +116,40 @@ class Routers extends routeros_api {
 	public function systemResourcePrint(){
 		if ($this->connect($this->iprouter , $this->usuariorouter , $this->claverouter, $this->puertorouter, $this->attemptsrouter, $this->delayrouter, $this->timeoutrouter)) {
 			$ARRAY = $this->comm("/system/resource/print");
-			$first = $ARRAY['0'];
-			$memperc = ($first['free-memory']/$first['total-memory']);
-			$hddperc = ($first['free-hdd-space']/$first['total-hdd-space']);
+			$info = $ARRAY['0'];
+			$memperc = ($info['free-memory']/$info['total-memory']);
+			$hddperc = ($info['free-hdd-space']/$info['total-hdd-space']);
 			$mem = ($memperc*100);
 			$hdd = ($hddperc*100);
-			$first['mem'] = $mem;
-			$first['hdd'] = $hdd;
+			$info['mem'] = $mem;
+			$info['hdd'] = $hdd;
 			
 			$this->disconnect();
 			$this->codigoRespuesta = "00";
 			$this->mensajeRespuesta = "Informacion del Router";
-			return $first;
+			return $info;
 		}else{
 			$this->codigoRespuesta = "50";
 			$this->mensajeRespuesta = "systemResourcePrint::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
 		}
 	}
-		
+	
+	public function ipHotspotUserRemove($idborrado){
+		if ($this->connect($this->iprouter , $this->usuariorouter , $this->claverouter, $this->puertorouter, $this->attemptsrouter, $this->delayrouter, $this->timeoutrouter)) {
+			$this->write('/ip/hotspot/user/remove', false); //Enviamos el comando y el true que significa enter
+			$this->write('=.id='.$idborrado);
+			$READ = $this->read(false);
+			$info = $this->parse_response($READ);
+			
+			$this->disconnect();
+			$this->codigoRespuesta = "00";
+			$this->mensajeRespuesta = "Registro Eliminado";
+			return $info;
+		}else{
+			$this->codigoRespuesta = "60";
+			$this->mensajeRespuesta = "ipHotspotUserRemove::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
+		}
+	}
 }
 	  
  

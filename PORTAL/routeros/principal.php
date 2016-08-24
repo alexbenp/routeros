@@ -1,4 +1,6 @@
-<?php include("control.php"); ?> 
+<?php include("control.php"); 
+error_reporting(E_ALL ^ E_NOTICE);
+?> 
 <html>
 <head>
 <title>Portal RouterOS</title>
@@ -35,10 +37,5 @@ $cierra_linea = "";
 		}
 	 }
 		echo "</ul>";
-	echo "</div>";
+	echo "</div><br><br>";
 ?>
-<br>
-<br>
-
-
-<?php
