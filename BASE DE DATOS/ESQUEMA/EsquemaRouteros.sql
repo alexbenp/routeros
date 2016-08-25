@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `routeros` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
 USE `routeros`;
--- MySQL dump 10.13  Distrib 5.6.24, for Win32 (x86)
+-- MySQL dump 10.13  Distrib 5.7.12, for Win32 (AMD64)
 --
 -- Host: localhost    Database: routeros
 -- ------------------------------------------------------
--- Server version	5.6.26-log
+-- Server version	5.7.14-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -52,7 +52,7 @@ DROP TABLE IF EXISTS `estados_menu`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `estados_menu` (
   `estados_menu_id` int(11) NOT NULL AUTO_INCREMENT,
-  `descripcion_estado` varchar(45) NOT NULL,
+  `estado` varchar(45) NOT NULL,
   PRIMARY KEY (`estados_menu_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -76,7 +76,7 @@ DROP TABLE IF EXISTS `estados_perfil`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `estados_perfil` (
   `estados_perfil_id` int(11) NOT NULL AUTO_INCREMENT,
-  `descripcion_estado` varchar(45) NOT NULL,
+  `estado` varchar(45) NOT NULL,
   PRIMARY KEY (`estados_perfil_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -100,7 +100,7 @@ DROP TABLE IF EXISTS `estados_router`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `estados_router` (
   `estados_router_id` int(11) NOT NULL AUTO_INCREMENT,
-  `descripcion_estado` varchar(45) COLLATE utf8_bin NOT NULL,
+  `estado` varchar(45) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`estados_router_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -124,7 +124,7 @@ DROP TABLE IF EXISTS `estados_usuario`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `estados_usuario` (
   `estados_usuario_id` int(11) NOT NULL AUTO_INCREMENT,
-  `descripcion_estado` varchar(45) NOT NULL,
+  `estado` varchar(45) NOT NULL,
   PRIMARY KEY (`estados_usuario_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -198,7 +198,7 @@ CREATE TABLE `menus` (
 
 LOCK TABLES `menus` WRITE;
 /*!40000 ALTER TABLE `menus` DISABLE KEYS */;
-INSERT INTO `menus` VALUES (1,1,NULL,'Inicio',NULL,1,'2016-08-22 04:50:17',1),(2,1,NULL,'Usuarios',NULL,2,'2016-08-22 04:50:17',1),(3,1,NULL,'Routers',NULL,3,'2016-08-22 04:50:17',1),(4,1,NULL,'Administración',NULL,4,'2016-08-22 04:50:17',1),(5,1,NULL,'Salir','salir.php',5,'2016-08-22 04:50:17',1),(6,2,2,'Registar Usuarios','registra_usuarios_router.php',1,'2016-08-22 05:00:17',1),(7,2,2,'Consultar Usuarios',NULL,2,'2016-08-22 05:00:17',1),(8,2,2,'Eliminar Usuarios','elimina_usuarios_router.php',3,'2016-08-22 05:00:17',1);
+INSERT INTO `menus` VALUES (1,1,NULL,'Inicio','configuracion_router.php',1,'2016-08-22 04:50:17',1),(2,1,NULL,'Usuarios',NULL,2,'2016-08-22 04:50:17',1),(3,1,NULL,'Routers',NULL,3,'2016-08-22 04:50:17',1),(4,1,NULL,'AdministraciÃ³n',NULL,4,'2016-08-22 04:50:17',1),(5,1,NULL,'Salir','salir.php',5,'2016-08-22 04:50:17',1),(6,2,2,'Registar Usuarios','registra_usuarios_router.php',1,'2016-08-22 05:00:17',1),(7,2,2,'Consultar Usuarios',NULL,2,'2016-08-22 05:00:17',1),(8,2,2,'Eliminar Usuarios','elimina_usuarios_router.php',3,'2016-08-22 05:00:17',1);
 /*!40000 ALTER TABLE `menus` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -214,6 +214,7 @@ CREATE TABLE `menus_perfil` (
   `menu_id` int(11) NOT NULL,
   `perfil_id` int(11) NOT NULL,
   `estados_menu_id` int(11) NOT NULL,
+  `principal` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`menus_perfil_id`),
   KEY `perfil_id` (`perfil_id`),
   KEY `pagina_id` (`menu_id`),
@@ -228,7 +229,7 @@ CREATE TABLE `menus_perfil` (
 
 LOCK TABLES `menus_perfil` WRITE;
 /*!40000 ALTER TABLE `menus_perfil` DISABLE KEYS */;
-INSERT INTO `menus_perfil` VALUES (1,1,1,1),(2,2,1,1),(3,3,1,1),(4,4,1,1),(5,5,1,1),(6,6,1,1),(7,7,1,1),(8,8,1,1),(9,1,2,1),(10,2,2,1),(11,5,2,1),(12,7,2,1);
+INSERT INTO `menus_perfil` VALUES (1,1,1,1,1),(2,2,1,1,0),(3,3,1,1,0),(4,4,1,1,0),(5,5,1,1,0),(6,6,1,1,0),(7,7,1,1,0),(8,8,1,1,0),(9,1,2,1,0),(10,2,2,1,0),(11,5,2,1,0),(12,7,2,1,0);
 /*!40000 ALTER TABLE `menus_perfil` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -285,7 +286,7 @@ CREATE TABLE `perfiles` (
 
 LOCK TABLES `perfiles` WRITE;
 /*!40000 ALTER TABLE `perfiles` DISABLE KEYS */;
-INSERT INTO `perfiles` VALUES (1,'Administrador','Perfil que Administra la Aplicación',1,'2016-08-18 03:56:14'),(2,'Usuario','Perfil usuario con permisos restringidos',1,'2016-08-18 03:56:55');
+INSERT INTO `perfiles` VALUES (1,'Administrador','Perfil que Administra la AplicaciÃ³n',1,'2016-08-18 03:56:14'),(2,'Usuario','Perfil usuario con permisos restringidos',1,'2016-08-18 03:56:55');
 /*!40000 ALTER TABLE `perfiles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -321,7 +322,7 @@ CREATE TABLE `routers` (
 
 LOCK TABLES `routers` WRITE;
 /*!40000 ALTER TABLE `routers` DISABLE KEYS */;
-INSERT INTO `routers` VALUES (1,'Rounter Development','6.36','192.168.56.2','8728','admin','֟ԃ7 őϮ𷵈ƛ',1,'2016-08-23 18:03:22','3','3','3');
+INSERT INTO `routers` VALUES (1,'Rounter Development','6.36','192.168.56.2','8728','admin','ÖÔ7 ÅÏ®ð·µÆ',1,'2016-08-23 18:03:22','3','3','3');
 /*!40000 ALTER TABLE `routers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -360,7 +361,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'ADMIN',NULL,'ADMINISTRADOR','ADMIN','PORTAL WEB','TELEFONO',1,'2016-08-22 04:30:18','󮼫AƬհfyϖ','corre@portalrouteros.com',1),(2,'USUARIO',NULL,'NOMBRE USUARIO','APELLIDO USUARIO','PORTAL ROUTEROS','TELEFONO',1,'2016-08-23 05:26:06','󮼫AƬհfyϖ','usuario@portalrouteros.com',2);
+INSERT INTO `usuarios` VALUES (1,'ADMIN',NULL,'ADMINISTRADOR','ADMIN','PORTAL WEB','TELEFONO',1,'2016-08-22 04:30:18','÷n<+A¦¬\íyðfy\ÎV','corre@portalrouteros.com',1),(2,'USUARIO',NULL,'NOMBRE USUARIO','APELLIDO USUARIO','PORTAL ROUTEROS','TELEFONO',1,'2016-08-23 05:26:06','÷n<+A¦¬\íyðfy\ÎV','usuario@portalrouteros.com',2);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -381,4 +382,6 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-23 15:43:55
+-- Dump completed on 2016-08-25  0:13:13
+
+ UPDATE usuarios SET clave = aes_encrypt('clave','$UjhY&743*#4#r1+u38s') WHERE usuario_id IN (1,2);

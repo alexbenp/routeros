@@ -1,5 +1,6 @@
 <?php
 require_once 'api.php';
+require_once 'Conexion.php';
 class Routers extends routeros_api {
 	var $debug = false;
 	
@@ -10,6 +11,8 @@ class Routers extends routeros_api {
 	private $attemptsrouter;
 	private $delayrouter;
 	private $timeoutrouter;
+	
+	private $estados_router_id;
 
 
 	public function getIpRouter() {
@@ -40,6 +43,10 @@ class Routers extends routeros_api {
 		return $this->mensajeRespuesta;
 	}
 	
+	public function getEstadosRouterId() {
+		return $this->estados_router_id;
+	}	
+	
 	public function __construct($iprouter, $usuariorouter, $claverouter, $puertorouter, $attemptsrouter, $delayrouter, $timeoutrouter){
 		$this->iprouter			= $iprouter;
 		$this->usuariorouter	= $usuariorouter;
@@ -50,6 +57,7 @@ class Routers extends routeros_api {
 		$this->timeoutrouter 	= $timeoutrouter;
 		
 	}
+	
 	public function ipHotspotUserGetall(){
 		if ($this->connect($this->iprouter , $this->usuariorouter , $this->claverouter, $this->puertorouter, $this->attemptsrouter, $this->delayrouter, $this->timeoutrouter)) {
 			$this->write('/ip/hotspot/user/getall');
@@ -149,6 +157,37 @@ class Routers extends routeros_api {
 			$this->codigoRespuesta = "60";
 			$this->mensajeRespuesta = "ipHotspotUserRemove::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
 		}
+	}
+
+	public function getInformacionAdminRouter($estados_router_id){
+		$this->estados_router_id = $estados_router_id;
+		$conexion = new Conexion();
+		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		try {
+			$this->codigoRespuesta = "60";
+			$this->mensajeRespuesta = "Router: ";
+			if($this->estados_router_id > 0){
+				$sql = $conexion->prepare('SELECT * FROM routers r INNER JOIN estados_router er ON (r.estados_router_id = er.estados_router_id) WHERE r.estados_router_id = :estados_router_id');
+				$sql->bindParam(':estados_router_id', $this->estados_router_id);
+			}else{
+				$sql = $conexion->prepare('SELECT * FROM routers INNER JOIN estados_router er ON (r.estados_router_id = er.estados_router_id)');
+				$sql->bindParam(':estados_router_id', $this->estados_router_id);				
+			}
+			$sql->execute();
+			$resultado = $sql->fetchAll();
+			
+			return $resultado;
+
+		}catch (PDOException $e) {
+			echo "<br>getInformacionAdminRouter::DataBase Error: <br>".$e->getMessage();
+			echo "<br>Error Code:<br> ".$e->getCode();
+			exit;
+		}catch (Exception $e) {
+			echo "getInformacionAdminRouter::General Error: The user could not be added.<br>".$e->getMessage();
+			exit;
+		}
+		$conexion = null;
 	}
 }
 	  

@@ -34,13 +34,30 @@ if($_POST)
 			$_SESSION["apellidos"] 	= $usuario->getApellidos();
 			$_SESSION["perfil"] 	= $usuario->getPerfil();
 			
+			$principal = 0;
 			require_once 'clases/Menus.php';
 			$menus = new Menus($usuario->getPerfilId());
 			$arreglo = $menus->getMenusNivelUno();
 			foreach($arreglo as $llave=>$elemento){
 				$menu_id = $arreglo[$llave]['menu_id'];
+				if($principal == '0'){
+					$principal = $arreglo[$llave]['principal'];
+					if($principal == '1'){
+						$ruta_url = $arreglo[$llave]['ruta_url'];
+					}
+				}
+				
 				if($menu_id > 0){
 					$arreglo[$llave]['submenu'] = $menus->getMenusNivelDos($menu_id);
+					if($principal == '0'){
+						foreach($arreglo[$llave]['submenu'] as $key=>$item){
+							$principal = $arreglo[$llave]['submenu'][$key]['principal'];
+							if($principal == '1'){
+								$ruta_url = $arreglo[$llave]['submenu'][$key]['ruta_url'];
+							}
+						}
+					}
+
 				}
 			}
 			
@@ -53,7 +70,7 @@ if($_POST)
 			
 			// $message = $usuario->getMensajeRespuesta().": ".$usuario->getCodigoRespuesta() ;
 			 // header("Location: registrarusuarios.php");
-			 header("Location: principal.php");
+			 header("Location: ".$ruta_url);
 		}else{
 			$message = $usuario->getMensajeRespuesta().":".$usuario->getCodigoRespuesta() ;
 			session_destroy();

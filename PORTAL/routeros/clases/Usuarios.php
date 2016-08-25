@@ -143,19 +143,19 @@
 				$this->usuario_id = $conexion->lastInsertId();
 				$this->codigoRespuesta = "00";
 				$this->mensajeRespuesta = "Se ha registrado el usuario ".$this->usuario." correctamente";
-			} catch (PDOException $e) {
-			  echo "<br>guardarRegistrar::DataBase Error: <br>".$e->getMessage();
-			  echo "<br>Error Code:<br> ".$e->getCode();
+			}catch (PDOException $e) {
+				echo "<br>guardarRegistrar::DataBase Error: <br>".$e->getMessage();
+				echo "<br>Error Code:<br> ".$e->getCode();
 				$this->codigoRespuesta = $e->getCode();
 				$this->mensajeRespuesta = $e->getMessage();
 			  //  var_dump($e->getMessage());
 				//var_dump($conexion->errorInfo());
-			  exit;
-			} catch (Exception $e) {
+				exit;
+			}catch (Exception $e) {
 				$this->codigoRespuesta = $e->getCode();
 				$this->mensajeRespuesta = $e->getMessage();
-			  echo "guardarRegistrar::General Error: The user could not be added.<br>".$e->getMessage();
-			  exit;
+				echo "guardarRegistrar::General Error: The user could not be added.<br>".$e->getMessage();
+				exit;
 			}
 		}
 
@@ -178,28 +178,28 @@
 				$sql->bindParam(':usuario', $this->usuario);
 				$sql->bindParam(':clave', $this->clave);
 				$sql->bindParam(':keyconfig', $this->keyconfig);
-				//var_dump($conexion->errorInfo());
-
+	//			var_dump($sql);
+//echo $this->usuario." ".$this->clave."".$this->keyconfig;
 				$sql->execute();
 				$resultado = $sql->fetchAll();
-
+//exit;
 				foreach ($resultado as $row) {
 					$this->codigoRespuesta 	= "00";
 					$this->mensajeRespuesta = "Usuario valido";
 					$this->perfil_id 		= $row["perfil_id"];
 					$this->nombres 			= $row["nombres"];
 					$this->apellidos 		= $row["apellidos"];
-					// echo $row["clave"];
+		
 				}
-			} catch (PDOException $e) {
-			  echo "<br>validaUsuario::DataBase Error: <br>".$e->getMessage();
-			  echo "<br>Error Code:<br> ".$e->getCode();
+			}catch (PDOException $e) {
+				echo "<br>validaUsuario::DataBase Error: <br>".$e->getMessage();
+				echo "<br>Error Code:<br> ".$e->getCode();
 			  //  var_dump($e->getMessage());
 				//var_dump($conexion->errorInfo());
-			  exit;
-			} catch (Exception $e) {
-			  echo "validaUsuario::General Error: The user could not be added.<br>".$e->getMessage();
-			  exit;
+				exit;
+			}catch (Exception $e) {
+				echo "validaUsuario::General Error: The user could not be added.<br>".$e->getMessage();
+				exit;
 			}
 		}else{
 			$this->codigoRespuesta = "99";
@@ -225,7 +225,7 @@
 			foreach ($resultado as $row) {
 				if($row["estados_perfil_id"] <> 1){
 					$this->codigoRespuesta 		= "22";
-					$this->mensajeRespuesta 	= "Peril Asignado no esta activo";
+					$this->mensajeRespuesta 	= "Perfil Asignado no esta activo";
 				}else{
 					$this->codigoRespuesta 		= "00";
 					$this->mensajeRespuesta 	= "Perfil Correcto";
@@ -234,13 +234,13 @@
 					// $this->estados_perfil_id 	= $row["estados_perfil_id"];
 				}
 			}
-		} catch (PDOException $e) {
-		  echo "<br>getPerfilUsuario::DataBase Error: <br>".$e->getMessage();
-		  echo "<br>Error Code:<br> ".$e->getCode();
-		  exit;
-		} catch (Exception $e) {
-		  echo "getPerfilUsuario::General Error: The user could not be added.<br>".$e->getMessage();
-		  exit;
+		}catch (PDOException $e) {
+			echo "<br>getPerfilUsuario::DataBase Error: <br>".$e->getMessage();
+			echo "<br>Error Code:<br> ".$e->getCode();
+			exit;
+		}catch (Exception $e) {
+			echo "getPerfilUsuario::General Error: The user could not be added.<br>".$e->getMessage();
+			exit;
 		}
 		$conexion = null;
 	}		
