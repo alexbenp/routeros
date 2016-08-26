@@ -13,14 +13,52 @@ $attempts = 3; // Connection attempt count
 $delay = 3; // Delay between connection attempts in seconds
 $timeout = 3; // Connection attempt timeout and data read timeout
 
+$ipRB			= $_SESSION["ip"]; //IP de tu RB.
+$Username		= $_SESSION["usuario"]; //Nombre de usuario con privilegios para acceder al RB
+$clave			= $_SESSION["clave"]; //Clave del usuario con privilegios
+$api_puerto		= $_SESSION["puerto"]; //Puerto que definimos el API en IP--->Services
+$attempts 		= $_SESSION["reintentos_conexion"]; // Connection attempt count
+$delay 			= $_SESSION["retraso_conexion"]; // Delay between connection attempts in seconds
+$timeout 		= $_SESSION["tiempo_maximo_conexion"]; // Connection attempt timeout and data read timeout
+
 
 $ROUTERS = new Routers($ipRB , $Username , $clave, $api_puerto, $attempts, $delay, $timeout);
 
 
-if ($action=="")    /* display the contact form */ 
+if ($action=="userRemove") 
 { 
+	$idborrado	=$_REQUEST['idborrado'];
+	$name		=$_REQUEST['name']; 
+	$password	=$_REQUEST['password']; 
+	$uptime		=$_REQUEST['uptime'];
+	$user_shared=$_REQUEST['user_shared'];
+	$comentario	=$_REQUEST['comentario'];
+	$rx			=$_REQUEST['rx']; 
+	$tx			=$_REQUEST['tx'];
+	if (($idborrado=="")) 
+	{ 
+		echo "Todos los campos son obligatorios, por favor completa <a href=\"\">el formulario</a> nuevamente.";
+	}else{
+		$userRemove = $ROUTERS->ipHotspotUserRemove($idborrado);
+		$mensajeRespuestaUserRemove = $ROUTERS->getMensajeRespuesta();
+		$codigoRespuestaUserRemove = $ROUTERS->getCodigoRespuesta();
+		// echo "<pre>";
+		// print_r($userRemove);
+		// echo "</pre>";
+
+	}
+}
+
 ?> 
 	<form class="contacto" id="contact_form" action="#" method="POST" enctype="multipart/form-data"> 
+		<div>
+			<label>
+<?php 		
+		if($mensajeRespuestaUserRemove!=''){
+			echo $codigoRespuestaUserRemove."::".$mensajeRespuestaUserRemove."<br><br>";
+		}
+?>
+			</label>
 		<div>
 			<label>Formulario para Eliminar los Usuarios<label>
 		</div>
@@ -29,7 +67,7 @@ if ($action=="")    /* display the contact form */
 			<input id="idborrado" class="input" name="idborrado" type="text" value="" size="2" /> 
 		</div> 
 		
-		<input type="hidden" name="action" value="submit"/>
+		<input type="hidden" name="action" value="userRemove"/>
 		<input id="submit_button" type="submit" value="Borrar Usuario" />
 		<input id="submit_button1" type="reset" value="Limpiar" />
 		<br /><br /><br />
@@ -68,27 +106,4 @@ if ($action=="")    /* display the contact form */
 
 ?>
     </form> 
-<?php 
-}else{ 
-	$idborrado	=$_REQUEST['idborrado'];
-	$name		=$_REQUEST['name']; 
-	$password	=$_REQUEST['password']; 
-	$uptime		=$_REQUEST['uptime'];
-	$user_shared=$_REQUEST['user_shared'];
-	$comentario	=$_REQUEST['comentario'];
-	$rx			=$_REQUEST['rx']; 
-	$tx			=$_REQUEST['tx'];
-	if (($idborrado=="")) 
-	{ 
-		echo "Todos los campos son obligatorios, por favor completa <a href=\"\">el formulario</a> nuevamente.";
-	}else{         
-		$remove = $ROUTERS->ipHotspotUserRemove($idborrado);
-		if($ROUTERS->getCodigoRespuesta() =='00'){
-	// print_r("");
-			echo "<br> ¡Usuario Borrado! ".$idborrado." Desea eliminar otro usuario haga click <a href=\"\">aquí</a>"; 	
-		}else{
-			echo $ROUTERS->mensajeRespuesta();
-		}
-	}
-}   
-?>
+

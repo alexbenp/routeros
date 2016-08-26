@@ -4,24 +4,83 @@ include("principal.php");
 //require_once ('clases/api.php'); //aqui incluimos la clase API para trabajar con ella
 require_once ('clases/Routers.php');
 $action=$_REQUEST['action']; 
+$profile=$_REQUEST['profile'];
 
-$ipRB="192.168.56.2"; //IP de tu RB.
-$Username="admin"; //Nombre de usuario con privilegios para acceder al RB
-$clave=""; //Clave del usuario con privilegios
-$api_puerto=8728; //Puerto que definimos el API en IP--->Services
-$attempts = 3; // Connection attempt count
-$delay = 3; // Delay between connection attempts in seconds
-$timeout = 3; // Connection attempt timeout and data read timeout
+// $ipRB="192.168.56.2"; //IP de tu RB.
+// $Username="admin"; //Nombre de usuario con privilegios para acceder al RB
+// $clave=""; //Clave del usuario con privilegios
+// $api_puerto=8728; //Puerto que definimos el API en IP--->Services
+// $attempts = 3; // Connection attempt count
+// $delay = 3; // Delay between connection attempts in seconds
+// $timeout = 3; // Connection attempt timeout and data read timeout
+
+$ipRB			= $_SESSION["ip"]; //IP de tu RB.
+$Username		= $_SESSION["usuario"]; //Nombre de usuario con privilegios para acceder al RB
+$clave			= $_SESSION["clave"]; //Clave del usuario con privilegios
+$api_puerto		= $_SESSION["puerto"]; //Puerto que definimos el API en IP--->Services
+$attempts 		= $_SESSION["reintentos_conexion"]; // Connection attempt count
+$delay 			= $_SESSION["retraso_conexion"]; // Delay between connection attempts in seconds
+$timeout 		= $_SESSION["tiempo_maximo_conexion"]; // Connection attempt timeout and data read timeout
 
 
 $ROUTERS = new Routers($ipRB , $Username , $clave, $api_puerto, $attempts, $delay, $timeout);
 
-if ($action=="")
+if ($action=="userAdd")
 {
+	
+	$name		=$_REQUEST['name']; 
+	$password	=$_REQUEST['password']; 
+	$uptime		=$_REQUEST['uptime'];
+	$user_shared=$_REQUEST['user_shared'];
+	$comentario	=$_REQUEST['comentario'];
+	$rx			=$_REQUEST['rx']; 
+	$tx			=$_REQUEST['tx'];
+
+	$profile_name	=$_REQUEST['profile_name']; 
+	$mac_uptime		=$_REQUEST['value_mac_uptime'].$_REQUEST['unid_mac_uptime'];
+
+	
+	if(empty($mac_uptime) ){
+		$add_mac_cookie = "no";
+	}else{
+		$add_mac_cookie = "yes";
+	}
+		
+	
+
+
+	
+	if (($name=="")||($password=="")||($user_shared=="")) 
+	{
+		echo "Todos los campos son obligatorios, por favor completa <a href=\"\">el formulario</a> nuevamente.";
+	}else{
+		$profileAdd = $ROUTERS->ipHotspotUserProfileAdd($profile_name,$user_shared,$rx,$tx,$add_mac_cookie,$mac_uptime);
+		$mensajeRespuestaProfileAdd = $ROUTERS->getMensajeRespuesta();
+		$codigoRespuestaProfileAdd = $ROUTERS->getCodigoRespuesta();
+		
+		// fin de crear perfil de usuario
+		$userAdd = $ROUTERS->ipHotspotUserAdd($name,$password,$uptime,$comentario,$profile_name);
+		$mensajeRespuestaUserAdd = $ROUTERS->getMensajeRespuesta();
+		$codigoRespuestaUserAdd = $ROUTERS->getCodigoRespuesta();
+
+	} 
+}
 ?> 
 	<form class="contacto" id="contact_form" action="#" method="POST" enctype="multipart/form-data"> 
 		<div>
-			<label> Pagina de prueba de creacion de Usuarios <label><br />
+			<label>
+<?php 		
+		if($mensajeRespuestaProfileAdd!=''){
+			echo $codigoRespuestaProfileAdd."::".$mensajeRespuestaProfileAdd."<br><br>";
+		}
+		if($mensajeRespuestaUserAdd!=''){
+			echo $codigoRespuestaUserAdd."::".$mensajeRespuestaUserAdd."<br><br>";
+		}
+?>
+			</label>
+		
+		<div>
+			<label> Creación de usuarios para RouterOS <label><br />
 		</div>
 		<div>
 			<label for="name">Usuario:</label>
@@ -31,16 +90,24 @@ if ($action=="")
 		</div> 
 		
 		<div>
-			<label for="uptime">Tiempo Navegacion</label>
-			<input id="uptime" class="input" name="uptime" type="text" value="01:00:00" size="6" />
+			<label for="profile_name">Nombre del Perfil</label>
+			<input id="profile_name" class="input" name="profile_name" type="text" value="" size="50" />
+			 <label for="uptime">Tiempo Navegacion</label>
+            <input id="uptime" class="input" name="uptime" type="text" value="01:00:00" size="6" />
 			<label for="user_shared"> Dispositivos a compartir:</label>
-			<input id="user_shared" class="input" name="user_shared" type="text" value="1" size="1" /><br /><br />
+			<input id="user_shared" class="input" name="user_shared" type="text" value="" size="1" />
+		</div>	
+		<div>
+			<label for="mac_uptime">Vigencia </label>
+			<input id="value_mac_uptime" name="value_mac_uptime" type="text" value="" size="10" />
+			<input id="unid_mac_uptime" name="unid_mac_uptime" type="text" value="" size="1" />
 		</div>
 		<div>
+			<label for="uptime">Velocidad de Navegacion</label>
 			<label for="rx"> BW RX (kbps):</label>
-			<input id="rx" class="input" name="rx" type="text" value="512" size="10" />
+			<input id="rx" class="input" name="rx" type="text" value="" size="10" />
 			<label for="tx"> BW TX (kbps):</label>
-			<input id="tx" class="input" name="tx" type="text" value="512" size="10" /><br /><br />
+			<input id="tx" class="input" name="tx" type="text" value="" size="10" /><br />
 		</div>
 
 
@@ -49,7 +116,7 @@ if ($action=="")
 			<textarea id="comentario" class="input" name="comentario" rows="3" cols="30"></textarea><br /><br />
 		</div>
 	<br>
-		<input type="hidden" name="action" value="submit"/>
+		<input type="hidden" name="action" value="userAdd"/>
 		<input id="submit_button" type="submit" value="Crear Usuario" />
 
 		<input id="submit_button1" type="reset" value="Limpiar" />
@@ -85,31 +152,4 @@ if ($action=="")
 	}
 	echo "</table>";	
 ?>
-
     </form> 
-<?php 
-}else{ 
-
-	$name		=$_REQUEST['name']; 
-	$password	=$_REQUEST['password']; 
-	$uptime		=$_REQUEST['uptime'];
-	$user_shared=$_REQUEST['user_shared'];
-	$comentario	=$_REQUEST['comentario'];
-	$rx			=$_REQUEST['rx']; 
-	$tx			=$_REQUEST['tx'];
-	if (($name=="")||($password=="")||($user_shared=="")) 
-	{
-		echo "Todos los campos son obligatorios, por favor completa <a href=\"\">el formulario</a> nuevamente.";
-	}else{
-		$info = $ROUTERS->ipHotspotUserProfileAdd($user_shared,$rx,$tx);
-
-		// fin de crear perfil de usuario
-		$crea_usuario = $ROUTERS->ipHotspotUserAdd($name,$password,$uptime,$comentario,$user_shared,$rx,$tx);
-		if($ROUTERS->getCodigoRespuesta() =='00'){
-			echo " ¡Usuario Creado! ".$name." Desea crear otro usuario haga click <a href=\"\">aquí</a>"; 	
-		}else{
-			echo $ROUTERS->mensajeRespuesta();
-		}
-	} 
-}   
-?>

@@ -47,7 +47,7 @@ class Routers extends routeros_api {
 		return $this->estados_router_id;
 	}	
 	
-	public function __construct($iprouter, $usuariorouter, $claverouter, $puertorouter, $attemptsrouter, $delayrouter, $timeoutrouter){
+	public function __construct($iprouter = null, $usuariorouter=null, $claverouter=null, $puertorouter=null, $attemptsrouter=null, $delayrouter=null, $timeoutrouter=null){
 		$this->iprouter			= $iprouter;
 		$this->usuariorouter	= $usuariorouter;
 		$this->claverouter		= $claverouter;
@@ -96,25 +96,45 @@ class Routers extends routeros_api {
 			$this->mensajeRespuesta = "ipHotspotUserProfileGetall::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
 		}
 	}
-	public function ipHotspotUserProfileAdd($user_shared,$rx,$tx){
+	public function ipHotspotUserProfileAdd($profile_name,$user_shared,$rx,$tx,$add_mac_cookie,$mac_uptime){
 		if ($this->connect($this->iprouter , $this->usuariorouter , $this->claverouter, $this->puertorouter, $this->attemptsrouter, $this->delayrouter, $this->timeoutrouter)) {
-			$this->comm("/ip/hotspot/user/profile/add",array("name" => $user_shared."u.".$rx."k.".$tx."k","rate-limit" => $rx."k/".$tx."k","shared-users" => $user_shared)); //Enviamos el comando y el true que significa enter
-			echo "Perfil creado ".$user_shared."u.".$rx."k.".$tx."k";
+			$resultado = $this->comm("/ip/hotspot/user/profile/add",array("name" => $profile_name,"shared-users" => $user_shared,"rate-limit" => $rx."k/".$tx."k","add-mac-cookie" => $add_mac_cookie,"mac-cookie-timeout" => $mac_uptime));
 			$this->disconnect();
-			$this->codigoRespuesta = "00";
-			$this->mensajeRespuesta = "Registro Exitoso Perfil";
+			// echo "<br>asasd <br><pre>";
+			// print_r($resultado);
+			// echo "</pre>";
+			if(is_array($resultado)){
+				$mensaje = $resultado['!trap'][0]['message'];	
+			}
+			if(!empty($mensaje)){
+				$this->codigoRespuesta = "21";	
+				$this->mensajeRespuesta = "Error Registro Perfil:".$mensaje;
+			}else{
+				$this->codigoRespuesta = "00";
+				$this->mensajeRespuesta = "Registro Exitoso Perfil";
+			}
+			return $resultado;
 		}else{
 			$this->codigoRespuesta = "30";
 			$this->mensajeRespuesta = "ipHotspotUserProfileAdd::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
 		}
 	}
-	public function ipHotspotUserAdd($name,$password,$uptime,$comentario,$user_shared,$rx,$tx){
+	
+	public function ipHotspotUserAdd($name,$password,$uptime,$comentario,$profile_name){
 		if ($this->connect($this->iprouter , $this->usuariorouter , $this->claverouter, $this->puertorouter, $this->attemptsrouter, $this->delayrouter, $this->timeoutrouter)) {
-		$this->comm("/ip/hotspot/user/add",array("name" => $name,"password" => $password,"limit-uptime" => $uptime,"comment" => $comentario,"profile" => $user_shared."u.".$rx."k.".$tx."k" )); //Enviamos el comando y el true que significa enter
-			echo "Usuario creado ".$name."u.".$rx."k.".$tx."k";
+			$resultado = $this->comm("/ip/hotspot/user/add",array("name" => $name,"password" => $password,"limit-uptime" => $uptime,"comment" => $comentario,"profile" => $profile_name)); 
 			$this->disconnect();
-			$this->codigoRespuesta = "00";
-			$this->mensajeRespuesta = "Registro Exitoso Usuario";
+			if(is_array($resultado)){
+				$mensaje = $resultado['!trap'][0]['message'];	
+			}
+			if(!empty($mensaje)){
+				$this->codigoRespuesta = "31";	
+				$this->mensajeRespuesta = "Error Registro Usuario:".$mensaje;
+			}else{
+				$this->codigoRespuesta = "00";
+				$this->mensajeRespuesta = "Registro Exitoso Usuario";
+			}
+			return $resultado;
 		}else{
 			$this->codigoRespuesta = "40";
 			$this->mensajeRespuesta = "ipHotspotUserAdd::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
@@ -147,48 +167,83 @@ class Routers extends routeros_api {
 			$this->write('/ip/hotspot/user/remove', false); //Enviamos el comando y el true que significa enter
 			$this->write('=.id='.$idborrado);
 			$READ = $this->read(false);
-			$info = $this->parse_response($READ);
-			
+			$resultado = $this->parse_response($READ);
 			$this->disconnect();
-			$this->codigoRespuesta = "00";
-			$this->mensajeRespuesta = "Registro Eliminado";
-			return $info;
+
+			if(is_array($resultado)){
+				$mensaje = $resultado['!trap'][0]['message'];	
+			}
+			if(!empty($mensaje)){
+				$this->codigoRespuesta = "51";	
+				$this->mensajeRespuesta = "Error Eliminando Usuario:".$mensaje;
+			}elseif(empty($resultado)){
+				$this->codigoRespuesta = "53";	
+				$this->mensajeRespuesta = "Error Usuario no encontrado:".$mensaje;
+			}else{
+				$this->codigoRespuesta = "00";
+				$this->mensajeRespuesta = "Usuario Eliminado Exitosamente";
+			}
+			return $resultado;
 		}else{
 			$this->codigoRespuesta = "60";
 			$this->mensajeRespuesta = "ipHotspotUserRemove::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
 		}
 	}
-
-	public function getInformacionAdminRouter($estados_router_id){
-		$this->estados_router_id = $estados_router_id;
-		$conexion = new Conexion();
-		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-		try {
-			$this->codigoRespuesta = "60";
-			$this->mensajeRespuesta = "Router: ";
-			if($this->estados_router_id > 0){
-				$sql = $conexion->prepare('SELECT * FROM routers r INNER JOIN estados_router er ON (r.estados_router_id = er.estados_router_id) WHERE r.estados_router_id = :estados_router_id');
-				$sql->bindParam(':estados_router_id', $this->estados_router_id);
-			}else{
-				$sql = $conexion->prepare('SELECT * FROM routers INNER JOIN estados_router er ON (r.estados_router_id = er.estados_router_id)');
-				$sql->bindParam(':estados_router_id', $this->estados_router_id);				
+	
+	public function ipHotspotUserProfileRemove($idborrado){
+		if ($this->connect($this->iprouter , $this->usuariorouter , $this->claverouter, $this->puertorouter, $this->attemptsrouter, $this->delayrouter, $this->timeoutrouter)) {
+			$this->write('/ip/hotspot/user/profile/remove', false); //Enviamos el comando y el true que significa enter
+			$this->write('=.id='.$idborrado);
+			$READ = $this->read(false);
+			$resultado = $this->parse_response($READ);
+			$this->disconnect();
+			if(is_array($resultado)){
+				$mensaje = $resultado['!trap'][0]['message'];	
 			}
-			$sql->execute();
-			$resultado = $sql->fetchAll();
-			
+			if(!empty($mensaje)){
+				$this->codigoRespuesta = "61";	
+				$this->mensajeRespuesta = "Error Eliminando Perfil:".$mensaje;
+			}else{
+				$this->codigoRespuesta = "00";
+				$this->mensajeRespuesta = "Perfil Eliminado Exitosamente";
+			}
 			return $resultado;
-
-		}catch (PDOException $e) {
-			echo "<br>getInformacionAdminRouter::DataBase Error: <br>".$e->getMessage();
-			echo "<br>Error Code:<br> ".$e->getCode();
-			exit;
-		}catch (Exception $e) {
-			echo "getInformacionAdminRouter::General Error: The user could not be added.<br>".$e->getMessage();
-			exit;
+		}else{
+			$this->codigoRespuesta = "70";
+			$this->mensajeRespuesta = "ipHotspotUserProfileRemove::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
 		}
-		$conexion = null;
 	}
+
+	// public function getInformacionAdminRouter($estados_router_id){
+		// $this->estados_router_id = $estados_router_id;
+		// $conexion = new Conexion();
+		// $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		// $conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		// try {
+			// $this->codigoRespuesta = "60";
+			// $this->mensajeRespuesta = "Router: ";
+			// if($this->estados_router_id > 0){
+				// $sql = $conexion->prepare('SELECT * FROM routers r INNER JOIN estados_router er ON (r.estados_router_id = er.estados_router_id) WHERE r.estados_router_id = :estados_router_id');
+				// $sql->bindParam(':estados_router_id', $this->estados_router_id);
+			// }else{
+				// $sql = $conexion->prepare('SELECT * FROM routers INNER JOIN estados_router er ON (r.estados_router_id = er.estados_router_id)');
+				// $sql->bindParam(':estados_router_id', $this->estados_router_id);				
+			// }
+			// $sql->execute();
+			// $resultado = $sql->fetchAll();
+			
+			// return $resultado;
+
+		// }catch (PDOException $e) {
+			// echo "<br>getInformacionAdminRouter::DataBase Error: <br>".$e->getMessage();
+			// echo "<br>Error Code:<br> ".$e->getCode();
+			// exit;
+		// }catch (Exception $e) {
+			// echo "getInformacionAdminRouter::General Error: The user could not be added.<br>".$e->getMessage();
+			// exit;
+		// }
+		// $conexion = null;
+	// }
 }
 	  
  

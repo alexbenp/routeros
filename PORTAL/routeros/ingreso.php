@@ -1,8 +1,8 @@
 <?php
 $message = "";
 
-if($_POST)
-{
+ if($_POST)
+ {
 	
 	
 	$p_usuario_id = "";
@@ -85,5 +85,5 @@ if($_POST)
 	 $message = "Los campos de Usuario y Clave son Requeridos";
 	// echo $message;
 	}
-}
+ }
 ?>
