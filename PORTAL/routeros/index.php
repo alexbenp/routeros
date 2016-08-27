@@ -2,7 +2,7 @@
 <head>
 <meta charset="utf-8">
 <title>Portal Routeros</title>
-<link href="estilos/ingreso.css" rel="stylesheet" type="text/css">
+<link href="css/ingreso.css" rel="stylesheet" type="text/css">
 </head>
 
  <div class="container mlogin">

@@ -5,9 +5,11 @@ error_reporting(E_ALL ^ E_NOTICE);
 <head>
 <title>Portal RouterOS</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-<link href="estilos/ingreso.css" rel="stylesheet" type="text/css">
-<link href="estilos/menu.css" rel="stylesheet" type="text/css">
-<link href="estilos/formulario.css" rel="stylesheet" type="text/css">
+<!--<link href="css/ingreso.css" rel="stylesheet" type="text/css"> -->
+<!--<link href="css/menu.css" rel="stylesheet" type="text/css"> -->
+<!--<link href="css/formulario.css" rel="stylesheet" type="text/css"> -->
+<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
 </head>
 <body> 
 <?php 			 
