@@ -6,36 +6,57 @@ error_reporting(E_ALL ^ E_NOTICE);
 <title>Portal RouterOS</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 <!--<link href="css/ingreso.css" rel="stylesheet" type="text/css"> -->
-<!--<link href="css/menu.css" rel="stylesheet" type="text/css"> -->
+<!--<link href="css/menu.css" rel="stylesheet" type="text/css">  -->
 <!--<link href="css/formulario.css" rel="stylesheet" type="text/css"> -->
-<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+<!--<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"> -->
+<!--<link href="css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"> -->
+
+
+<!-- Versión compilada y comprimida del CSS de Bootstrap -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+ 
+<!-- Tema opcional -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+
+
 </head>
 <body> 
+
+<script src="https://code.jquery.com/jquery.js"></script>
+
+<!-- Versión compilada y comprimida del JavaScript de Bootstrap -->
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+
 <?php 			 
 $cierra_linea = "";
-	echo "<div id=\"header\">";
-		echo "<ul class=\"nav\">";
+	echo "<div id=\"collapse navbar-collapse navbar-ex1-collapse\">";
+		echo "<ul class=\"nav nav-tabs\">";
 	
 	$menus = $_SESSION['menuPerfil'];
 	foreach($menus as $llave=>$elmento){
 		$menu_nombre = $menus[$llave]["menu"];
 		$link = $menus[$llave]["ruta_url"];
 		$submenu = $menus[$llave]["submenu"];
-		echo "<li><a href=\"".$link."\">".$menu_nombre."</a>";
-		foreach($submenu as $key=>$item){
-			$submenu_nombre = $submenu[$key]["menu"];
-			$link = $submenu[$key]["ruta_url"];
-			if($key == 0){
-				$cierra_linea = true;
-				echo "<ul>";
+		if(empty($link)){
+			echo "<li class=\"dropdown\">
+					<a href=\"".$link."\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">".$menu_nombre."<b class=\"caret\"></b></a>";
+			foreach($submenu as $key=>$item){
+				$submenu_nombre = $submenu[$key]["menu"];
+				$link = $submenu[$key]["ruta_url"];
+				if($key == 0){
+					$cierra_linea = true;
+					echo "<ul  class=\"dropdown-menu\">";
+				}
+				echo "<li><a href=\"".$link."\"> ".$submenu_nombre." </a></li>";
 			}
-			echo "<li><a href=\"".$link."\"> ".$submenu_nombre." </a></li>";
-		}
 			echo "</li>";
-		if($cierra_linea == true){
-			echo "</ul>";
-			$cierra_linea = false;
+			if($cierra_linea == true){
+				echo "</ul>";
+				$cierra_linea = false;
+			}
+		}else{
+			 echo "<li><a href=\"".$link."\"> ".$menu_nombre." </a></li>";
 		}
 	 }
 		echo "</ul>";

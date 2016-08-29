@@ -65,45 +65,50 @@ if ($action=="userRemove")
 		<div> 
 			<label>Ingrese ID usuario a Borrar:</label>
 			<input id="idborrado" class="input" name="idborrado" type="text" value="" size="2" /> 
+			<input type="hidden" name="action" value="userRemove"/>
+			<input id="submit_button" class="btn btn-primary" type="submit" value="Borrar Usuario" />
 		</div> 
 		
-		<input type="hidden" name="action" value="userRemove"/>
-		<input id="submit_button" type="submit" value="Borrar Usuario" />
-		<input id="submit_button1" type="reset" value="Limpiar" />
+
 		<br /><br /><br />
+		
+	 </form> 	
 
-<?php 
-	$first = $ROUTERS->systemResourcePrint();
+<div class="container">
+  <div class="">
+    <h1>Usuarios RouterOS</h1>
+  </div>
+<form id="Usuarios" action="#" method="post">
+  <table class="table table-hover" id="tabla">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Nombre</th>
+        <th>Tiempo</th>
+        <th>Comentarios</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
 
-	echo "<div><label>Mikrotik RouterOs 4.16 Resources</label></div>";
-	echo "<table width=500 border=0 align=center>";
-	echo "<tr><td>Platform, board name and Ros version is:</td><td>" . $first['platform'] . " - " . $first['board-name'] . " - "  . $first['version'] . " - " . $first['architecture-name'] . "</td></tr>";
-	echo "<tr><td>Cpu and available cores:</td><td>" . $first['cpu'] . " at " . $first['cpu-frequency'] . " Mhz with " . $first['cpu-count'] . " core(s) "  . "</td></tr>";
-	echo "<tr><td>Uptime is:</td><td>" . $first['uptime'] . " (hh/mm/ss)" . "</td></tr><br />";
-	echo "<tr><td>Cpu Load is:</td><td>" . $first['cpu-load'] . " %" . "</td></tr><br />";
-	echo "<tr><td>Total,free memory and memory % is:</td><td>" . $first['total-memory'] . "Kb - " . $first['free-memory'] . "Kb - " . number_format($first['mem'],3) . "% </td></tr>";
-	echo "<tr><td>Total,free disk and disk % is:</td><td>" . $first['total-hdd-space'] . "Kb - " . $first['free-hdd-space'] . "Kb - " . number_format($first['hdd'],3) . "% </td></tr>";
-	echo "<tr><td>Sectors (write,since reboot,bad blocks):</td><td>" . $first['write-sect-total'] . " - " . $first['write-sect-since-reboot'] . " - " . $first['bad-blocks'] . "% </td></tr>";
-	echo "</table>";
-
+<?php 		
 	$info = $ROUTERS->ipHotspotUserGetall();
 
-	echo "<br><div><label> Usuarios creados a la fecha</label></div> ";
-	echo "<table>";
 	foreach ($info as $i => $value) {
 		$valor=$info[$i];
-		echo "<tr><td> ".$valor['.id']." ".$valor['name']." tiempo actual:".$valor['uptime']."</td></tr>";
+		echo 
+		'<tr>
+			<td>'.$valor['.id'].'</td>
+			<td>'.$valor['name'].'</td>
+			<td>'.$valor['uptime'].'</td>
+			<td>'.$valor['comment'].'</td>
+		</tr>';
 	}
-	echo "</table>";
-	echo "<table>";
-	$info = $ROUTERS->ipHotspotUserProfileGetall();
-	echo "<br /><br /><div><label> Perfiles de Usuarios creados a la fecha</label></div>";
-	foreach ($info as $i => $value) {
-		$valor=$info[$i];
-		echo "<tr><td> ".$valor['.id']." ".$valor['name']." Dispositivos:  ".$valor['shared-users']." Rate: ".$valor['rate-limit']."</td></tr>";
-	}
-	echo "</table>";
 
 ?>
-    </form> 
+    </tbody>
+  </table>
+ </form>
+
+
 

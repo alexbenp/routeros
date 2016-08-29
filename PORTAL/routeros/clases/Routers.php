@@ -122,7 +122,7 @@ class Routers extends routeros_api {
 	
 	public function ipHotspotUserAdd($name,$password,$uptime,$comentario,$profile_name){
 		if ($this->connect($this->iprouter , $this->usuariorouter , $this->claverouter, $this->puertorouter, $this->attemptsrouter, $this->delayrouter, $this->timeoutrouter)) {
-			$resultado = $this->comm("/ip/hotspot/user/add",array("name" => $name,"password" => $password,"limit-uptime" => $uptime,"comment" => $comentario,"profile" => $profile_name)); 
+			$resultado = $this->comm("/ip/hotspot/user/add",array("name" => $name,"password" => $password,"limit-uptime" => $uptime,"comment" => $comentario)); 
 			$this->disconnect();
 			if(is_array($resultado)){
 				$mensaje = $resultado['!trap'][0]['message'];	
@@ -176,9 +176,9 @@ class Routers extends routeros_api {
 			if(!empty($mensaje)){
 				$this->codigoRespuesta = "51";	
 				$this->mensajeRespuesta = "Error Eliminando Usuario:".$mensaje;
-			}elseif(empty($resultado)){
-				$this->codigoRespuesta = "53";	
-				$this->mensajeRespuesta = "Error Usuario no encontrado:".$mensaje;
+			// }elseif(empty($resultado)){
+				// $this->codigoRespuesta = "53";	
+				// $this->mensajeRespuesta = "Error Usuario no encontrado:".$mensaje;
 			}else{
 				$this->codigoRespuesta = "00";
 				$this->mensajeRespuesta = "Usuario Eliminado Exitosamente";

@@ -3,7 +3,9 @@ include("control.php");
 require_once("principal.php");
 //require_once ('clases/api.php'); //aqui incluimos la clase API para trabajar con ella
 require_once ('clases/RouterDb.php');
+require_once ('clases/Routers.php');
 $router=$_REQUEST['router']; 
+$action=$_REQUEST['action']; 
 $estados_router_id = 1;
 
 
@@ -13,10 +15,22 @@ $estados_router_id = 1;
 $ADMROUTERS = new RoutersDb($router);
 $AdminRouters = $ADMROUTERS->getParametrosRouter($estados_router_id);
 
-echo "<pre>";
-print_r($AdminRouters);
-echo "</pre>";
-echo "kjhkjh".$router;
+$ipRB			= $_SESSION["ip"]; //IP de tu RB.
+$Username		= $_SESSION["usuario"]; //Nombre de usuario con privilegios para acceder al RB
+$clave			= $_SESSION["clave"]; //Clave del usuario con privilegios
+$api_puerto		= $_SESSION["puerto"]; //Puerto que definimos el API en IP--->Services
+$attempts 		= $_SESSION["reintentos_conexion"]; // Connection attempt count
+$delay 			= $_SESSION["retraso_conexion"]; // Delay between connection attempts in seconds
+$timeout 		= $_SESSION["tiempo_maximo_conexion"]; // Connection attempt timeout and data read timeout
+
+
+$ROUTERS = new Routers($ipRB , $Username , $clave, $api_puerto, $attempts, $delay, $timeout);
+
+
+// echo "<pre>";
+// print_r($AdminRouters);
+// echo "</pre>";
+// echo "kjhkjh".$router;
 $_SESSION["ip"] 	= $AdminRouters[0]['ip'];
 $_SESSION["usuario"] 	= $AdminRouters[0]['usuario'];
 $_SESSION["clave"] 	=   ""; //$AdminRouters[0]['usuario'];
@@ -28,10 +42,10 @@ $_SESSION["tiempo_maximo_conexion"] 	= $AdminRouters[0]['tiempo_maximo_conexion'
 	<form class="contacto" id="configura_router" action="#" method="POST" enctype="multipart/form-data"> 
 	
 		<div>
-			<label> Seleccion de Routers Para Administrar <label><br />
+			<label> Seleccion de Router Para Administrar <label><br />
 		</div>
 		
-		<table border=1>
+		<table class="table table-hover">
 			<tr>
 				<td><label>Usar</label></td>
 				<td><label>IdRouter</label></td>
@@ -39,7 +53,6 @@ $_SESSION["tiempo_maximo_conexion"] 	= $AdminRouters[0]['tiempo_maximo_conexion'
 				<td><label>IP</label></td>
 				<td><label>Puerto</label></td>
 				<td><label>Version</label></td>
-				<td><label>Usar</label></td>
 			</tr>
 <?php
 		foreach($AdminRouters as $llave=>$elmento){
@@ -63,11 +76,26 @@ $_SESSION["tiempo_maximo_conexion"] 	= $AdminRouters[0]['tiempo_maximo_conexion'
 			echo "<td><label>".$ipRouter."</label></td>";
 			echo "<td><label>".$puertoRouter."</label></td>";
 			echo "<td><label>".$versionRouter."</label></td>";
-			echo "<td><label>boton</label></td>";
 			echo "<tr>";
 		}			
 ?>
 		</table>
+	</form>
 <?php 
+if(!empty($router)){
+	
 
+	$first = $ROUTERS->systemResourcePrint();
+
+	echo "<div><label>Mikrotik RouterOs 4.16 Resources</label></div>";
+	echo "<table class=\"table table-hover\" width=500 border=0 align=center>";
+	echo "<tr><td>Platform, board name and Ros version is:</td><td>" . $first['platform'] . " - " . $first['board-name'] . " - "  . $first['version'] . " - " . $first['architecture-name'] . "</td></tr>";
+	echo "<tr><td>Cpu and available cores:</td><td>" . $first['cpu'] . " at " . $first['cpu-frequency'] . " Mhz with " . $first['cpu-count'] . " core(s) "  . "</td></tr>";
+	echo "<tr><td>Uptime is:</td><td>" . $first['uptime'] . " (hh/mm/ss)" . "</td></tr><br />";
+	echo "<tr><td>Cpu Load is:</td><td>" . $first['cpu-load'] . " %" . "</td></tr><br />";
+	echo "<tr><td>Total,free memory and memory % is:</td><td>" . $first['total-memory'] . "Kb - " . $first['free-memory'] . "Kb - " . number_format($first['mem'],3) . "% </td></tr>";
+	echo "<tr><td>Total,free disk and disk % is:</td><td>" . $first['total-hdd-space'] . "Kb - " . $first['free-hdd-space'] . "Kb - " . number_format($first['hdd'],3) . "% </td></tr>";
+	echo "<tr><td>Sectors (write,since reboot,bad blocks):</td><td>" . $first['write-sect-total'] . " - " . $first['write-sect-since-reboot'] . " - " . $first['bad-blocks'] . "% </td></tr>";
+	echo "</table>";
+}
 ?>

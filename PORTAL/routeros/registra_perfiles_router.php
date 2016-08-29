@@ -52,6 +52,8 @@ if ($action=="profileAdd")
 		$mensajeRespuestaProfileAdd = $ROUTERS->getMensajeRespuesta();
 		$codigoRespuestaProfileAdd = $ROUTERS->getCodigoRespuesta();
 	}
+	echo "alert('alex');"
+	exit();
 }elseif($action=="profileDel"){
 	
 	$profileRemove = $ROUTERS->ipHotspotUserProfileRemove($profile);

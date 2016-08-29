@@ -20,7 +20,7 @@ class RoutersDb {
 				$sql = $conexion->prepare('SELECT * FROM routers r INNER JOIN estados_router er ON (r.estados_router_id = er.estados_router_id) WHERE r.router_id = :router_id');
 				$sql->bindParam(':router_id', $this->router_id);
 			}elseif(!is_null($this->estados_router_id)){
-				echo "entra qui".$this->estados_router_id;
+				//echo "entra qui".$this->estados_router_id;
 				$sql = $conexion->prepare('SELECT * FROM routers r INNER JOIN estados_router er ON (r.estados_router_id = er.estados_router_id) WHERE r.estados_router_id = :estados_router_id');
 				$sql->bindParam(':estados_router_id', $this->estados_router_id);
 			}else{
