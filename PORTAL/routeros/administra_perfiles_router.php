@@ -116,10 +116,9 @@ $info = $ROUTERS->ipHotspotUserProfileGetall();
 			<th width=10></th>
 			<th width=50>Perfil</th>
 			<th width=200>Dispositivos</th>
-			<th width=100>Vigencia</th>
-			<th width=200></th>
+			<th width=100 colspan=2>Vigencia</th>
 			<th width=200>Velocidad RX</th>
-			<th width=200>Velocidad TX</th>
+			<th>Velocidad TX</th>
 			<th>&nbsp </th>
 		  </tr>
 		</thead>
