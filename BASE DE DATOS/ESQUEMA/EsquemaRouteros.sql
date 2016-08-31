@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `routeros` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
 USE `routeros`;
--- MySQL dump 10.13  Distrib 5.7.12, for Win32 (AMD64)
+-- MySQL dump 10.13  Distrib 5.6.24, for Win32 (x86)
 --
 -- Host: localhost    Database: routeros
 -- ------------------------------------------------------
--- Server version	5.7.14-log
+-- Server version	5.6.26-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -189,7 +189,7 @@ CREATE TABLE `menus` (
   KEY `submenu_idfk_idx` (`submenu_id`),
   CONSTRAINT `estados_menu_idfk` FOREIGN KEY (`estados_menu_id`) REFERENCES `estados_menu` (`estados_menu_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `submenu_idfk` FOREIGN KEY (`submenu_id`) REFERENCES `menus` (`menu_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Presenta los Menus que puede tener la aplicacion';
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Presenta los Menus que puede tener la aplicacion';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -198,7 +198,7 @@ CREATE TABLE `menus` (
 
 LOCK TABLES `menus` WRITE;
 /*!40000 ALTER TABLE `menus` DISABLE KEYS */;
-INSERT INTO `menus` VALUES (1,1,NULL,'Inicio','configuracion_router.php',1,'2016-08-22 04:50:17',1),(2,1,NULL,'Usuarios',NULL,2,'2016-08-22 04:50:17',1),(3,1,NULL,'Perfiles',NULL,3,'2016-08-22 04:50:17',1),(4,1,NULL,'Administraci√≥n',NULL,4,'2016-08-22 04:50:17',1),(5,1,NULL,'Salir','salir.php',5,'2016-08-22 04:50:17',1),(6,2,2,'Registar Usuarios','registra_usuarios_router.php',1,'2016-08-22 05:00:17',1),(7,2,2,'Consultar Usuarios',NULL,2,'2016-08-22 05:00:17',1),(8,2,2,'Eliminar Usuarios','elimina_usuarios_router.php',3,'2016-08-22 05:00:17',1),(9,2,3,'Crear Perfiles','registra_perfiles_router.php',1,'2016-08-26 01:27:40',1);
+INSERT INTO `menus` VALUES (1,1,NULL,'Inicio','configuracion_router.php',1,'2016-08-22 04:50:17',1),(2,1,NULL,'Usuarios',NULL,2,'2016-08-22 04:50:17',1),(3,1,NULL,'Perfiles',NULL,3,'2016-08-22 04:50:17',1),(4,1,NULL,'Administraci√≥n',NULL,4,'2016-08-22 04:50:17',1),(5,1,NULL,'Salir','salir.php',5,'2016-08-22 04:50:17',1),(6,2,2,'Registar Usuarios','registra_usuarios_router.php',1,'2016-08-22 05:00:17',1),(7,2,2,'Consultar Usuarios','consulta_usuarios_router.php',2,'2016-08-22 05:00:17',1),(8,2,2,'Eliminar Usuarios','elimina_usuarios_router.php',3,'2016-08-22 05:00:17',1),(9,2,3,'Crear Perfiles','administra_perfiles_router.php',1,'2016-08-26 01:27:40',1),(10,2,4,'Auditor√≠a Router','auditoria_eventos_router.php',1,'2016-08-30 23:30:30',1),(11,2,4,'Historial Eventos','historial_eventos_router.php',2,'2016-08-31 01:00:00',1);
 /*!40000 ALTER TABLE `menus` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -220,7 +220,7 @@ CREATE TABLE `menus_perfil` (
   KEY `pagina_id` (`menu_id`),
   KEY `estados_menu_perfil_idfk_idx` (`estados_menu_id`),
   CONSTRAINT `estados_menu_perfil_idfk` FOREIGN KEY (`estados_menu_id`) REFERENCES `estados_menu` (`estados_menu_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -229,7 +229,7 @@ CREATE TABLE `menus_perfil` (
 
 LOCK TABLES `menus_perfil` WRITE;
 /*!40000 ALTER TABLE `menus_perfil` DISABLE KEYS */;
-INSERT INTO `menus_perfil` VALUES (1,1,1,1,1),(2,2,1,1,0),(3,3,1,1,0),(4,4,1,1,0),(5,5,1,1,0),(6,6,1,1,0),(7,7,1,1,0),(8,8,1,1,0),(9,1,2,1,0),(10,2,2,1,0),(11,5,2,1,0),(12,7,2,1,0),(13,9,1,1,0);
+INSERT INTO `menus_perfil` VALUES (1,1,1,1,1),(2,2,1,1,0),(3,3,1,1,0),(4,4,1,1,0),(5,5,1,1,0),(6,6,1,1,0),(7,7,1,1,0),(8,8,1,1,0),(9,1,2,1,0),(10,2,2,1,0),(11,5,2,1,0),(12,7,2,1,0),(13,9,1,1,0),(14,10,1,1,0),(15,11,1,1,0);
 /*!40000 ALTER TABLE `menus_perfil` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -313,7 +313,7 @@ CREATE TABLE `routers` (
   PRIMARY KEY (`router_id`),
   KEY `estados_router_idfk_idx` (`estados_router_id`),
   CONSTRAINT `estados_router_idfk` FOREIGN KEY (`estados_router_id`) REFERENCES `estados_router` (`estados_router_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -322,7 +322,7 @@ CREATE TABLE `routers` (
 
 LOCK TABLES `routers` WRITE;
 /*!40000 ALTER TABLE `routers` DISABLE KEYS */;
-INSERT INTO `routers` VALUES (1,'Rounter Development','6.36','192.168.56.2','8728','admin','÷ü‘É7 ≈ëœÆ∑µà∆õ',1,'2016-08-23 18:03:22','3','3','3');
+INSERT INTO `routers` VALUES (1,'Rounter Development','6.36','192.168.56.2','8728','admin','2sNQ⁄9Á≥·—ù®R≈õB',1,'2016-08-23 18:03:22','3','3','3'),(2,'Rounter QA','6.36','186.155.37.179','8728','admin','BLÖ7ÀPΩ=l˘¿Ã›†',2,'2016-08-23 23:03:22','3','3','3');
 /*!40000 ALTER TABLE `routers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -361,7 +361,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'ADMIN',NULL,'ADMINISTRADOR','ADMIN','PORTAL WEB','TELEFONO',1,'2016-08-22 04:30:18','˜n<+A¶¨\Ìyîfy\ŒV','corre@portalrouteros.com',1),(2,'USUARIO',NULL,'NOMBRE USUARIO','APELLIDO USUARIO','PORTAL ROUTEROS','TELEFONO',1,'2016-08-23 05:26:06','˜n<+A¶¨\Ìyîfy\ŒV','usuario@portalrouteros.com',2);
+INSERT INTO `usuarios` VALUES (1,'ADMIN',NULL,'ADMINISTRADOR','ADMIN','PORTAL WEB','TELEFONO',1,'2016-08-22 04:30:18','˜n<+A¶¨ÌyîfyŒV','corre@portalrouteros.com',1),(2,'USUARIO',NULL,'NOMBRE USUARIO','APELLIDO USUARIO','PORTAL ROUTEROS','TELEFONO',1,'2016-08-23 05:26:06','˜n<+A¶¨ÌyîfyŒV','usuario@portalrouteros.com',2);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -382,6 +382,5 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-26  2:55:17
-
+-- Dump completed on 2016-08-30 20:01:03
 UPDATE usuarios SET clave = aes_encrypt('clave','$UjhY&743*#4#r1+u38s') WHERE usuario_id IN (1,2);
