@@ -144,9 +144,9 @@ class Routers extends routeros_api {
 	public function systemResourcePrint(){
 		if ($this->connect($this->iprouter , $this->usuariorouter , $this->claverouter, $this->puertorouter, $this->attemptsrouter, $this->delayrouter, $this->timeoutrouter)) {
 			$ARRAY = $this->comm("/system/resource/print");
-			echo "<pre>";
-			print_r($ARRAY);
-			echo "</pre>";
+			// echo "<pre>";
+			// print_r($ARRAY);
+			// echo "</pre>";
 			$info = $ARRAY['0'];
 			$memperc = ($info['free-memory']/$info['total-memory']);
 			$hddperc = ($info['free-hdd-space']/$info['total-hdd-space']);
