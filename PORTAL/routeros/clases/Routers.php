@@ -144,6 +144,9 @@ class Routers extends routeros_api {
 	public function systemResourcePrint(){
 		if ($this->connect($this->iprouter , $this->usuariorouter , $this->claverouter, $this->puertorouter, $this->attemptsrouter, $this->delayrouter, $this->timeoutrouter)) {
 			$ARRAY = $this->comm("/system/resource/print");
+			echo "<pre>";
+			print_r($ARRAY);
+			echo "</pre>";
 			$info = $ARRAY['0'];
 			$memperc = ($info['free-memory']/$info['total-memory']);
 			$hddperc = ($info['free-hdd-space']/$info['total-hdd-space']);
@@ -211,6 +214,37 @@ class Routers extends routeros_api {
 		}else{
 			$this->codigoRespuesta = "70";
 			$this->mensajeRespuesta = "ipHotspotUserProfileRemove::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
+		}
+	}
+	
+	public function logSystemRouter(){
+		if ($this->connect($this->iprouter , $this->usuariorouter , $this->claverouter, $this->puertorouter, $this->attemptsrouter, $this->delayrouter, $this->timeoutrouter)) {
+			$info = $this->comm("/log/print");
+			// $info = $ARRAY['0'];
+
+			// echo "<pre>";
+			// print_r($info);
+			// echo "</pre>";
+			$this->disconnect();
+			$this->codigoRespuesta = "00";
+			$this->mensajeRespuesta = "Informacion del Router";
+			return $info;
+		}else{
+			$this->codigoRespuesta = "80";
+			$this->mensajeRespuesta = "logSystemRouter::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
+		}
+	}
+	
+	public function historySystemRouter(){
+		if ($this->connect($this->iprouter , $this->usuariorouter , $this->claverouter, $this->puertorouter, $this->attemptsrouter, $this->delayrouter, $this->timeoutrouter)) {
+			$info = $this->comm("/system/history/print");
+			$this->disconnect();
+			$this->codigoRespuesta = "00";
+			$this->mensajeRespuesta = "Informacion del Router";
+			return $info;
+		}else{
+			$this->codigoRespuesta = "90";
+			$this->mensajeRespuesta = "historySystemRouter::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
 		}
 	}
 }
