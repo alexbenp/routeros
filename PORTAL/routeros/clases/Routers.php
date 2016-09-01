@@ -172,7 +172,9 @@ class Routers extends routeros_api {
 			$READ = $this->read(false);
 			$resultado = $this->parse_response($READ);
 			$this->disconnect();
-
+		// echo "<pre>";
+		// print_r($resultado);
+		// echo "</pre>";
 			if(is_array($resultado)){
 				$mensaje = $resultado['!trap'][0]['message'];	
 			}

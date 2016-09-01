@@ -4,6 +4,7 @@ error_reporting(E_ALL ^ E_NOTICE);
 <html>
 <head>
 <title>Portal RouterOS</title>
+<script language="JavaScript" type="text/javascript" src="js/ajax.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 <!--<link href="css/ingreso.css" rel="stylesheet" type="text/css"> -->
 <!--<link href="css/menu.css" rel="stylesheet" type="text/css">  -->
@@ -23,6 +24,7 @@ error_reporting(E_ALL ^ E_NOTICE);
 <body> 
 
 <script src="https://code.jquery.com/jquery.js"></script>
+
 
 <!-- Versión compilada y comprimida del JavaScript de Bootstrap -->
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>

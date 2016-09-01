@@ -24,16 +24,13 @@ $delay 			= $_SESSION["retraso_conexion"]; // Delay between connection attempts 
 $timeout 		= $_SESSION["tiempo_maximo_conexion"]; // Connection attempt timeout and data read timeout
 
 
-$ROUTERS = new Routers($ipRB , $Username , $clave, $api_puerto, $attempts, $delay, $timeout);
 
 
-// echo "<pre>";
-// print_r($AdminRouters);
-// echo "</pre>";
+
 // echo "kjhkjh".$router;
 $_SESSION["ip"] 	= $AdminRouters[0]['ip'];
 $_SESSION["usuario"] 	= $AdminRouters[0]['usuario'];
-$_SESSION["clave"] 	=   ""; //$AdminRouters[0]['usuario'];
+$_SESSION["clave"] 	=  $AdminRouters[0]['clave'];
 $_SESSION["puerto"] 	= $AdminRouters[0]['puerto'];
 $_SESSION["reintentos_conexion"] 	= $AdminRouters[0]['reintentos_conexion'];
 $_SESSION["retraso_conexion"] 	= $AdminRouters[0]['retraso_conexion'];
@@ -84,7 +81,10 @@ $_SESSION["tiempo_maximo_conexion"] 	= $AdminRouters[0]['tiempo_maximo_conexion'
 <?php 
 if(!empty($router)){
 	
-
+	$ROUTERS = new Routers($ipRB , $Username , $clave, $api_puerto, $attempts, $delay, $timeout);
+// echo "<pre>";
+// print_r($ROUTERS);
+// echo "</pre>";
 	$first = $ROUTERS->systemResourcePrint();
 
 	echo "<div><label>Mikrotik RouterOs 4.16 Resources</label></div>";
