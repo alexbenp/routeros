@@ -30,7 +30,7 @@ if ($action=="userAdd")
 	
 	$name		=$_REQUEST['name']; 
 	$password	=$_REQUEST['password']; 
-	$uptime		=$_REQUEST['uptime'];
+	$uptime		=$_REQUEST['uptime'].$_REQUEST['unid_uptime'];
 	$comentario	=$_REQUEST['comentario'];
 
 	$profile_name	= $_REQUEST['profile_name']; 
@@ -66,30 +66,22 @@ if ($action=="userAdd")
     <tbody>
 
 <?php
-	$unidadOriginal 	= array("s", "m", "h", "d", "w");
-	$valores			= array("");
-	$unidadFormateado   = array(" Segundo"," Minuto", " Hora", " Dia", " Semana");
-	$unidadMayores   = array(" Segundos"," Minutos", " Horas", " Dias", " Semanas");
-		
+
 	$info = $ROUTERS->ipHotspotUserGetall();
 
 	foreach ($info as $i => $value) {
 		$valor=$info[$i];
 		$unidad = $valor['limit-uptime'];
-		$valor_sin_unidad = str_replace($unidadOriginal, $valores, $unidad);
-		if ($valor_sin_unidad == '1'){
-			$limite = str_replace($unidadOriginal, $unidadFormateado, $unidad);
-		}else{
-			$limite = str_replace($unidadOriginal, $unidadMayores, $unidad);	
-		}
+		$linea  = $ROUTERS->formateaUnidades($unidad);
 		echo 
 		'<tr>
 			<td>'.$valor['.id'].'</td>
 			<td>'.$valor['name'].'</td>
 			<td>'.$valor['uptime'].'</td>
 			<td>'.$valor['profile'].'</td>
-			<td>'.$limite.'</td>
+			<td>'.$linea.'</td>
 			<td>'.$valor['comment'].'</td>
+			<td>'.$unidad.'</td>
 		</tr>';
 	}
 
@@ -138,11 +130,12 @@ if ($action=="userAdd")
 			<td><input id="password" class="input" name="password" type="password" value="" size="15" /></td>
 			<td><input id="uptime" class="input" name="uptime" type="text" value="" size="3" /></td>
 			<td><select id="unid_uptime" name="unid_uptime" class="form-control">
-				  <option value="d">Dias</option>
-				  <option value="h">Horas</option>
-				  <option value="w">Semanas</option>
-				  <option value="m">Minutos</option>
-				  <option value="s">Segundos</option>
+				<?php 		
+					$info = $ROUTERS->unidadesTiempo();
+					foreach ($info as $i => $value) {
+						echo '<option id="'.$i.'" value="'.$i.'">'.$value.'</option>';
+					}
+				?>
 				</select>
 			</td>
 			<td> <select id="profile_name" name="profile_name" > 

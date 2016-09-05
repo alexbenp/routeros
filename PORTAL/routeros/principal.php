@@ -1,4 +1,6 @@
-<?php include("control.php"); 
+<?php 
+include("control.php"); 
+require_once 'clases/Menus.php';
 error_reporting(E_ALL ^ E_NOTICE);
 ?> 
 <html>
@@ -30,27 +32,37 @@ error_reporting(E_ALL ^ E_NOTICE);
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
 
 
-<?php 			 
+<?php
+	$menus = new Menus($_SESSION['getPerfilId']);
+	$info = $menus->getMenu();
+	$arreglo = $info['info'];
+
+
 $cierra_linea = "";
 	echo "<div id=\"collapse navbar-collapse navbar-ex1-collapse\">";
 		echo "<ul class=\"nav nav-tabs\">";
 	
-	$menus = $_SESSION['menuPerfil'];
-	foreach($menus as $llave=>$elmento){
-		$menu_nombre = $menus[$llave]["menu"];
-		$link = $menus[$llave]["ruta_url"];
-		$submenu = $menus[$llave]["submenu"];
+	// $menus = $_SESSION['menuPerfil'];
+	foreach($arreglo as $llave=>$elmento){
+		// echo "llave".$llave."<br>";
+		$menu_nombre = $arreglo[$llave]['menu'];
+		$link = $arreglo[$llave]['ruta_url'];
+		$submenu = $arreglo[$llave]['submenu'];
 		if(empty($link)){
 			echo "<li class=\"dropdown\">
 					<a href=\"".$link."\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">".$menu_nombre."<b class=\"caret\"></b></a>";
-			foreach($submenu as $key=>$item){
-				$submenu_nombre = $submenu[$key]["menu"];
-				$link = $submenu[$key]["ruta_url"];
-				if($key == 0){
-					$cierra_linea = true;
-					echo "<ul  class=\"dropdown-menu\">";
+			if(is_array($submenu)){
+				
+			
+				foreach($submenu as $key=>$item){
+					$submenu_nombre = $submenu[$key]["menu"];
+					$link = $submenu[$key]["ruta_url"];
+					if($key == 0){
+						$cierra_linea = true;
+						echo "<ul  class=\"dropdown-menu\">";
+					}
+					echo "<li><a href=\"".$link."\"> ".$submenu_nombre." </a></li>";
 				}
-				echo "<li><a href=\"".$link."\"> ".$submenu_nombre." </a></li>";
 			}
 			echo "</li>";
 			if($cierra_linea == true){

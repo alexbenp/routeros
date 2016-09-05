@@ -66,37 +66,31 @@ if (!empty($usuario_id))
 
 <?php 		
 
-	$unidadOriginal 	= array("s", "m", "h", "d", "w");
-	$valores			= array("");
-	$unidadFormateado   = array(" Segundo"," Minuto", " Hora", " Dia", " Semana");
-	$unidadMayores   = array(" Segundos"," Minutos", " Horas", " Dias", " Semanas");
+	
+	$arreglo = array("w"=>"Semana","d"=>"Dia","h"=>"Hora","m"=>"Minuto","s"=>"Segundo");
 		
 	$info = $ROUTERS->ipHotspotUserGetall();
 
 	foreach ($info as $i => $value) {
+		$linea = "";
 		$valor=$info[$i];
+		$id = $info[$i]['.id'];
 		$unidad = $valor['limit-uptime'];
-		$valor_sin_unidad = str_replace($unidadOriginal, $valores, $unidad);
-		if ($valor_sin_unidad == '1'){
-			$limite = str_replace($unidadOriginal, $unidadFormateado, $unidad);
-		}else{
-			$limite = str_replace($unidadOriginal, $unidadMayores, $unidad);	
-		}
+		$linea  = $ROUTERS->formateaUnidades($unidad);
 		echo 
-		'<tr id="tr'.$valor['.id'].'">
+		'<tr id="tr'.$id.'">
 				<td>'.$valor['.id'].'</td>
 				<td>'.$valor['name'].'</td>
 				<td>'.$valor['uptime'].'</td>
 				<td>'.$valor['profile'].'</td>
-				<td>'.$limite.'</td>
+				<td>'.$linea.'</td>
 				<td>'.$valor['comment'].'</td>
 				<td>
-					<a style="text-decoration:underline;cursor:pointer;" onclick="eliminarDato(\''.$valor['.id'].'\')">Del</a>
+					<a style="text-decoration:underline;cursor:pointer;"  onclick="deleteInfo(\''.$id.'\',\'elimina_dato_router.php\')">Del</a>
 				</td>
 		</tr>
 		';
 	}
-
 ?>
 
 </table>   

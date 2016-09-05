@@ -5,6 +5,8 @@ class Menus {
 	private $nivel_uno 	= 1;
 	private $nivel_dos 	= 2;
 	private $nivel_tres = 3;
+	// private $principal;
+	// private $url_principal;
 	
 	public function __construct($perfil_id) {
 		$this->perfil_id = $perfil_id;
@@ -17,6 +19,7 @@ class Menus {
 		// $this->submenu_id = $submenu_id;
     }
 	
+
 	public function getMenusNivelUno(){
 		$conexion = new Conexion();
 		
@@ -77,6 +80,37 @@ class Menus {
 		
 	}
 	
+	public function getMenu(){
+		
+		$arreglo = $this->getMenusNivelUno();
+		$principal = 0;
+		foreach($arreglo as $llave=>$elemento){
+			$menu_id = $arreglo[$llave]['menu_id'];
+			if($principal == '0'){
+				$principal = $arreglo[$llave]['principal'];
+				if($principal == '1'){
+					$url_principal = $arreglo[$llave]['ruta_url'];
+					// echo "nivel 1::".$arreglo[$llave]['ruta_url'];
+				}
+			}
+			
+			if($menu_id > 0){
+				$arreglo[$llave]['submenu'] = $this->getMenusNivelDos($menu_id);
+				if($principal == '0'){
+					foreach($arreglo[$llave]['submenu'] as $key=>$item){
+						$principal = $arreglo[$llave]['submenu'][$key]['principal'];
+						if($principal == '1'){
+							$url_principal = $arreglo[$llave]['submenu'][$key]['ruta_url'];
+						}
+					}
+				}
+			}
+		}
+		$retorna['info'] = $arreglo;
+		$retorna['url_principal'] = $url_principal;
+		 
+		return $retorna;
+	}
 	
 }
 ?>

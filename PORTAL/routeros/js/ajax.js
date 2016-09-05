@@ -16,7 +16,8 @@ function objetoAjax(){
 	return xmlhttp;
 }
 
-function eliminarDato(id){
+
+function deleteInfo(id,destino){
 	//donde se mostrará el resultado de la eliminacion
 	divResultado = document.getElementById('resultado');
 	divOrigen	 = document.getElementById('tr'+id);
@@ -28,7 +29,7 @@ function eliminarDato(id){
 		//uso del medotod GET
 		//indicamos el archivo que realizará el proceso de eliminación
 		//junto con un valor que representa el id del empleado
-		ajax.open("GET", "elimina_dato_router.php?id="+id);
+		ajax.open("GET", destino+"?id="+id);
 		ajax.onreadystatechange=function() {
 			if (ajax.readyState==4) {
 				//mostrar resultados en esta capa

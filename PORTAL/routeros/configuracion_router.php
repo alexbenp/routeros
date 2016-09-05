@@ -4,6 +4,7 @@ require_once("principal.php");
 //require_once ('clases/api.php'); //aqui incluimos la clase API para trabajar con ella
 require_once ('clases/RouterDb.php');
 require_once ('clases/Routers.php');
+// require_once 'clases/Menus.php';
 $router=$_REQUEST['router']; 
 $action=$_REQUEST['action']; 
 $estados_router_id = 1;

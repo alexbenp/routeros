@@ -249,6 +249,31 @@ class Routers extends routeros_api {
 			$this->mensajeRespuesta = "historySystemRouter::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
 		}
 	}
+	
+	public function unidadesTiempo(){
+			$arreglo = array("w"=>"Semana","d"=>"Dia","h"=>"Hora","m"=>"Minuto","s"=>"Segundo");
+		return $arreglo;
+		
+	}
+	
+	public function formateaUnidades($cadena){
+		$arreglo = $this->unidadesTiempo();
+		$linea = "";
+		foreach($arreglo as $r => $dd){
+			$result = strstr($cadena, $r, true);
+			$longitud = strlen($result);
+			if(!empty($result)){
+				$cadena = substr($cadena,$longitud+1);
+			}
+			if($result == 1 ){
+				$linea .= $result.":".$dd." ";
+			}elseif($result > 1){
+				$linea .= $result.":".$dd."s ";
+			}
+		}
+		
+		return $linea;
+	}
 }
 	  
  

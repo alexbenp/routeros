@@ -12,6 +12,7 @@ $attempts 		= $_SESSION["reintentos_conexion"]; // Connection attempt count
 $delay 			= $_SESSION["retraso_conexion"]; // Delay between connection attempts in seconds
 $timeout 		= $_SESSION["tiempo_maximo_conexion"]; // Connection attempt timeout and data read timeout
 
+
 $ROUTERS = new Routers($ipRB , $Username , $clave, $api_puerto, $attempts, $delay, $timeout);
 
 
@@ -51,6 +52,16 @@ $info = $ROUTERS->ipHotspotUserProfileGetall();
 
 ?>
 
+ 		<div id="resultado">
+			<label>
+<?php 		
+		if($mensajeRespuestaProfileRemove!=''){
+			echo $codigoRespuestaProfileRemove."::".$mensajeRespuestaProfileRemove."::idProfile::".$profile."<br><br>";
+		}
+?>
+			</label>
+		</div>
+		
 <div class="container">
   <div class="">
     <h1>Lista de Perfiles</h1>
@@ -76,15 +87,14 @@ $info = $ROUTERS->ipHotspotUserProfileGetall();
 				$unidad = $valor['mac-cookie-timeout'];
 				$linea  = $ROUTERS->formateaUnidades($unidad);
 				// echo "ada".$id;
-				echo '<tr id="fila_'.$id.'">
+				echo '<tr id="tr'.$id.'">
 						<td>'.$id.'</td>
 						<td>'.$valor['name'].'</td>
 						<td>'.$valor['shared-users'].'</td>
 						<td>'.$valor['rate-limit'].'</td>
 						<td>'.$linea.'</td>
 						<td>
-						<input id="submit_button" class="btn btn-primary" type="submit" value="Del" />
-						<input name="profile" type="hidden" value="'.$id.'" />
+							<a style="text-decoration:underline;cursor:pointer;" onclick="deleteInfo(\''.$id.'\',\'eliminaPerfilRouter.php\')">Del</a>
 						</td>
 					</tr>';
 			}
@@ -93,60 +103,4 @@ $info = $ROUTERS->ipHotspotUserProfileGetall();
   </table>
   <input type="hidden" name="action" value="profileDel"/>
  </form>
- 
- 		<div>
-			<label>
-<?php 		
-		if($mensajeRespuestaProfileAdd!=''){
-			echo $codigoRespuestaProfileAdd."::".$mensajeRespuestaProfileAdd."<br><br>";
-		}
-		if($mensajeRespuestaProfileRemove!=''){
-			echo $codigoRespuestaProfileRemove."::".$mensajeRespuestaProfileRemove."::idProfile::".$profile."<br><br>";
-		}
-?>
-			</label>
-		</div>
-  
-	<form id="addPerfiles" action="#" method="post">
-	  <table class="table2" id="tablaReg">
-		<thead>
-		  <tr>
-			<th width=10></th>
-			<th width=50>Perfil</th>
-			<th width=200>Dispositivos</th>
-			<th width=100 colspan=2>Vigencia</th>
-			<th width=200>Velocidad RX</th>
-			<th>Velocidad TX</th>
-			<th>&nbsp </th>
-		  </tr>
-		</thead>
-		<tbody>
-		<tr>
-			<td></td>
-			<td><input id="profile_name" type="text" name="profile_name" size="10"></td>
-			<td> <!--<input id="user_shared" type="text" name="user_shared" size="20"> -->
-				<select id="user_shared" name="user_shared" class="form-control">
-				  <option>1</option>
-				  <option>2</option>
-				</select>
-				</td>
-			<td><input id="value_mac_uptime" type="text" name="value_mac_uptime" size="2"></td>
-			<td><select id="unid_mac_uptime" name="unid_mac_uptime" class="form-control">
-				<?php 		
-					$info = $ROUTERS->unidadesTiempo();
-					foreach ($info as $i => $value) {
-						echo '<option id="'.$i.'" value="'.$i.'">'.$value.'</option>';
-					}
-				?>
-				</select>
-			</td>
-			<td><input id="rx" type="text" name="rx"  value="512" size="4"></td>
-			<td><input id="tx" type="text" name="tx"  value="512" size="4"></td>
-			<td><input type="submit" class="btn btn-primary" value="Agregar">
-				<input type="hidden" name="action" value="profileAdd"/>
-			</td>
-		</tr>
-		</tbody>
-	  </table>
-	</form>	
 </div>
