@@ -24,7 +24,7 @@ $message = "";
 		session_start();
 		require_once 'clases/Usuarios.php';
 		$usuario = new Usuarios($p_usuario_id,$p_usuario,$p_identificacion,$p_nombres,$p_apellidos,$p_direccion,$p_telefono,$p_estados_usuario_id,$p_fecharegistro,$p_clave,$p_correo,$p_perfil_id);
-		$usuario->validaUsuario();
+		$info = $usuario->validaUsuario();
 		if ($usuario->getCodigoRespuesta() == $p_codigo_respuesta_exitosa){
 			
 			$usuario->getPerfilUsuario();
@@ -44,8 +44,21 @@ $message = "";
 			 header("Location: ".$ruta_url);
 		}else{
 			$message = $usuario->getMensajeRespuesta().":".$usuario->getCodigoRespuesta() ;
+			
+			if($usuario->getCodigoRespuesta() == '02'){
+				$usuario ->setIntentosfallidos($usuario->getUsuarioId());
+			}
+			
+			
+		
+		
+			
 			session_destroy();
-			 echo"<script>alert('Usuario no Existe o la contrase\u00f1a no es correcta.'); window.location.href=\"index.php\"</script>"; 
+			
+			
+			 // echo "<script>alert('Usuario no Existe o la contrase\u00f1a no es correcta.'); window.location.href=\"index.php\"</script>"; 
+			 
+			 echo '<script>alert(\''.$message.'\'); window.location.href="index.php"</script>'; 
 		}
 
 	 
