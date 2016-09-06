@@ -14,6 +14,7 @@
     private $correo;
     private $perfil_id;
 	private $keyconfig = '$UjhY&743*#4#r1+u38s';
+	private $reintentos = 13;
 	
     const TABLA = 'usuarios';
     
@@ -174,23 +175,58 @@
 			try {
 				$this->codigoRespuesta = "01";
 				$this->mensajeRespuesta = "USUARIO O CLAVE NO VALIDO:";
-				$sql = $conexion->prepare('SELECT nombres,apellidos,perfil_id FROM ' . self::TABLA .' WHERE usuario = :usuario AND clave = AES_ENCRYPT(:clave,:keyconfig) ');
+				$sql = $conexion->prepare('SELECT usuario_id,nombres,apellidos,perfil_id,estados_usuario_id,intentos_fallidos FROM ' . self::TABLA .' WHERE usuario = :usuario');
 				$sql->bindParam(':usuario', $this->usuario);
-				$sql->bindParam(':clave', $this->clave);
-				$sql->bindParam(':keyconfig', $this->keyconfig);
+				
 	//			var_dump($sql);
-//echo $this->usuario." ".$this->clave."".$this->keyconfig;
+
 				$sql->execute();
 				$resultado = $sql->fetchAll();
 //exit;
 				foreach ($resultado as $row) {
-					$this->codigoRespuesta 	= "00";
-					$this->mensajeRespuesta = "Usuario valido";
-					$this->perfil_id 		= $row["perfil_id"];
-					$this->nombres 			= $row["nombres"];
-					$this->apellidos 		= $row["apellidos"];
-		
+					$this->usuario_id 		= $row['usuario_id'];
+					$this->perfil_id 		= $row['perfil_id'];
+					$this->nombres 			= $row['nombres'];
+					$this->apellidos 		= $row['apellidos'];
+					$this->estados_usuario_id = $row['estados_usuario_id'];
+					$this->intentos_fallidos = $row['intentos_fallidos'];
+					// // echo $this->intentos_fallidos."--- ";
+					// exit();
+					if($row['estados_usuario_id'] == 2){
+						$this->codigoRespuesta 		= "11";
+						$this->mensajeRespuesta 	= "Usuario Inactivo";
+					}elseif($row['estados_usuario_id'] == 3){
+						$this->codigoRespuesta 		= "12";
+						$this->mensajeRespuesta 	= "Usuario Bloqueado";						
+					}elseif($this->intentos_fallidos >= $this->reintentos){
+						$this->codigoRespuesta 		= "13";
+						$this->mensajeRespuesta 	= "Ha superado los ".$reintentos." Intentos maximos, Esta en ".$this->intentos_fallidos."";
+					}else{
+						
+						$this->codigoRespuesta = "02";
+						$this->mensajeRespuesta = "Clave no Valida:";
+						$sql = $conexion->prepare('SELECT usuario_id,nombres,apellidos,perfil_id,estados_usuario_id,intentos_fallidos FROM ' . self::TABLA .' WHERE usuario = :usuario AND clave = AES_ENCRYPT(:clave,:keyconfig) ');
+						$sql->bindParam(':usuario', $this->usuario);
+						$sql->bindParam(':clave', $this->clave);
+						$sql->bindParam(':keyconfig', $this->keyconfig);
+						$sql->execute();
+						$informacion = $sql->fetchAll();
+						
+						foreach ($informacion as $linea){
+							$this->codigoRespuesta 	= "00";
+							$this->mensajeRespuesta = "Usuario valido";
+							$this->usuario_id 		= $linea['usuario_id'];
+							$this->perfil_id 		= $linea['perfil_id'];
+							$this->nombres 			= $linea['nombres'];
+							$this->apellidos 		= $linea['apellidos'];
+							$this->estados_usuario_id = $linea['estados_usuario_id'];
+							$this->intentos_fallidos = $linea['intentos_fallidos'];
+						}
+					}
 				}
+				// echo $this->usuario." ".$this->clave."".$this->intentos_fallidos;
+				// exit();
+				return $resultado;
 			}catch (PDOException $e) {
 				echo "<br>validaUsuario::DataBase Error: <br>".$e->getMessage();
 				echo "<br>Error Code:<br> ".$e->getCode();
@@ -223,15 +259,15 @@
 			// print_r($resultado);
 			// echo "</pre>";
 			foreach ($resultado as $row) {
-				if($row["estados_perfil_id"] <> 1){
+				if($row['estados_perfil_id'] <> 1){
 					$this->codigoRespuesta 		= "22";
 					$this->mensajeRespuesta 	= "Perfil Asignado no esta activo";
 				}else{
 					$this->codigoRespuesta 		= "00";
 					$this->mensajeRespuesta 	= "Perfil Correcto";
-					$this->perfil 				= $row["perfil"];
-					// $this->descripcionPerfil	= $row["descripcion"];
-					// $this->estados_perfil_id 	= $row["estados_perfil_id"];
+					$this->perfil 				= $row['perfil'];
+					// $this->descripcionPerfil	= $row['descripcion'];
+					// $this->estados_perfil_id 	= $row['estados_perfil_id'];
 				}
 			}
 		}catch (PDOException $e) {
@@ -245,7 +281,30 @@
 		$conexion = null;
 	}		
 	
+	public function setIntentosfallidos($usuario_id){
+		$conexion = new Conexion();
+		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		try {
+			
+			$this->codigoRespuesta = "44";
+			$this->mensajeRespuesta = "Error Actualizando los reintentos: ";
+			$sql = $conexion->prepare('UPDATE usuarios SET intentos_fallidos = intentos_fallidos+1 WHERE usuario_id = '.$this->usuario_id);
+			$sql->bindParam(':usuario_id', $this->usuario_id);
+			$sql->execute();
 	
+			
+		}catch (PDOException $e) {
+			echo "<br>setIntentosfallidos::DataBase Error: <br>".$e->getMessage();
+			echo "<br>Error Code:<br> ".$e->getCode();
+			exit;
+		}catch (Exception $e) {
+			echo "setIntentosfallidos::General Error: The user could not be added.<br>".$e->getMessage();
+			exit;
+		}
+		$conexion = null;
+		
+	}
 			
  }
 ?>

@@ -6,14 +6,6 @@ require_once ('clases/Routers.php');
 $action=$_REQUEST['action']; 
 $profile=$_REQUEST['profile'];
 
-// $ipRB="192.168.56.2"; //IP de tu RB.
-// $Username="admin"; //Nombre de usuario con privilegios para acceder al RB
-// $clave=""; //Clave del usuario con privilegios
-// $api_puerto=8728; //Puerto que definimos el API en IP--->Services
-// $attempts = 3; // Connection attempt count
-// $delay = 3; // Delay between connection attempts in seconds
-// $timeout = 3; // Connection attempt timeout and data read timeout
-
 $ipRB			= $_SESSION["ip"]; //IP de tu RB.
 $Username		= $_SESSION["usuario"]; //Nombre de usuario con privilegios para acceder al RB
 $clave			= $_SESSION["clave"]; //Clave del usuario con privilegios
@@ -22,6 +14,9 @@ $attempts 		= $_SESSION["reintentos_conexion"]; // Connection attempt count
 $delay 			= $_SESSION["retraso_conexion"]; // Delay between connection attempts in seconds
 $timeout 		= $_SESSION["tiempo_maximo_conexion"]; // Connection attempt timeout and data read timeout
 
+// echo "<pre>";
+// print_r($_SESSION);
+// echo "</pre>";
 
 $ROUTERS = new Routers($ipRB , $Username , $clave, $api_puerto, $attempts, $delay, $timeout);
 

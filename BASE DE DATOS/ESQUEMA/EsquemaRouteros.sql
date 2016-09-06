@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `routeros` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
 USE `routeros`;
--- MySQL dump 10.13  Distrib 5.6.24, for Win32 (x86)
+-- MySQL dump 10.13  Distrib 5.7.12, for Win32 (AMD64)
 --
 -- Host: localhost    Database: routeros
 -- ------------------------------------------------------
--- Server version	5.6.26-log
+-- Server version	5.7.14-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -322,7 +322,7 @@ CREATE TABLE `routers` (
 
 LOCK TABLES `routers` WRITE;
 /*!40000 ALTER TABLE `routers` DISABLE KEYS */;
-INSERT INTO `routers` VALUES (1,'Router Development','6.36','192.168.56.2','8728','admin','',1,'2016-08-23 18:03:22','3','3','3'),(2,'Router QA','6.36','186.155.37.179','8728','admin','sipltda2016',2,'2016-08-23 23:03:22','3','3','3'),(3,'Rounter QA Pruebas','6.36','186.155.37.179','8728','prueba','pruebas123',2,'2016-08-23 23:03:22','3','3','3');
+INSERT INTO `routers` VALUES (1,'Router Development','6.36','192.168.56.2','8728','admin','',2,'2016-08-23 18:03:22','3','3','3'),(2,'Router QA','6.36','186.155.37.179','8728','admin','sipltda2016',1,'2016-08-23 23:03:22','3','3','3'),(3,'Rounter QA Pruebas','6.36','186.155.37.179','8728','prueba','pruebas123',2,'2016-08-23 23:03:22','3','3','3');
 /*!40000 ALTER TABLE `routers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -346,6 +346,7 @@ CREATE TABLE `usuarios` (
   `clave` blob NOT NULL,
   `correo` varchar(100) NOT NULL,
   `perfil_id` int(10) NOT NULL,
+  `intentos_fallidos` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`usuario_id`),
   UNIQUE KEY `correo_UNIQUE` (`correo`),
   UNIQUE KEY `usuario_UNIQUE` (`usuario`),
@@ -361,7 +362,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'ADMIN',NULL,'ADMINISTRADOR','ADMIN','PORTAL WEB','TELEFONO',1,'2016-08-22 04:30:18','󮼫AƬհfyϖ','corre@portalrouteros.com',1),(2,'USUARIO',NULL,'NOMBRE USUARIO','APELLIDO USUARIO','PORTAL ROUTEROS','TELEFONO',1,'2016-08-23 05:26:06','󮼫AƬհfyϖ','usuario@portalrouteros.com',2);
+INSERT INTO `usuarios` VALUES (1,'ADMIN',NULL,'ADMINISTRADOR','ADMIN','PORTAL WEB','TELEFONO',1,'2016-08-22 04:30:18','󮼫AƬ\հfy\ϖ','corre@portalrouteros.com',1,7),(2,'USUARIO',NULL,'NOMBRE USUARIO','APELLIDO USUARIO','PORTAL ROUTEROS','TELEFONO',2,'2016-08-23 05:26:06','󮼫AƬ\հfy\ϖ','usuario@portalrouteros.com',2,0);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -382,7 +383,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-05 14:22:42
+-- Dump completed on 2016-09-06  1:26:36
 
 UPDATE usuarios SET clave = aes_encrypt('clave','$UjhY&743*#4#r1+u38s') WHERE usuario_id IN (1,2);
 UPDATE routers SET usuario = 'admin', estados_router_id = 1, clave = '' WHERE router_id IN (1);
