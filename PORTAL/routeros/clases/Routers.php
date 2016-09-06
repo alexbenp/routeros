@@ -74,7 +74,7 @@ class Routers extends routeros_api {
 			return $info;
 		}else{
 			$this->codigoRespuesta = "10";
-			$this->mensajeRespuesta = "ipHotspotUserGetall::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
+			$this->mensajeRespuesta = "ipHotspotUserGetall::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." en el puerto: ".$this->puertorouter;
 		}
 	}
 	public function ipHotspotUserProfileGetall(){
@@ -93,7 +93,7 @@ class Routers extends routeros_api {
 			return $info;
 		}else{
 			$this->codigoRespuesta = "20";
-			$this->mensajeRespuesta = "ipHotspotUserProfileGetall::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
+			$this->mensajeRespuesta = "ipHotspotUserProfileGetall::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." en el puerto: ".$this->puertorouter;
 		}
 	}
 	public function ipHotspotUserProfileAdd($profile_name,$user_shared,$rx,$tx,$add_mac_cookie,$mac_uptime){
@@ -116,7 +116,7 @@ class Routers extends routeros_api {
 			return $resultado;
 		}else{
 			$this->codigoRespuesta = "30";
-			$this->mensajeRespuesta = "ipHotspotUserProfileAdd::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
+			$this->mensajeRespuesta = "ipHotspotUserProfileAdd::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." en el puerto: ".$this->puertorouter;
 		}
 	}
 	
@@ -137,7 +137,7 @@ class Routers extends routeros_api {
 			return $resultado;
 		}else{
 			$this->codigoRespuesta = "40";
-			$this->mensajeRespuesta = "ipHotspotUserAdd::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
+			$this->mensajeRespuesta = "ipHotspotUserAdd::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." en el puerto: ".$this->puertorouter;
 		}
 	}
 	
@@ -161,7 +161,7 @@ class Routers extends routeros_api {
 			return $info;
 		}else{
 			$this->codigoRespuesta = "50";
-			$this->mensajeRespuesta = "systemResourcePrint::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
+			$this->mensajeRespuesta = "systemResourcePrint::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." en el puerto: ".$this->puertorouter;
 		}
 	}
 	
@@ -191,7 +191,7 @@ class Routers extends routeros_api {
 			return $resultado;
 		}else{
 			$this->codigoRespuesta = "60";
-			$this->mensajeRespuesta = "ipHotspotUserRemove::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
+			$this->mensajeRespuesta = "ipHotspotUserRemove::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." en el puerto: ".$this->puertorouter;
 		}
 	}
 	
@@ -215,7 +215,7 @@ class Routers extends routeros_api {
 			return $resultado;
 		}else{
 			$this->codigoRespuesta = "70";
-			$this->mensajeRespuesta = "ipHotspotUserProfileRemove::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
+			$this->mensajeRespuesta = "ipHotspotUserProfileRemove::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." en el puerto: ".$this->puertorouter;
 		}
 	}
 	
@@ -233,7 +233,7 @@ class Routers extends routeros_api {
 			return $info;
 		}else{
 			$this->codigoRespuesta = "80";
-			$this->mensajeRespuesta = "logSystemRouter::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
+			$this->mensajeRespuesta = "logSystemRouter::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." en el puerto: ".$this->puertorouter;
 		}
 	}
 	
@@ -246,7 +246,7 @@ class Routers extends routeros_api {
 			return $info;
 		}else{
 			$this->codigoRespuesta = "90";
-			$this->mensajeRespuesta = "historySystemRouter::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." Clave: ".$this->claverouter." en el puerto: ".$this->puertorouter;
+			$this->mensajeRespuesta = "historySystemRouter::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." en el puerto: ".$this->puertorouter;
 		}
 	}
 	
