@@ -14,7 +14,7 @@
     private $correo;
     private $perfil_id;
 	private $keyconfig = '$UjhY&743*#4#r1+u38s';
-	private $reintentos = 13;
+	private $reintentos = 3;
 	
     const TABLA = 'usuarios';
     
@@ -199,8 +199,13 @@
 						$this->codigoRespuesta 		= "12";
 						$this->mensajeRespuesta 	= "Usuario Bloqueado";						
 					}elseif($this->intentos_fallidos >= $this->reintentos){
+						$this->setCambiaEstadoUsuario($this->usuario_id,$nuevo_estado_usuario);
 						$this->codigoRespuesta 		= "13";
-						$this->mensajeRespuesta 	= "Ha superado los ".$reintentos." Intentos maximos, Esta en ".$this->intentos_fallidos."";
+						$this->mensajeRespuesta 	= "Ha superado los ".$this->reintentos." Intentos maximos, Esta en ".$this->intentos_fallidos."";
+						
+						$nuevo_estado_usuario = 3;
+						
+
 					}else{
 						
 						$this->codigoRespuesta = "02";
@@ -251,7 +256,7 @@
 		try {
 			$this->codigoRespuesta = "33";
 			$this->mensajeRespuesta = "Perfil no definido: ";
-			$sql = $conexion->prepare('SELECT perfil,descripcion,estados_perfil_id FROM perfiles WHERE perfil_id = '.$this->perfil_id);
+			$sql = $conexion->prepare('SELECT perfil,descripcion,estados_perfil_id FROM perfiles WHERE perfil_id = :perfil_id');
 			$sql->bindParam(':perfil_id', $this->perfil_id);
 			$sql->execute();
 			$resultado = $sql->fetchAll();
@@ -281,7 +286,7 @@
 		$conexion = null;
 	}		
 	
-	public function setIntentosfallidos($usuario_id){
+	public function setIncrementaIntentosfallidos($usuario_id){
 		$conexion = new Conexion();
 		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
@@ -289,17 +294,68 @@
 			
 			$this->codigoRespuesta = "44";
 			$this->mensajeRespuesta = "Error Actualizando los reintentos: ";
-			$sql = $conexion->prepare('UPDATE usuarios SET intentos_fallidos = intentos_fallidos+1 WHERE usuario_id = '.$this->usuario_id);
+			$sql = $conexion->prepare('UPDATE usuarios SET intentos_fallidos = intentos_fallidos+1 WHERE usuario_id = :usuario_id');
 			$sql->bindParam(':usuario_id', $this->usuario_id);
 			$sql->execute();
 	
 			
 		}catch (PDOException $e) {
-			echo "<br>setIntentosfallidos::DataBase Error: <br>".$e->getMessage();
+			echo "<br>setIncrementaIntentosfallidos::DataBase Error: <br>".$e->getMessage();
 			echo "<br>Error Code:<br> ".$e->getCode();
 			exit;
 		}catch (Exception $e) {
-			echo "setIntentosfallidos::General Error: The user could not be added.<br>".$e->getMessage();
+			echo "setIncrementaIntentosfallidos::General Error: The user could not be added.<br>".$e->getMessage();
+			exit;
+		}
+		$conexion = null;
+		
+	}
+	
+	public function setReiniciaIntentosfallidos($usuario_id){
+		$conexion = new Conexion();
+		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		try {
+			
+			$this->codigoRespuesta = "45";
+			$this->mensajeRespuesta = "Error Actualizando los reintentos: ";
+			$sql = $conexion->prepare('UPDATE usuarios SET intentos_fallidos = 0 WHERE usuario_id = :usuario_id');
+			$sql->bindParam(':usuario_id', $this->usuario_id);
+			$sql->execute();
+	
+			
+		}catch (PDOException $e) {
+			echo "<br>setReiniciaIntentosfallidos::DataBase Error: <br>".$e->getMessage();
+			echo "<br>Error Code:<br> ".$e->getCode();
+			exit;
+		}catch (Exception $e) {
+			echo "setReiniciaIntentosfallidos::General Error: The user could not be added.<br>".$e->getMessage();
+			exit;
+		}
+		$conexion = null;
+		
+	}
+	
+	public function setCambiaEstadoUsuario($usuario_id,$estados_usuario_id){
+		$conexion = new Conexion();
+		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		try {
+			
+			// $this->codigoRespuesta = "00";
+			$this->mensajeRespuesta = "Error Actualizando estado usuario: ";
+			$sql = $conexion->prepare('UPDATE usuarios SET estados_usuario_id = :estados_usuario_id WHERE usuario_id = :usuario_id');
+			$sql->bindParam(':usuario_id', $this->usuario_id);
+			$sql->bindParam(':estados_usuario_id', $this->estados_usuario_id);
+			$sql->execute();
+	
+			
+		}catch (PDOException $e) {
+			echo "<br>setCambiaEstadoUsuario::DataBase Error: <br>".$e->getMessage();
+			echo "<br>Error Code:<br> ".$e->getCode();
+			exit;
+		}catch (Exception $e) {
+			echo "setCambiaEstadoUsuario::General Error: The user could not be added.<br>".$e->getMessage();
 			exit;
 		}
 		$conexion = null;

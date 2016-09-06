@@ -53,47 +53,9 @@ $info = $ROUTERS->ipHotspotUserProfileGetall();
 
 <div class="container">
   <div class="">
-    <h1>Lista de Perfiles</h1>
+    <h3 class="text-center text-success">Crea Perfiles RouterOS<h3><br />
   </div>
-<form id="Perfiles" action="#" method="post">
-  <table class="table table-hover" id="tabla">
-    <thead>
-      <tr>
-        <th>Id</th>
-        <th>Perfil</th>
-        <th>Dispositivos</th>
-        <th>Velocidad</th>
-        <th>Vigencia</th>
-		<th>&nbsp</th>
-      </tr>
-    </thead>
-    <tbody>
-<?php
 
-			foreach ($info as $i => $value) {
-				$valor	= $info[$i];
-				$id 	= $info[$i]['.id'];
-				$unidad = $valor['mac-cookie-timeout'];
-				$linea  = $ROUTERS->formateaUnidades($unidad);
-				// echo "ada".$id;
-				echo '<tr id="fila_'.$id.'">
-						<td>'.$id.'</td>
-						<td>'.$valor['name'].'</td>
-						<td>'.$valor['shared-users'].'</td>
-						<td>'.$valor['rate-limit'].'</td>
-						<td>'.$linea.'</td>
-						<td>
-						<input id="submit_button" class="btn btn-primary" type="submit" value="Del" />
-						<input name="profile" type="hidden" value="'.$id.'" />
-						</td>
-					</tr>';
-			}
-?>
-    </tbody>
-  </table>
-  <input type="hidden" name="action" value="profileDel"/>
- </form>
- 
  		<div>
 			<label>
 <?php 		
@@ -108,30 +70,26 @@ $info = $ROUTERS->ipHotspotUserProfileGetall();
 		</div>
   
 	<form id="addPerfiles" action="#" method="post">
-	  <table class="table2" id="tablaReg">
-		<thead>
-		  <tr>
-			<th width=10></th>
-			<th width=50>Perfil</th>
-			<th width=200>Dispositivos</th>
-			<th width=100 colspan=2>Vigencia</th>
-			<th width=200>Velocidad RX</th>
-			<th>Velocidad TX</th>
-			<th>&nbsp </th>
-		  </tr>
-		</thead>
-		<tbody>
-		<tr>
-			<td></td>
-			<td><input id="profile_name" type="text" name="profile_name" size="10"></td>
-			<td> <!--<input id="user_shared" type="text" name="user_shared" size="20"> -->
+		<div class="form-group has-success">
+	  
+			<label for="inputSuccess" class="col-lg-12 control-label">Perfil </label>
+			<div class="col-lg-4">
+				<input type="text" name="profile_name" id="profile_name" class="form-control" value="" size="10" placeholder=" DIGITE NOMBRE PERFIL" />
+			</div>
+			<label for="inputSuccess" class="col-lg-12 control-label">Dispositivos </label>
+			<div class="col-lg-4">
 				<select id="user_shared" name="user_shared" class="form-control">
 				  <option>1</option>
 				  <option>2</option>
 				</select>
-				</td>
-			<td><input id="value_mac_uptime" type="text" name="value_mac_uptime" size="2"></td>
-			<td><select id="unid_mac_uptime" name="unid_mac_uptime" class="form-control">
+			</div>
+			
+			<label for="inputSuccess" class="col-lg-12 control-label">Vigencia </label>
+			<div class="col-lg-4">
+				<input id="value_mac_uptime" type="text" class="form-control" name="value_mac_uptime" size="2">
+			</div>
+			<div class="col-lg-6">
+				<select id="unid_mac_uptime" name="unid_mac_uptime" class="form-control">
 				<?php 		
 					$info = $ROUTERS->unidadesTiempo();
 					foreach ($info as $i => $value) {
@@ -139,14 +97,21 @@ $info = $ROUTERS->ipHotspotUserProfileGetall();
 					}
 				?>
 				</select>
-			</td>
-			<td><input id="rx" type="text" name="rx"  value="512" size="4"></td>
-			<td><input id="tx" type="text" name="tx"  value="512" size="4"></td>
-			<td><input type="submit" class="btn btn-primary" value="Agregar">
+			</div>
+			
+			<label for="inputSuccess" class="col-lg-12 control-label">Velocidad RX </label>
+			<div class="col-lg-4">
+				<input id="rx" type="text" name="rx" class="form-control" value="512" size="4">
+			</div>
+			<label for="inputSuccess" class="col-lg-12 control-label">Velocidad TX </label>
+			<div class="col-lg-4">
+				<input id="tx" type="text" name="tx"  class="form-control"  value="512" size="4">
+				<br /><br />
+				<input type="submit" class="btn btn-success"  value="Agregar">
 				<input type="hidden" name="action" value="profileAdd"/>
-			</td>
-		</tr>
-		</tbody>
-	  </table>
+			</div>
+			
+		</div>
+
 	</form>	
 </div>

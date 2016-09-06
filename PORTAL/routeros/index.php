@@ -36,7 +36,6 @@
 		<input type="submit" name="login" class="btn btn-success" value="Entrar" />
 	</p>
 	</form>
-	<img src="..." alt="..." class="img-thumbnail">
 	</div>
 
 	</div>

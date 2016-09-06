@@ -39,8 +39,9 @@ error_reporting(E_ALL ^ E_NOTICE);
 
 
 $cierra_linea = "";
-	echo "<div id=\"collapse navbar-collapse navbar-ex1-collapse\">";
-		echo "<ul class=\"nav nav-tabs\">";
+	echo '<div id="collapse navbar-collapse navbar-ex1-collapse">';
+		// echo '<ul class="nav nav-tabs">';
+		echo '<ul class="nav nav-tabs nav-justified">';
 	
 	// $menus = $_SESSION['menuPerfil'];
 	foreach($arreglo as $llave=>$elmento){
@@ -49,30 +50,29 @@ $cierra_linea = "";
 		$link = $arreglo[$llave]['ruta_url'];
 		$submenu = $arreglo[$llave]['submenu'];
 		if(empty($link)){
-			echo "<li class=\"dropdown\">
-					<a href=\"".$link."\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">".$menu_nombre."<b class=\"caret\"></b></a>";
+			echo '<li class="dropdown">';
+			echo '<a href="'.$link.'" class="dropdown-toggle" data-toggle="dropdown">'.$menu_nombre.'<b class="caret"></b></a>';
 			if(is_array($submenu)){
-				
-			
+
 				foreach($submenu as $key=>$item){
-					$submenu_nombre = $submenu[$key]["menu"];
-					$link = $submenu[$key]["ruta_url"];
+					$submenu_nombre = $submenu[$key]['menu'];
+					$link = $submenu[$key]['ruta_url'];
 					if($key == 0){
 						$cierra_linea = true;
-						echo "<ul  class=\"dropdown-menu\">";
+						echo '<ul  class="dropdown-menu">';
 					}
-					echo "<li><a href=\"".$link."\"> ".$submenu_nombre." </a></li>";
+					echo '<li class="active"><a href="'.$link.'"> '.$submenu_nombre.' </a></li>';
 				}
 			}
-			echo "</li>";
+			echo '</li>';
 			if($cierra_linea == true){
-				echo "</ul>";
+				echo '</ul>';
 				$cierra_linea = false;
 			}
 		}else{
-			 echo "<li><a href=\"".$link."\"> ".$menu_nombre." </a></li>";
+			 echo '<li><a href="'.$link.'"> '.$menu_nombre.' </a></li>';
 		}
 	 }
-		echo "</ul>";
-	echo "</div><br><br>";
+		echo '</ul>';
+	echo '</div><br><br>';
 ?>

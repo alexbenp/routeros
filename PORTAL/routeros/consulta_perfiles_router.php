@@ -25,21 +25,19 @@ $info = $ROUTERS->ipHotspotUserProfileGetall();
 		
 <div class="container">
   <div class="">
-    <h1>Lista de Perfiles</h1>
+    <h3 class="text-center text-success">Lista de Perfiles<h3><br />
   </div>
 <form id="Perfiles" action="#" method="post">
   <table class="table table-hover" id="tabla">
-    <thead>
       <tr>
-        <th>Id</th>
-        <th>Perfil</th>
-        <th>Dispositivos</th>
-        <th>Velocidad</th>
-        <th>Vigencia</th>
-		<th>&nbsp</th>
+        <th class="success">Id</th>
+        <th class="success">Perfil</th>
+        <th class="success">Dispositivos</th>
+        <th class="success">Velocidad</th>
+        <th class="success">Vigencia</th>
+		<th class="success">&nbsp</th>
       </tr>
-    </thead>
-    <tbody>
+
 <?php
 
 			foreach ($info as $i => $value) {
@@ -49,15 +47,14 @@ $info = $ROUTERS->ipHotspotUserProfileGetall();
 				$linea  = $ROUTERS->formateaUnidades($unidad);
 				// echo "ada".$id;
 				echo '<tr id="tr'.$id.'">
-						<td>'.$id.'</td>
-						<td>'.$valor['name'].'</td>
-						<td>'.$valor['shared-users'].'</td>
-						<td>'.$valor['rate-limit'].'</td>
-						<td>'.$linea.'</td>
+						<td class="text-info">'.$id.'</td>
+						<td class="text-info">'.$valor['name'].'</td>
+						<td class="text-info">'.$valor['shared-users'].'</td>
+						<td class="text-info">'.$valor['rate-limit'].'</td>
+						<td class="text-info">'.$linea.'</td>
 					</tr>';
 			}
 ?>
-    </tbody>
   </table>
  </form>
 </div>

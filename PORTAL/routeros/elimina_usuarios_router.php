@@ -48,26 +48,27 @@ if (!empty($usuario_id))
 
 <div class="container">
   <div class="">
-    <h1>Usuarios RouterOS</h1>
+    <h3 class="text-center text-success">Usuarios RouterOS<h3><br />
   </div>
-
-
-
- <table class="table table-hover" id="tabla">
-      <tr>
-        <th>Id</th>
-        <th>Nombre</th>
-        <th>Tiempo Uso</th>
-        <th>Profile</th>
-		<th>Tiempo Limite</th>
-        <th>Comentarios</th>
-		<th></th>
-      </tr>
+  <table class="table table-hover" id="tabla">
+	<div class="container">
+		<div class="form-group">
+			<tr>
+				<th class="success"><label>Id</label></th>
+				<th class="success"><label>Nombre</label></th>
+				<th class="success"><label>Tiempo Uso</label></th>
+				<th class="success"><label>Profile</label></th>
+				<th class="success"><label>Tiempo Limite</label></th>
+				<th class="success"><label>Comentarios</label></th>
+				<th class="success"></th>
+			</tr>
+		</div>
+	</div>
 
 <?php 		
 
 	
-	$arreglo = array("w"=>"Semana","d"=>"Dia","h"=>"Hora","m"=>"Minuto","s"=>"Segundo");
+	// $arreglo = array("w"=>"Semana","d"=>"Dia","h"=>"Hora","m"=>"Minuto","s"=>"Segundo");
 		
 	$info = $ROUTERS->ipHotspotUserGetall();
 
@@ -79,13 +80,13 @@ if (!empty($usuario_id))
 		$linea  = $ROUTERS->formateaUnidades($unidad);
 		echo 
 		'<tr id="tr'.$id.'">
-				<td>'.$valor['.id'].'</td>
-				<td>'.$valor['name'].'</td>
-				<td>'.$valor['uptime'].'</td>
-				<td>'.$valor['profile'].'</td>
-				<td>'.$linea.'</td>
-				<td>'.$valor['comment'].'</td>
-				<td>
+				<td class="text-info">'.hexdec($valor['.id']).'</td>
+				<td class="text-info">'.$valor['name'].'</td>
+				<td class="text-info">'.$valor['uptime'].'</td>
+				<td class="text-info">'.$valor['profile'].'</td>
+				<td class="text-info">'.$linea.'</td>
+				<td class="text-info">'.$valor['comment'].'</td>
+				<td class="text-info">
 					<a style="text-decoration:underline;cursor:pointer;"  onclick="deleteInfo(\''.$id.'\',\'elimina_dato_router.php\')">Del</a>
 				</td>
 		</tr>

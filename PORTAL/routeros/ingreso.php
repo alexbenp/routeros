@@ -40,13 +40,15 @@ $message = "";
 			$menus = new Menus($usuario->getPerfilId());
 			$arreglo = $menus->getMenu();
 			$ruta_url = $arreglo['url_principal'];
+			
+			$usuario ->setReiniciaIntentosfallidos($usuario->getUsuarioId());
 
 			 header("Location: ".$ruta_url);
 		}else{
 			$message = $usuario->getMensajeRespuesta().":".$usuario->getCodigoRespuesta() ;
 			
 			if($usuario->getCodigoRespuesta() == '02'){
-				$usuario ->setIntentosfallidos($usuario->getUsuarioId());
+				$usuario ->setIncrementaIntentosfallidos($usuario->getUsuarioId());
 			}
 			
 			
