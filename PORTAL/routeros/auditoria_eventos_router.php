@@ -1,60 +1,56 @@
 <?php 
 include("control.php");
 require_once("principal.php");
-require_once ('clases/Routers.php');
+// require_once ('clases/Routers.php');
+require_once ('clases/AuditoriaSysLog.php');
 
+$AuditoriaSysLog = new AuditoriaSysLog();
 
-$ipRB			= $_SESSION["ip"]; //IP de tu RB.
-$Username		= $_SESSION["usuario"]; //Nombre de usuario con privilegios para acceder al RB
-$clave			= $_SESSION["clave"]; //Clave del usuario con privilegios
-$api_puerto		= $_SESSION["puerto"]; //Puerto que definimos el API en IP--->Services
-$attempts 		= $_SESSION["reintentos_conexion"]; // Connection attempt count
-$delay 			= $_SESSION["retraso_conexion"]; // Delay between connection attempts in seconds
-$timeout 		= $_SESSION["tiempo_maximo_conexion"]; // Connection attempt timeout and data read timeout
-
-$ROUTERS = new Routers($ipRB , $Username , $clave, $api_puerto, $attempts, $delay, $timeout);
-$logSystemRouter = $ROUTERS->logSystemRouter();
+$fechaInicio 		= '2016-09-06 20:00:00';
+$fechaFinal			= '2016-09-06 23:59:59';
+$getSystemEvents 	= $AuditoriaSysLog->getSystemEvents($fechaInicio,$fechaFinal);
 // echo "<pre>";
-// print_r($logSystemRouter);
+// print_r($getSystemEvents);
 // echo "</pre>";	
 
 ?>
 <div class="container">
   <div class="">
-    <h1>Auditoria RouterOS</h1>
+    <h3 class="text-center text-success">Auditoria RouterOS<h3>
   </div>
 <form id="auditoria" action="#" method="post">
   <table class="table table-hover" id="tabla">
-    <thead>
-      <tr>
-        <th>Id</th>
-        <th>Fecha Hora</th>
-        <th>Categoria</th>
-        <th>Evento</th>
-      </tr>
-    </thead>
-    <tbody>
-		
-		
+	<div class="container">
+		<div class="form-group">
+		  <tr>
+			<th class="success">Id</th>
+			<th class="success">Equipo</th>
+			<th class="success">Fecha</th>
+			<th class="success">Mensaje</th>
+			<th class="success">Etiqueta Log</th>
+		  </tr>
+		</div>
+	</div>
 <?php
 
-	foreach ($logSystemRouter as $i => $value) {
-		$id    		= hexdec($logSystemRouter[$i]['.id']);
-		$time		= $logSystemRouter[$i]['time'];
-		$topics		= $logSystemRouter[$i]['topics'];
-		$message	= $logSystemRouter[$i]['message'];
+	foreach ($getSystemEvents as $i => $value) {
+		$id    		= hexdec($getSystemEvents[$i]['ID']);
+		$FromHost	= $getSystemEvents[$i]['FromHost'];
+		$ReceivedAt	= $getSystemEvents[$i]['ReceivedAt'];
+		$Message	= $getSystemEvents[$i]['Message'];
+		$SysLogTag	= $getSystemEvents[$i]['SysLogTag'];
 
 		echo 
 		'<tr>
-			<td>'.$id.'</td>
-			<td>'.$time.'</td>
-			<td>'.$topics.'</td>
-			<td>'.$message.'</td>
+			<td class="text-info">'.$id.'</td>
+			<td class="text-info">'.$FromHost.'</td>
+			<td class="text-info">'.$ReceivedAt.'</td>
+			<td class="text-info">'.$Message.'</td>
+			<td class="text-info">'.$SysLogTag.'</td>
 			
 		</tr>';
 	}
 ?>
-    </tbody>
   </table>
   <input type="hidden" name="action" value="userDel"/>
  </form>
