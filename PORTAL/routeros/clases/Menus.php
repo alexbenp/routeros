@@ -30,7 +30,7 @@ class Menus {
 			try {
 				$this->codigoRespuesta = "11";
 				$this->mensajeRespuesta = "Menu no valido:";
-				$sql = $conexion->prepare('SELECT * FROM menus_perfil mp INNER JOIN menus m ON (mp.menu_id = m.menu_id) WHERE mp.perfil_id = :perfil_id AND m.nivel = :nivel_id order by nivel,orden');
+				$sql = $conexion->prepare('SELECT * FROM menus_perfil mp INNER JOIN menus m ON (mp.menu_id = m.menu_id) WHERE mp.perfil_id = :perfil_id AND m.nivel = :nivel_id AND m.estados_menu_id = 1 AND mp.estados_menu_id = 1 order by nivel,orden');
 				$sql->bindParam(':perfil_id', $this->perfil_id);
 				$sql->bindParam(':nivel_id',  $this->nivel_uno);
 
@@ -59,7 +59,7 @@ class Menus {
 			try {
 				$this->codigoRespuesta = "12";
 				$this->mensajeRespuesta = "SubMenu no valido:";
-				$sql = $conexion->prepare('SELECT * FROM menus_perfil mp INNER JOIN menus m ON (mp.menu_id = m.menu_id) WHERE mp.perfil_id = :perfil_id AND m.nivel = :nivel_id AND m.submenu_id = :menu_id order by nivel,orden');
+				$sql = $conexion->prepare('SELECT * FROM menus_perfil mp INNER JOIN menus m ON (mp.menu_id = m.menu_id) WHERE mp.perfil_id = :perfil_id AND m.nivel = :nivel_id AND m.submenu_id = :menu_id AND m.estados_menu_id = 1 AND mp.estados_menu_id = 1 order by nivel,orden');
 				$sql->bindParam(':perfil_id', $this->perfil_id);
 				$sql->bindParam(':menu_id', $this->menu_id);
 				$sql->bindParam(':nivel_id',  $this->nivel_dos);

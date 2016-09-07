@@ -6,8 +6,8 @@ require_once ('clases/AuditoriaSysLog.php');
 
 $AuditoriaSysLog = new AuditoriaSysLog();
 
-$fechaInicio 		= '2016-09-06 20:00:00';
-$fechaFinal			= '2016-09-06 23:59:59';
+$fechaInicio 		= '2016-09-07 17:00:00';
+$fechaFinal			= '2016-09-07 23:59:59';
 $getSystemEvents 	= $AuditoriaSysLog->getSystemEvents($fechaInicio,$fechaFinal);
 // echo "<pre>";
 // print_r($getSystemEvents);

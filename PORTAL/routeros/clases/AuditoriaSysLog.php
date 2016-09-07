@@ -16,7 +16,7 @@ class AuditoriaSysLog {
 			try {
 				$this->codigoRespuesta = "01";
 				$this->mensajeRespuesta = "No existe Informacon de Auditoria:";
-				$sql = $conexion->prepare('SELECT * FROM SystemEvents WHERE ReceivedAt BETWEEN  :fechaInicio AND :fechaFinal');
+				$sql = $conexion->prepare('SELECT * FROM SystemEvents WHERE ReceivedAt BETWEEN  :fechaInicio AND :fechaFinal ORDER BY ReceivedAt DESC');
 				$sql->bindParam(':fechaInicio', $fechaInicio);
 				$sql->bindParam(':fechaFinal',  $fechaFinal);
 
