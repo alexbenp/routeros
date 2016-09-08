@@ -198,7 +198,7 @@ CREATE TABLE `menus` (
 
 LOCK TABLES `menus` WRITE;
 /*!40000 ALTER TABLE `menus` DISABLE KEYS */;
-INSERT INTO `menus` VALUES (1,1,NULL,'Inicio','configuracion_router.php',1,'2016-08-22 04:50:17',1),(2,1,NULL,'Usuarios',NULL,2,'2016-08-22 04:50:17',1),(3,1,NULL,'Perfiles',NULL,3,'2016-08-22 04:50:17',1),(4,1,NULL,'Administración',NULL,4,'2016-08-22 04:50:17',1),(5,1,NULL,'Salir','salir.php',5,'2016-08-22 04:50:17',1),(6,2,2,'Registar Usuarios','registra_usuarios_router.php',1,'2016-08-22 05:00:17',1),(7,2,2,'Consultar Usuarios','consulta_usuarios_router.php',2,'2016-08-22 05:00:17',1),(8,2,2,'Eliminar Usuarios','elimina_usuarios_router.php',3,'2016-08-22 05:00:17',1),(9,2,3,'Crear Perfiles','administra_perfiles_router.php',1,'2016-08-26 01:27:40',1),(10,2,4,'Auditoría Router','auditoria_eventos_router.php',1,'2016-08-30 23:30:30',1),(11,2,4,'Historial Eventos','historial_eventos_router.php',2,'2016-08-31 01:00:00',1),(12,2,3,'Eliminar Perfiles','elimina_perfiles_router.php',3,'2016-09-05 04:33:00',1),(13,2,3,'Consultar Perfiles','consulta_perfiles_router.php',2,'2016-09-05 04:33:00',1);
+INSERT INTO `menus` VALUES (1,1,NULL,'Inicio','configuracion_router.php',1,'2016-08-22 04:50:17',1),(2,1,NULL,'Usuarios',NULL,2,'2016-08-22 04:50:17',1),(3,1,NULL,'Perfiles',NULL,3,'2016-08-22 04:50:17',1),(4,1,NULL,'Auditoria',NULL,4,'2016-08-22 04:50:17',1),(5,1,NULL,'Salir','salir.php',5,'2016-08-22 04:50:17',1),(6,2,2,'Registar Usuarios','registra_usuarios_router.php',1,'2016-08-22 05:00:17',1),(7,2,2,'Consultar Usuarios','consulta_usuarios_router.php',2,'2016-08-22 05:00:17',1),(8,2,2,'Eliminar Usuarios','elimina_usuarios_router.php',3,'2016-08-22 05:00:17',1),(9,2,3,'Crear Perfiles','administra_perfiles_router.php',1,'2016-08-26 01:27:40',1),(10,2,4,'Auditoría Router','auditoria_eventos_router.php',1,'2016-08-30 23:30:30',1),(11,2,4,'Historial Eventos','historial_eventos_router.php',2,'2016-08-31 01:00:00',2),(12,2,3,'Eliminar Perfiles','elimina_perfiles_router.php',3,'2016-09-05 04:33:00',1),(13,2,3,'Consultar Perfiles','consulta_perfiles_router.php',2,'2016-09-05 04:33:00',1);
 /*!40000 ALTER TABLE `menus` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -362,7 +362,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'ADMIN',NULL,'ADMINISTRADOR','ADMIN','PORTAL WEB','TELEFONO',1,'2016-08-22 04:30:18','󮼫AƬ\հfy\ϖ','corre@portalrouteros.com',1,7),(2,'USUARIO',NULL,'NOMBRE USUARIO','APELLIDO USUARIO','PORTAL ROUTEROS','TELEFONO',2,'2016-08-23 05:26:06','󮼫AƬ\հfy\ϖ','usuario@portalrouteros.com',2,0);
+INSERT INTO `usuarios` VALUES (1,'ADMIN',NULL,'ADMINISTRADOR','ADMIN','PORTAL WEB','TELEFONO',1,'2016-08-22 04:30:18','󮼫AƬ\հfy\ϖ','corre@portalrouteros.com',1,0),(2,'USUARIO',NULL,'NOMBRE USUARIO','APELLIDO USUARIO','PORTAL ROUTEROS','TELEFONO',1,'2016-08-23 05:26:06','󮼫AƬ\հfy\ϖ','usuario@portalrouteros.com',2,0);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -383,7 +383,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-06  1:26:36
+-- Dump completed on 2016-09-08  2:05:27
 
 UPDATE usuarios SET clave = aes_encrypt('clave','$UjhY&743*#4#r1+u38s') WHERE usuario_id IN (1,2);
 UPDATE routers SET usuario = 'admin', estados_router_id = 1, clave = '' WHERE router_id IN (1);

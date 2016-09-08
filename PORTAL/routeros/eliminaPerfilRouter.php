@@ -1,8 +1,12 @@
 <?php 
  error_reporting(E_ALL ^ E_NOTICE);
 include("control.php");
+include("include/config.php");
 require_once ('clases/api.php'); //aqui incluimos la clase API para trabajar con ella
 require_once ('clases/Routers.php');
+$validaSesion = new Menus($_SESSION['getPerfilId']);
+$php_self = str_replace($ruta_instalacion,'',$_SERVER['REQUEST_URI']);
+$validaSesion->getPageByName($php_self);
 $profile = $_GET['id'];
 
 

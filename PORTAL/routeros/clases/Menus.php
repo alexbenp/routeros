@@ -48,6 +48,7 @@ class Menus {
 			}
 		
 	}
+	
 	public function getMenusNivelDos($menu_id){
 		$conexion = new Conexion();
 		$this->menu_id = $menu_id;
@@ -110,6 +111,48 @@ class Menus {
 		$retorna['url_principal'] = $url_principal;
 		 
 		return $retorna;
+	}
+
+	public function getPageByName($ruta_url){
+		$this->ruta_url = $ruta_url;
+		$conexion 		= new Conexion();
+		
+		  // echo 'client version: ', $conexion->getAttribute(PDO::ATTR_CLIENT_VERSION), "\n";
+		  // echo 'server version: ', $conexion->getAttribute(PDO::ATTR_SERVER_VERSION), "\n";
+		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+			try {
+				$this->codigoRespuesta = "13";
+				$this->mensajeRespuesta = "Menu no valido:";
+				$sql = $conexion->prepare('SELECT count(*) AS VALIDA FROM menus_perfil mp INNER JOIN menus m ON (mp.menu_id = m.menu_id) WHERE mp.perfil_id = :perfil_id AND m.estados_menu_id = 1 AND mp.estados_menu_id = 1 AND m.ruta_url = :ruta_url order by nivel,orden');
+				$sql->bindParam(':perfil_id', $this->perfil_id);
+				$sql->bindParam(':ruta_url', $this->ruta_url);
+
+
+				$sql->execute();
+				$resultado = $sql->fetchAll();
+				$valida = $resultado[0]['VALIDA'];
+
+				if($valida == 0){
+					echo ' No encuenrta datos '.$this->perfil_id.' ruta:'.$this->ruta_url;
+					session_destroy();
+					UNSET($_SESSION);
+					// Redireccionamos a index.php (al inicio de sesión) 
+					header("Location: index.php"); 
+				}else{
+					return $resultado;	
+				}
+
+
+			} catch (PDOException $e) {
+			  echo "<br>getMenusNivelUno::DataBase Error: <br>".$e->getMessage();
+			  echo "<br>Error Code:<br> ".$e->getCode();
+			  exit;
+			} catch (Exception $e) {
+			  echo "getMenusNivelUno::General Error: The user could not be added.<br>".$e->getMessage();
+			  exit;
+			}
+		
 	}
 	
 }

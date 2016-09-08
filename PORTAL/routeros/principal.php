@@ -1,13 +1,17 @@
 <?php 
 include("control.php"); 
+include("include/config.php");
 require_once 'clases/Menus.php';
+
 error_reporting(E_ALL ^ E_NOTICE);
 ?> 
 <html>
 <head>
 <title>Portal RouterOS</title>
-<script language="JavaScript" type="text/javascript" src="js/ajax.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+<link rel="stylesheet" type="text/css" href="css/jquery.datetimepicker.css"/>
+
+
 <!--<link href="css/ingreso.css" rel="stylesheet" type="text/css"> -->
 <!--<link href="css/menu.css" rel="stylesheet" type="text/css">  -->
 <!--<link href="css/formulario.css" rel="stylesheet" type="text/css"> -->
@@ -22,11 +26,15 @@ error_reporting(E_ALL ^ E_NOTICE);
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
 
 
+
 </head>
 <body> 
 
-<script src="https://code.jquery.com/jquery.js"></script>
+<!-- <script src="https://code.jquery.com/jquery.js"></script> -->
+<script src="js/jquery.js"></script>
+<script src="js/jquery.datetimepicker.full.js"></script>
 
+<script language="JavaScript" type="text/javascript" src="js/ajax.js"></script>
 
 <!-- Versión compilada y comprimida del JavaScript de Bootstrap -->
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>

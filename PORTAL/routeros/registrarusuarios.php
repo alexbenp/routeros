@@ -1,5 +1,6 @@
 <?php
 include("control.php");
+include("include/config.php");
 //  var_dump($_POST);
   
 if($_POST)

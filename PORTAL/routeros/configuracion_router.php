@@ -1,9 +1,18 @@
 <?php 
 include("control.php");
+include("include/config.php");
 require_once("principal.php");
 //require_once ('clases/api.php'); //aqui incluimos la clase API para trabajar con ella
 require_once ('clases/RouterDb.php');
 require_once ('clases/Routers.php');
+
+$validaSesion = new Menus($_SESSION['getPerfilId']);
+$php_self = str_replace($ruta_instalacion,'',$_SERVER['REQUEST_URI']);
+// echo "php_self".$php_self;
+$validaSesion->getPageByName($php_self);
+
+
+
 // require_once 'clases/Menus.php';
 $router=$_REQUEST['router']; 
 $action=$_REQUEST['action']; 

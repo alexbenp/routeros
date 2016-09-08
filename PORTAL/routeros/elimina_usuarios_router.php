@@ -1,6 +1,7 @@
 <?php 
 include("control.php");
 include("principal.php");
+include("include/config.php");
 require_once ('clases/api.php'); //aqui incluimos la clase API para trabajar con ella
 require_once ('clases/Routers.php');
 $action=$_REQUEST['action']; 

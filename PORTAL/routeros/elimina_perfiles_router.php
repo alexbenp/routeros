@@ -1,7 +1,12 @@
 <?php 
 include("control.php");
 include("principal.php");
+include("include/config.php");
 require_once ('clases/Routers.php');
+
+$validaSesion = new Menus($_SESSION['getPerfilId']);
+$php_self = str_replace($ruta_instalacion,'',$_SERVER['REQUEST_URI']);
+$validaSesion->getPageByName($php_self);
 $action			= $_REQUEST['action']; 
 $profile		= $_REQUEST['profile']; 
 $ipRB			= $_SESSION["ip"]; //IP de tu RB.
