@@ -34,6 +34,8 @@ $message = "";
 			$_SESSION["apellidos"] 	= $usuario->getApellidos();
 			$_SESSION["perfil"] 	= $usuario->getPerfil();
 			$_SESSION["getPerfilId"] 	= $usuario->getPerfilId();
+			$_SESSION["estados_usuario_id"] 	= $usuario->getEstadosUsuarioId();
+
 			
 			// $principal = 0;
 			require_once 'clases/Menus.php';

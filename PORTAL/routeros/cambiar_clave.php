@@ -2,22 +2,86 @@
 include("control.php");
 include("include/config.php");
 require_once("principal.php");
-// require_once ('clases/Routers.php');
+require_once 'clases/Usuarios.php';
 require_once ('clases/AuditoriaSysLog.php');
 $action	=	$_REQUEST['action']; 
+$codigo_respuesta_exitosa = "00";
 
 $validaSesion = new Menus($_SESSION['getPerfilId']);
 $php_self = str_replace($ruta_instalacion,'',$_SERVER['REQUEST_URI']);
 $validaSesion->getPageByName($php_self);
 
 
+		
+		
 ?>
 
+
+<?php 
+if($action =="1" ){
+
+	$password1 = $_POST['password1'];
+	$password2 = $_POST['password2'];
+	$password3 = $_POST['password3'];
+	
+
+	
+
+	
+	if (empty($password1) or empty($password2) or empty($password3)){
+		echo "Paramentros Invalidos<br>";
+	}else{
+		if($password1 !== $password2){
+			echo "Error: La nueva clave y la confirmación no son iguales<br>";
+		}else{
+			if($password1 == $password3){
+				echo "Error: La nueva clave es igual a la anterior<br>";
+			}else{
+				if(preg_match("/^.*(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/",$password1)){
+					
+					
+					
+									
+					$estados_usuario_id 	= $_SESSION['estados_usuario_id'];
+					$s_usuario				= $_SESSION['usuario'];
+
+
+					$usuario = new Usuarios($usuario_id,$s_usuario,$identificacion,$nombres,$apellidos,$direccion,$telefono,$estados_usuario_id,$fecharegistro,$password3,$correo,$perfil_id);
+					
+					$info = $usuario->validaUsuario();
+					if ($usuario->getCodigoRespuesta() == $codigo_respuesta_exitosa){
+						
+						$cambia = $usuario->setClave($usuario->getUsuarioId(),$password1);
+						if ($cambia =='00') {
+							$respuesta = "La Clave se ha cambiado Correctamente";	
+						}else{
+							$respuesta = "Error en el Proceso de actualizacion de la clave";	
+						}
+												
+					}else{
+						$respuesta = "No coincide la clave actual con la digitada";	
+					}
+					
+					
+				}else{
+					$respuesta = "La clave no cumple las condiciones de seguridad";
+
+				}
+				
+			}
+		}
+		
+	}
+}
+?>	
 
 <div class="container">
 	<div class="row">
 		<div class="col-sm-12">
 			<h1 class="text-center text-success">Cambiar Clave</h1>
+			<br>
+			<h4 class="text-center text-success"><?php echo $respuesta; ?></h4>
+			<br>
 		</div>
 	</div>
 	<div class="row">
@@ -133,50 +197,3 @@ $("input[type=password]").keyup(function(){
 	
 });
 </script>
-
-<?php 
-if($action =="1" ){
-	
-	$password1 = $_POST['password1'];
-	$password2 = $_POST['password2'];
-	$password3 = $_POST['password3'];
-	
-	if (empty($password1) or empty($password2) or empty($password3)){
-		echo "Paramentros Invalidos<br>";
-	}else{
-		if($password1 !== $password2){
-			echo "Error: La nueva clave y la confirmación no son iguales<br>";
-		}else{
-			if($password1 == $password3){
-				echo "Error: La nueva clave es igual a la anterior<br>";
-			}else{
-				if(preg_match("/^.*(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/",$password1)){
-					echo "ok";
-				}else{
-					echo "La clave no cumple criterios de seguridad<br>
-					Clave que contengan al menos una letra mayúscula.<br>
-					Clave que contengan al menos una letra minúscula.<br>
-					Clave que contengan al menos un número o caracter especial.<br>
-					Clave cuya longitud sea como mínimo 8 caracteres.<br>
-					Clave cuya longitud máxima no debe ser arbitrariamente limitada.<br>
-					";
-				}
-				
-			   if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/", $password1)){     
-			   echo "Su password es seguro.";   
-			   }else{
-				 echo "Su password no es seguro."; 
-			   }
-				
-			}
-		}
-		
-	}
-	
-	
-	echo "<pre>";
-	print_r($_REQUEST);
-	echo "</pre>";
-	
-}
-?>	

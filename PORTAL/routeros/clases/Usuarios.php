@@ -361,6 +361,39 @@
 		$conexion = null;
 		
 	}
+	
+	public function setClave($usuario_id,$clave){
+		$conexion = new Conexion();
+		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		try {
+			
+			
+			$this->mensajeRespuesta = "Error Actualizando estado usuario: ";
+			// $sql = $conexion->prepare('UPDATE usuarios SET clave = AES_ENCRYPT(\''.$clave.'\',\''.$this->keyconfig.'\') WHERE usuario_id = '.$usuario_id);
+			$sql = $conexion->prepare('UPDATE usuarios SET clave = AES_ENCRYPT(:clave,:keyconfig) WHERE usuario_id = :usuario_id');
+			$sql->bindParam(':clave', $clave);
+			$sql->bindParam(':keyconfig', $this->keyconfig);
+			$sql->bindParam(':usuario_id', $usuario_id);
+			$sql->execute();
+			// echo "<pre>";
+			// print_r($sql);
+			// echo "</pre>";
+			
+			$resultado = '00';
+			return $resultado;
+			
+		}catch (PDOException $e) {
+			echo "<br>setCambiaEstadoUsuario::DataBase Error: ".$usuario_id." clave = ".$clave."<br>".$e->getMessage();
+			echo "<br>Error Code:<br> ".$e->getCode();
+			exit;
+		}catch (Exception $e) {
+			echo "setCambiaEstadoUsuario::General Error: The user could not be added.<br>".$e->getMessage();
+			exit;
+		}
+		$conexion = null;
+		
+	}
 			
  }
 ?>
