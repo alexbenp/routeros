@@ -370,7 +370,7 @@
 			
 			
 			$this->mensajeRespuesta = "Error Actualizando estado usuario: ";
-			// $sql = $conexion->prepare('UPDATE usuarios SET clave = AES_ENCRYPT(\''.$clave.'\',\''.$this->keyconfig.'\') WHERE usuario_id = '.$usuario_id);
+
 			$sql = $conexion->prepare('UPDATE usuarios SET clave = AES_ENCRYPT(:clave,:keyconfig) WHERE usuario_id = :usuario_id');
 			$sql->bindParam(':clave', $clave);
 			$sql->bindParam(':keyconfig', $this->keyconfig);

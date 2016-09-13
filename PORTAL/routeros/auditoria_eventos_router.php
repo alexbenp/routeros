@@ -1,7 +1,7 @@
 <?php 
 include("control.php");
 include("include/config.php");
-require_once("principal.php");
+include("principal.php");
 // require_once ('clases/Routers.php');
 require_once ('clases/AuditoriaSysLog.php');
 $action	=	$_REQUEST['action']; 

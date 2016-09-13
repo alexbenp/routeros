@@ -1,11 +1,26 @@
 <?php 
+include_once("control.php");
+include_once("include/config.php");
+
+$imprimeMenu 	= 1;
+$action			= $_REQUEST['action']; 
+
+if($action=="userRemove"){
+	$imprimeMenu = 0;
+}
+
+
+
+if($imprimeMenu == 1){
+	require_once("principal.php");	
+}
+
 include("control.php");
-include("principal.php");
 include("include/config.php");
-require_once ('clases/api.php'); //aqui incluimos la clase API para trabajar con ella
+// require_once ('clases/api.php'); //aqui incluimos la clase API para trabajar con ella
 require_once ('clases/Routers.php');
-$action=$_REQUEST['action']; 
-// $usuario_id = $_POST['id'];
+require_once ('clases/Menus.php');
+
 $usuario_id = $_GET['id'];
 
 
@@ -20,23 +35,26 @@ $timeout 		= $_SESSION["tiempo_maximo_conexion"]; // Connection attempt timeout 
 
 $ROUTERS = new Routers($ipRB , $Username , $clave, $api_puerto, $attempts, $delay, $timeout);
 
-if (!empty($usuario_id)) 
-{
-	
-	if (($usuario_id =="")) 
-	{ 
-		echo "Todos los campos son obligatorios, por favor completa <a href=\"\">el formulario</a> nuevamente.";
-	}else{
-		$userRemove = $ROUTERS->ipHotspotUserRemove($usuario_id);
-		$mensajeRespuestaUserRemove = $ROUTERS->getMensajeRespuesta();
-		$codigoRespuestaUserRemove = $ROUTERS->getCodigoRespuesta();
+if($action=="userRemove"){
+	if (!empty($usuario_id)) 
+	{
+		
+		if (($usuario_id =="")) 
+		{ 
+			echo "Todos los campos son obligatorios, por favor completa <a href=\"\">el formulario</a> nuevamente.";
+		}else{
+			$userRemove = $ROUTERS->ipHotspotUserRemove($usuario_id);
+			$mensajeRespuestaUserRemove = $ROUTERS->getMensajeRespuesta();
+			$codigoRespuestaUserRemove = $ROUTERS->getCodigoRespuesta();
 
+		}
+		
 	}
+}
 	
-}else
+
+if($imprimeMenu == 1){
 ?> 
-
-
 <body>
 		<div id="resultado"></div>
 		
@@ -51,6 +69,7 @@ if (!empty($usuario_id))
   <div class="">
     <h3 class="text-center text-success">Usuarios RouterOS<h3><br />
   </div>
+  <form id="Perfiles" action="#" method="post">
   <table class="table table-hover" id="tabla">
 	<div class="container">
 		<div class="form-group">
@@ -88,16 +107,16 @@ if (!empty($usuario_id))
 				<td class="text-info">'.$linea.'</td>
 				<td class="text-info">'.$valor['comment'].'</td>
 				<td class="text-info">
-					<a style="text-decoration:underline;cursor:pointer;"  onclick="deleteInfo(\''.$id.'\',\'elimina_dato_router.php\')">Del</a>
+					<a style="text-decoration:underline;cursor:pointer;"  onclick="deleteInfo(\''.$id.'\',\'elimina_usuarios_router.php\',\'tr\',\'resultado\',\'action\')">Del</a>
 				</td>
 		</tr>
 		';
 	}
+
 ?>
-
-</table>   
+	</table>   
+	<input type="hidden" id="action" name="action" value="userRemove"/>
+	</form>
  </body>
-
-
-
-
+<?php 
+}

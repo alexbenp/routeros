@@ -1,17 +1,11 @@
 <?php 
  class ConexionSysLog extends PDO { 
     private $tipo_de_base = 'mysql';
-   // private $host = '186.155.37.179';
-   // private $port = '43306';
-   // private $nombre_de_base = 'Syslog';
-   // private $usuario = 'Syslog.sip';
-   // private $contrasena = 'Syslog.sipltda2016';
-   
    private $host = 'localhost';
    private $port = '3306';
    private $nombre_de_base = 'Syslog';
-   private $usuario = 'routeros';
-   private $contrasena = 'routeros';
+   private $usuario = 'Syslog.sip';
+   private $contrasena = 'Syslog.sipltda2016';
     
    public function __construct() {
       //Sobreescribo el método constructor de la clase PDO.
