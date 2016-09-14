@@ -9,11 +9,15 @@ if($action=="userRemove"){
 	$imprimeMenu = 0;
 }
 
-
-
 if($imprimeMenu == 1){
 	require_once("principal.php");	
 }
+
+$validaSesion = new Menus($_SESSION['getPerfilId']);
+$php_self = str_replace($ruta_instalacion,'',$_SERVER['REQUEST_URI']);
+$validaSesion->getPageByName($php_self);
+
+
 
 include("control.php");
 include("include/config.php");

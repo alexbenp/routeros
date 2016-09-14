@@ -274,6 +274,24 @@ class Routers extends routeros_api {
 		
 		return $linea;
 	}
+	
+	public function ipHotspotUserPrint($usuario,$estado,$perfil){
+		if ($this->connect($this->iprouter , $this->usuariorouter , $this->claverouter, $this->puertorouter, $this->attemptsrouter, $this->delayrouter, $this->timeoutrouter)) {
+			$comando = "";
+			if(!empty($usuario)){
+				$resultado = $this->comm('/ip/hotspot/user/print',array('?name' => $usuario));
+				
+			}else{
+				$resultado = $this->comm('/ip/hotspot/user/print'.$commando);
+			}
+			$this->disconnect();
+			return $resultado;
+		}else{
+			$this->codigoRespuesta = "100";
+			$this->mensajeRespuesta = "ipHotspotUserGetall::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." en el puerto: ".$this->puertorouter;
+		}
+	}
+	
 }
 	  
  
