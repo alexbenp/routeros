@@ -1,56 +1,129 @@
 <?php 
 include("control.php");
 include("include/config.php");
-require_once("principal.php");
+// require_once("principal.php");
 //require_once ('clases/api.php'); //aqui incluimos la clase API para trabajar con ella
 require_once ('clases/RouterDb.php');
 require_once ('clases/Routers.php');
 
+
+$imprimeMenu 	= 1;
+$estados_router_id = 1;
+$action			= $_REQUEST['action']; 
+$routerId		=$_REQUEST['router_id']; 
+$usuario_id 	= $_SESSION['usuario_id'];
+
+if($action=="getInfoRouter"){
+	require_once ('clases/Menus.php');
+	$imprimeMenu = 0;
+}
+
+if($imprimeMenu == 1){
+	require_once("principal.php");	
+}
+
+$ADMROUTERS = new RoutersDb();
 $validaSesion = new Menus($_SESSION['getPerfilId']);
-$php_self = str_replace($ruta_instalacion,'',$_SERVER['REQUEST_URI']);
+$php_self = str_replace($ruta_instalacion,'',$_SERVER['PHP_SELF']);
 // echo "php_self".$php_self;
 $validaSesion->getPageByName($php_self);
 
 
 
+
+
 // require_once 'clases/Menus.php';
-$router=$_REQUEST['router']; 
-$action=$_REQUEST['action']; 
-$estados_router_id = 1;
+
+
+
 
 
 // $ROUTERS = new Routers();
 // $AdminRouters = $ROUTERS->getInformacionAdminRouter($estados_router_id);
 
-$ADMROUTERS = new RoutersDb($router);
-$AdminRouters = $ADMROUTERS->getParametrosRouter($estados_router_id);
 
-$ipRB			= $_SESSION['ip']; //IP de tu RB.
-$Username		= $_SESSION['usuario']; //Nombre de usuario con privilegios para acceder al RB
-$clave			= $_SESSION['clave']; //Clave del usuario con privilegios
-$api_puerto		= $_SESSION['puerto']; //Puerto que definimos el API en IP--->Services
+
+$AdminRouters = $ADMROUTERS->getRouterUser($usuario_id,$estados_router_id);
+$getCodigoRespuestaRouter = $ADMROUTERS->getCodigoRespuesta();
+$getMensajeRespuestaRouter = $ADMROUTERS->getMensajeRespuesta();
+
+
+if(empty($routerId) and empty($_SESSION['ipRouter'])){
+	
+	if($getCodigoRespuestaRouter!='00'){
+		echo $getCodigoRespuestaRouter."::".$getMensajeRespuestaRouter."<br><br>";
+	}else{
+		echo "Por qaui aso<br>";
+		$contar = true;
+		$_SESSION['ipRouter'] 				= $AdminRouters[0]['router_id'];
+		$_SESSION['ipRouter'] 				= $AdminRouters[0]['ipRouter'];
+		$_SESSION['usuarioRouter'] 			= $AdminRouters[0]['usuarioRouter'];
+		$_SESSION['claveRouter'] 			= $AdminRouters[0]['claveRouter'];
+		$_SESSION['puertoRouter'] 			= $AdminRouters[0]['puertoRouter'];
+		$_SESSION['reintentos_conexion'] 	= $AdminRouters[0]['reintentos_conexion'];
+		$_SESSION['retraso_conexion'] 		= $AdminRouters[0]['retraso_conexion'];
+		$_SESSION['tiempo_maximo_conexion'] = $AdminRouters[0]['tiempo_maximo_conexion'];
+	}
+}elseif($routerId>0 and $action=='getInfoRouter'){
+	$getRouterUserByRouterId = $ADMROUTERS->getRouterUserByRouterId($usuario_id,$routerId,$estados_router_id);
+	$getCodigoRespuestaRouterUser = $ADMROUTERS->getCodigoRespuesta();
+	$getMensajeRespuestaRouterUser = $ADMROUTERS->getMensajeRespuesta();
+	
+	if($getCodigoRespuestaRouterUser!='00'){
+		echo $getCodigoRespuestaRouterUser."::".$getMensajeRespuestaRouterUser."<br><br>";
+	}else{
+		echo "Por este lado<br>";
+		$contar = true;
+		$_SESSION['ipRouter'] 				= $getRouterUserByRouterId[0]['router_id'];
+		$_SESSION['ipRouter'] 				= $getRouterUserByRouterId[0]['ipRouter'];
+		$_SESSION['usuarioRouter'] 			= $getRouterUserByRouterId[0]['usuarioRouter'];
+		$_SESSION['claveRouter'] 			= $getRouterUserByRouterId[0]['claveRouter'];
+		$_SESSION['puertoRouter'] 			= $getRouterUserByRouterId[0]['puertoRouter'];
+		$_SESSION['reintentos_conexion'] 	= $getRouterUserByRouterId[0]['reintentos_conexion'];
+		$_SESSION['retraso_conexion'] 		= $getRouterUserByRouterId[0]['retraso_conexion'];
+		$_SESSION['tiempo_maximo_conexion'] = $getRouterUserByRouterId[0]['tiempo_maximo_conexion'];
+	}
+
+}
+
+$ipRB			= $_SESSION['ipRouter']; //IP de tu RB.
+$UsernameRouter	= $_SESSION['usuarioRouter']; //Nombre de usuario con privilegios para acceder al RB
+$claveRouter	= $_SESSION['claveRouter']; //Clave del usuario con privilegios
+$api_puerto		= $_SESSION['puertoRouter']; //Puerto que definimos el API en IP--->Services
 $attempts 		= $_SESSION['reintentos_conexion']; // Connection attempt count
 $delay 			= $_SESSION['retraso_conexion']; // Delay between connection attempts in seconds
 $timeout 		= $_SESSION['tiempo_maximo_conexion']; // Connection attempt timeout and data read timeout
 
 
 
-
-
+			echo "<pre>";
+			print_r($_SESSION);
+			// echo "</pre>";
+			// echo "<pre>";
+			// print_r($_REQUEST);
+			// echo "</pre>";
 // echo "kjhkjh".$router;
-$_SESSION['ip'] 	= $AdminRouters[0]['ip'];
-$_SESSION['usuario'] 	= $AdminRouters[0]['usuario'];
-$_SESSION['clave'] 	=  $AdminRouters[0]['clave'];
-$_SESSION['puerto'] 	= $AdminRouters[0]['puerto'];
-$_SESSION['reintentos_conexion'] 	= $AdminRouters[0]['reintentos_conexion'];
-$_SESSION['retraso_conexion'] 	= $AdminRouters[0]['retraso_conexion'];
-$_SESSION['tiempo_maximo_conexion'] 	= $AdminRouters[0]['tiempo_maximo_conexion'];
+
+
+if($imprimeMenu == 1){
+?> 
+	<div id="resultado"></div>
+		
+<?php 
+
 ?>
 	<form class="contacto" id="configura_router" action="#" method="POST" enctype="multipart/form-data"> 
 	
 		<div>
-			<h3 class="text-center text-success"> Conectado al Router <h3><br />
+			<h3 class="text-center text-success">Conectado al Router <h3><br />
 		</div>
+		
+<?php 
+		if($getMensajeRespuestaRouter!='' and $getCodigoRespuestaRouter!='00'){
+			echo $getCodigoRespuestaRouter."::".$getMensajeRespuestaRouter."<br><br>";
+		}
+?>		
+		
 		<table class="table table-hover">
 			<div class="container">
 						<div class="form-group">
@@ -60,6 +133,7 @@ $_SESSION['tiempo_maximo_conexion'] 	= $AdminRouters[0]['tiempo_maximo_conexion'
 								<th class="success"><label>IP</label></th>
 								<th class="success"><label>Puerto</label></th>
 								<th class="success"><label>Version</label></th>
+								<th class="success"><label>Princial</label></th>
 								<th class="success"><label>Usar</label></th>
 							</tr>
 						</div>
@@ -68,34 +142,43 @@ $_SESSION['tiempo_maximo_conexion'] 	= $AdminRouters[0]['tiempo_maximo_conexion'
 <?php
 		foreach($AdminRouters as $llave=>$elmento){
 			$idRouter = $AdminRouters[$llave]['router_id'];
-			$nombreRouter = $AdminRouters[$llave]['nombre'];
-			$ipRouter = $AdminRouters[$llave]['ip'];
-			$puertoRouter = $AdminRouters[$llave]['puerto'];
-			$versionRouter = $AdminRouters[$llave]['version'];
-			$claveRouter = $AdminRouters[$llave]['clave'];
-			$estadoRouter = $AdminRouters[$llave]['estado'];
+			$nombreRouter = $AdminRouters[$llave]['nombreRouter'];
+			$ipRouter = $AdminRouters[$llave]['ipRouter'];
+			$puertoRouter = $AdminRouters[$llave]['puertoRouter'];
+			$versionRouter = $AdminRouters[$llave]['versionRouter'];
+			$principalRouter = $AdminRouters[$llave]['principal'];
+			// $listClaveRouter = $AdminRouters[$llave]['claveRouter'];
+			$estadoRouter = $AdminRouters[$llave]['estadoRouter'];
 			$reintentosConexionRouter = $AdminRouters[$llave]['reintentos_conexion'];
 			$retrasoConexionRouter = $AdminRouters[$llave]['retraso_conexion'];
 			$tiempoMaximoConexionRouter = $AdminRouters[$llave]['tiempo_maximo_conexion'];
 			
-			echo '<tr>';
+			echo '<tr id="tr'.$idRouter.'">';
 			echo '<td class="text-info"><label>'.$idRouter.'</label></td>';
 			echo '<td class="text-info"><label>'.$nombreRouter.'</label></td>';
 			echo '<td class="text-info"><label>'.$ipRouter.'</label></td>';
 			echo '<td class="text-info"><label>'.$puertoRouter.'</label></td>';
 			echo '<td class="text-info"><label>'.$versionRouter.'</label></td>';
-			echo '<td class="text-info">	<input class="btn btn-success" id="submit_button" type="submit" value="A" />
-						<input name="router" type="hidden" value="'.$idRouter.'" />
-				  </td>';
+			echo '<td class="text-info"><label>'.$principalRouter.'</label></td>';
+			// echo '<td class="text-info">	
+			// <input class="btn btn-success" id="submit_button" type="submit" value="A" />
+						// <input name="router_id" type="hidden" value="'.$idRouter.'" />
+				  // </td>';
+			echo '<td class="text-info">
+						<a style="text-decoration:underline;cursor:pointer;"  onclick="sendInfo(\''.$idRouter.'\',\'configuracion_router.php\',\'tr\',\'resultado\',\'action\')">A</a>
+					</td>';
+					
 			echo '<tr>';
 		}			
 ?>
 		</table>
+		<input type="hidden" id="action" name="action" value="getInfoRouter"/>
 	</form>
 <?php 
-if(!empty($router)){
-	
-	$ROUTERS = new Routers($ipRB , $Username , $clave, $api_puerto, $attempts, $delay, $timeout);
+}
+// if($contar){
+	// echo "Que hace aqui===???" .$ipRB . $UsernameRouter .$claveRouter. $api_puerto. $attempts. $delay. $timeout;
+	$ROUTERS = new Routers($ipRB , $UsernameRouter , $claveRouter, $api_puerto, $attempts, $delay, $timeout);
 // echo "<pre>";
 // print_r($ROUTERS);
 // echo "</pre>";
@@ -111,5 +194,6 @@ if(!empty($router)){
 	echo '<tr><td>Total,free disk and disk % is:</td><td>' . $first['total-hdd-space'] . 'Kb - ' . $first['free-hdd-space'] . 'Kb - ' . number_format($first['hdd'],3) . '% </td></tr>';
 	echo '<tr><td>Sectors (write,since reboot,bad blocks):</td><td>' . $first['write-sect-total'] . ' - ' . $first['write-sect-since-reboot'] . ' - ' . $first['bad-blocks'] . '% </td></tr>';
 	echo '</table>';
-}
+// }
+
 ?>

@@ -28,13 +28,14 @@ $message = "";
 		if ($usuario->getCodigoRespuesta() == $p_codigo_respuesta_exitosa){
 			
 			$usuario->getPerfilUsuario();
-			$_SESSION["sesion"] 	= "TRUE";
-			$_SESSION["usuario"] 	= $usuario->getUsuario();
-			$_SESSION["nombres"] 	= $usuario->getNombres();
-			$_SESSION["apellidos"] 	= $usuario->getApellidos();
-			$_SESSION["perfil"] 	= $usuario->getPerfil();
-			$_SESSION["getPerfilId"] 	= $usuario->getPerfilId();
-			$_SESSION["estados_usuario_id"] 	= $usuario->getEstadosUsuarioId();
+			$_SESSION['sesion'] 	= "TRUE";
+			$_SESSION['usuario_id']	= $usuario->getUsuarioId();
+			$_SESSION['usuario'] 	= $usuario->getUsuario();
+			$_SESSION['nombres'] 	= $usuario->getNombres();
+			$_SESSION['apellidos'] 	= $usuario->getApellidos();
+			$_SESSION['perfil'] 	= $usuario->getPerfil();
+			$_SESSION['getPerfilId'] 	= $usuario->getPerfilId();
+			$_SESSION['estados_usuario_id'] 	= $usuario->getEstadosUsuarioId();
 
 			
 			// $principal = 0;

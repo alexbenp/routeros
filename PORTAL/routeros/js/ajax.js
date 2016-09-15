@@ -45,3 +45,28 @@ function deleteInfo(id,url_destino,origen,resultado,action){
 		ajax.send(null)
 	}
 }
+
+
+function sendInfo(id,url_destino,origen,resultado,action){
+	//donde se mostrará el resultado de la eliminacion
+	// alert(url_destino);
+	divResultado = document.getElementById(resultado);
+	action		 = document.getElementById(action).value;
+	divOrigen	 = document.getElementById(origen+id);
+		//instanciamos el objetoAjax
+		ajax=objetoAjax();
+		//uso del medotod GET
+		//indicamos el archivo que realizará el proceso de eliminación
+		//junto con un valor que representa el id del empleado
+		ajax.open("POST", url_destino+"?router_id="+id+"&action="+action);
+		ajax.onreadystatechange=function() {
+			if (ajax.readyState==4) {
+				//mostrar resultados en esta capa
+				divResultado.innerHTML = ajax.responseText
+			}
+		}
+		//como hacemos uso del metodo GET
+		//colocamos null
+		ajax.send(null)
+}
+

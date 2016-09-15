@@ -198,7 +198,7 @@ CREATE TABLE `menus` (
 
 LOCK TABLES `menus` WRITE;
 /*!40000 ALTER TABLE `menus` DISABLE KEYS */;
-INSERT INTO `menus` VALUES (1,1,NULL,'Inicio','configuracion_router.php',1,'2016-08-22 04:50:17',1),(2,1,NULL,'Usuarios',NULL,2,'2016-08-22 04:50:17',1),(3,1,NULL,'Perfiles',NULL,3,'2016-08-22 04:50:17',1),(4,1,NULL,'Auditoria',NULL,4,'2016-08-22 04:50:17',1),(5,1,NULL,'Salir','salir.php',6,'2016-08-22 04:50:17',1),(6,2,2,'Registar Usuarios','registra_usuarios_router.php',1,'2016-08-22 05:00:17',1),(7,2,2,'Consultar Usuarios','consulta_usuarios_router.php',2,'2016-08-22 05:00:17',1),(8,2,2,'Eliminar Usuarios','elimina_usuarios_router.php',3,'2016-08-22 05:00:17',1),(9,2,3,'Crear Perfiles','administra_perfiles_router.php',1,'2016-08-26 01:27:40',1),(10,2,4,'Auditoría Router','auditoria_eventos_router.php',1,'2016-08-30 23:30:30',1),(11,2,4,'Historial Eventos','historial_eventos_router.php',2,'2016-08-31 01:00:00',2),(12,2,3,'Eliminar Perfiles','elimina_perfiles_router.php',3,'2016-09-05 04:33:00',1),(13,2,3,'Consultar Perfiles','consulta_perfiles_router.php',2,'2016-09-05 04:33:00',1),(14,1,NULL,'Cambiar Clave','cambiar_clave.php',5,'2016-09-09 04:33:00',1);
+INSERT INTO `menus` VALUES (1,1,NULL,'Inicio','configuracion_router.php',1,'2016-08-22 04:50:17',1),(2,1,NULL,'Usuarios',NULL,2,'2016-08-22 04:50:17',1),(3,1,NULL,'Perfiles',NULL,3,'2016-08-22 04:50:17',1),(4,1,NULL,'Auditoria',NULL,4,'2016-08-22 04:50:17',1),(5,1,NULL,'Salir','salir.php',6,'2016-08-22 04:50:17',1),(6,2,2,'Registar Usuarios','registra_usuarios_router.php',1,'2016-08-22 05:00:17',1),(7,2,2,'Consultar Usuarios','consulta_usuarios_router.php',2,'2016-08-22 05:00:17',1),(8,2,2,'Eliminar Usuarios','elimina_usuarios_router.php',3,'2016-08-22 05:00:17',1),(9,2,3,'Crear Perfiles','administra_perfiles_router.php',1,'2016-08-26 01:27:40',1),(10,2,4,'Auditoría HostPot','auditoria_eventos_router.php',1,'2016-08-30 23:30:30',1),(11,2,4,'Historial Eventos','historial_eventos_router.php',2,'2016-08-31 01:00:00',2),(12,2,3,'Eliminar Perfiles','elimina_perfiles_router.php',3,'2016-09-05 04:33:00',1),(13,2,3,'Consultar Perfiles','consulta_perfiles_router.php',2,'2016-09-05 04:33:00',1),(14,1,NULL,'Cambiar Clave','cambiar_clave.php',5,'2016-09-09 04:33:00',1);
 /*!40000 ALTER TABLE `menus` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -291,6 +291,68 @@ INSERT INTO `perfiles` VALUES (1,'Administrador','Perfil que Administra la Aplic
 UNLOCK TABLES;
 
 --
+-- Table structure for table `restaurar_clave`
+--
+
+DROP TABLE IF EXISTS `restaurar_clave`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `restaurar_clave` (
+  `restaurar_clave_id` int(11) NOT NULL AUTO_INCREMENT,
+  `usuario_id` int(11) NOT NULL,
+  `usuario` varchar(45) COLLATE utf8_bin NOT NULL,
+  `codigo` varchar(45) COLLATE utf8_bin NOT NULL,
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`restaurar_clave_id`),
+  UNIQUE KEY `usuario_id_UNIQUE` (`usuario_id`),
+  KEY `fecha_idx` (`fecha`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `restaurar_clave`
+--
+
+LOCK TABLES `restaurar_clave` WRITE;
+/*!40000 ALTER TABLE `restaurar_clave` DISABLE KEYS */;
+/*!40000 ALTER TABLE `restaurar_clave` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `router_usuario`
+--
+
+DROP TABLE IF EXISTS `router_usuario`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `router_usuario` (
+  `router_usuario_id` int(11) NOT NULL AUTO_INCREMENT,
+  `router_id` int(11) NOT NULL,
+  `usuario_id` int(11) NOT NULL,
+  `principal` tinyint(4) NOT NULL DEFAULT '0',
+  `estados_router_id` int(11) NOT NULL COMMENT 'Este campo se toma de los estados del Router.',
+  `fecha_registro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`router_usuario_id`),
+  KEY `estado_fk_idx` (`estados_router_id`),
+  KEY `usuario_fk_idx` (`usuario_id`),
+  KEY `router_fk_idx` (`router_id`),
+  CONSTRAINT `estado_fk` FOREIGN KEY (`estados_router_id`) REFERENCES `estados_router` (`estados_router_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `router_fk` FOREIGN KEY (`router_id`) REFERENCES `routers` (`router_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `usuario_fk` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Table que presenta la información de la relacion entre los Routers que puede tener un usuario asignado.';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `router_usuario`
+--
+
+LOCK TABLES `router_usuario` WRITE;
+/*!40000 ALTER TABLE `router_usuario` DISABLE KEYS */;
+INSERT INTO `router_usuario` VALUES (1,1,1,1,1,'2016-09-15 15:28:25'),(2,2,1,0,1,'2016-09-15 15:28:37'),(3,3,1,0,1,'2016-09-15 15:28:37'),(4,1,2,1,1,'2016-09-15 15:28:38'),(5,2,2,0,1,'2016-09-15 15:28:38');
+/*!40000 ALTER TABLE `router_usuario` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `routers`
 --
 
@@ -322,7 +384,7 @@ CREATE TABLE `routers` (
 
 LOCK TABLES `routers` WRITE;
 /*!40000 ALTER TABLE `routers` DISABLE KEYS */;
-INSERT INTO `routers` VALUES (1,'Router Development','6.36','192.168.56.2','8728','admin','',1,'2016-08-23 18:03:22','3','3','3'),(2,'Router QA','6.36','186.155.37.179','8728','admin','sipltda2016',2,'2016-08-23 23:03:22','3','3','3'),(3,'Rounter QA Pruebas','6.36','186.155.37.179','8728','prueba','pruebas123',2,'2016-08-23 23:03:22','3','3','3');
+INSERT INTO `routers` VALUES (1,'Router Development','6.36','192.168.56.2','8728','admin','',1,'2016-08-23 18:03:22','3','3','3'),(2,'Router QA','6.36','186.155.37.179','8728','admin','sipltda2016',1,'2016-08-23 23:03:22','3','3','3'),(3,'Rounter QA Pruebas','6.36','186.155.37.179','8728','prueba','pruebas123',1,'2016-08-23 23:03:22','3','3','3');
 /*!40000 ALTER TABLE `routers` ENABLE KEYS */;
 UNLOCK TABLES;
 
