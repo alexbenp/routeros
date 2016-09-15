@@ -88,17 +88,26 @@ if($action =="1" ){
 	
 
 	$AuditoriaSysLog = new AuditoriaSysLog();
-
-if (empty($fechaInicial)){
 	
-	echo '<h4 class="text-center">Debe Seleccionar Fecha Inicial</h4>';
-}elseif(empty($fechaFinal)){
-	echo '<h4 class="text-center">Debe Seleccionar Fecha Final</h4>';
-}elseif(empty($usuario)){
-	echo '<h4 class="text-center">Debe Digitar un Usuario</h4>';
+	
+	
+if(!empty($usuario)){
+	if(!empty($fechaInicial) and !empty($fechaFinal)){
+		$getSystemEvents 	= $AuditoriaSysLog->getHotspotUserDateEvents($usuario,$fechaInicial,$fechaFinal);
+	}else{
+		$getSystemEvents 	= $AuditoriaSysLog->getHotspotUserEvents($usuario);
+	}
 }else{
-	
-	$getSystemEvents 	= $AuditoriaSysLog->getHotspotUserEvents($fechaInicial,$fechaFinal,$usuario);
+	if (empty($fechaInicial)){
+		echo '<h4 class="text-center">Debe Seleccionar Fecha Inicial</h4>';
+	}elseif(empty($fechaFinal)){
+		echo '<h4 class="text-center">Debe Seleccionar Fecha Final</h4>';
+	}else{
+		$getSystemEvents 	= $AuditoriaSysLog->getHotspotDateEvents($fechaInicial,$fechaFinal,$usuario);
+	}
+}
+
+
 ?>	
 
 <?php
@@ -123,7 +132,7 @@ if (empty($fechaInicial)){
 			
 		</tr>';
 	}
-}
+
 ?>
   </table>
 </div>
