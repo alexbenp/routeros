@@ -5,21 +5,22 @@ include("include/config.php");
 //require_once ('clases/api.php'); //aqui incluimos la clase API para trabajar con ella
 require_once ('clases/Routers.php');
 $validaSesion = new Menus($_SESSION['getPerfilId']);
-$php_self = str_replace($ruta_instalacion,'',$_SERVER['REQUEST_URI']);
+$php_self = str_replace($ruta_instalacion,'',$_SERVER['PHP_SELF']);
 $validaSesion->getPageByName($php_self);
 $action=$_REQUEST['action']; 
 $profile=$_REQUEST['profile'];
 
-$ipRB			= $_SESSION["ip"]; //IP de tu RB.
-$Username		= $_SESSION["usuario"]; //Nombre de usuario con privilegios para acceder al RB
-$clave			= $_SESSION["clave"]; //Clave del usuario con privilegios
-$api_puerto		= $_SESSION["puerto"]; //Puerto que definimos el API en IP--->Services
-$attempts 		= $_SESSION["reintentos_conexion"]; // Connection attempt count
-$delay 			= $_SESSION["retraso_conexion"]; // Delay between connection attempts in seconds
-$timeout 		= $_SESSION["tiempo_maximo_conexion"]; // Connection attempt timeout and data read timeout
+$ipRB			= $_SESSION['ipRouter']; //IP de tu RB.
+$Username		= $_SESSION['usuarioRouter']; //Nombre de usuario con privilegios para acceder al RB
+$clave			= $_SESSION['claveRouter']; //Clave del usuario con privilegios
+$api_puerto		= $_SESSION['puertoRouter']; //Puerto que definimos el API en IP--->Services
+$attempts 		= $_SESSION['reintentos_conexion']; // Connection attempt count
+$delay 			= $_SESSION['retraso_conexion']; // Delay between connection attempts in seconds
+$timeout 		= $_SESSION['tiempo_maximo_conexion']; // Connection attempt timeout and data read timeout
 
 
 $ROUTERS = new Routers($ipRB , $Username , $clave, $api_puerto, $attempts, $delay, $timeout);
+$infoPerfil = $ROUTERS->ipHotspotUserProfileGetall();
 
 if ($action=="userAdd")
 {
@@ -47,16 +48,21 @@ if ($action=="userAdd")
 ?> 
 <div class="container">
   <div class="">
-		<h4 class="text-center text-success"> CREACION DE USUARIOS</h4>
-	<br>
+		<h3 class="text-center text-success"> CREACION DE USUARIOS</h3>
+		<h5 class="text-center text-success">
+		<?php echo $_SESSION['nombreRouter'].' IP: '.$_SESSION['ipRouter'].' Versión: '.$_SESSION['versionRouter'];
+		?>
+	</h5>
 	<div>
 		<label>
 <?php 		
 	if($mensajeRespuestaUserAdd!=''){
 		echo $codigoRespuestaUserAdd."::".$mensajeRespuestaUserAdd."<br><br>";
 	}
-	if($mensajeRespuestaUserRemove!=''){
-		echo $codigoRespuestaUserAdd."::".$mensajeRespuestaUserRemove."::idUser::".$user."<br><br>";
+		$mensajeRespuestaConnect = $ROUTERS->getMensajeRespuesta();
+		$codigoRespuestaConnect = $ROUTERS->getCodigoRespuesta();
+	if($mensajeRespuestaConnect!='' and $codigoRespuestaConnect!='00'){
+		echo $codigoRespuestaConnect."::".$mensajeRespuestaConnect."::idUser::".$user."<br><br>";
 	}
 ?>
 		</label>
@@ -94,9 +100,9 @@ if ($action=="userAdd")
 				<div class="col-lg-4">
 					<select id="profile_name" name="profile_name" class="form-control">
 							<?php 		
-								$info = $ROUTERS->ipHotspotUserProfileGetall();
-								foreach ($info as $i => $value) {
-										$valor=$info[$i];
+								
+								foreach ($infoPerfil as $i => $value) {
+										$valor=$infoPerfil[$i];
 										echo '<option id="'.$valor['.id'].'" value="'.$valor['name'].'">'.$valor['name'].'</option>';
 								}
 							?>

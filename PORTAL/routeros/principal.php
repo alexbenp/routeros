@@ -48,13 +48,11 @@ error_reporting(E_ALL ^ E_NOTICE);
 
 $cierra_linea = "";
 	echo '<div id="collapse navbar-collapse navbar-ex1-collapse">';
-		// echo '<ul class="nav nav-tabs">';
 		echo '<ul class="nav nav-tabs nav-justified">';
 
 	
-	// $menus = $_SESSION['menuPerfil'];
+
 	foreach($arreglo as $llave=>$elmento){
-		// echo "llave".$llave."<br>";
 		$menu_nombre = $arreglo[$llave]['menu'];
 		$link = $arreglo[$llave]['ruta_url'];
 		$submenu = $arreglo[$llave]['submenu'];
@@ -84,6 +82,5 @@ $cierra_linea = "";
 	 }
 		echo '</ul>';
 	echo '</div>';
-	// echo '<div id="div_menu" class="active">Usuario:'.$_SESSION['usuario'].' - Router:'.$_SESSION['nombreRouter'].'</div>';
 	echo '<br><br>';
 ?>

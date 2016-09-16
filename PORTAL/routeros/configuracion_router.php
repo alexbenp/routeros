@@ -25,22 +25,7 @@ if($imprimeMenu == 1){
 $ADMROUTERS = new RoutersDb();
 $validaSesion = new Menus($_SESSION['getPerfilId']);
 $php_self = str_replace($ruta_instalacion,'',$_SERVER['PHP_SELF']);
-// echo "php_self".$php_self;
 $validaSesion->getPageByName($php_self);
-
-
-
-
-
-// require_once 'clases/Menus.php';
-
-
-
-
-
-// $ROUTERS = new Routers();
-// $AdminRouters = $ROUTERS->getInformacionAdminRouter($estados_router_id);
-
 
 
 $AdminRouters = $ADMROUTERS->getRouterUser($usuario_id,$estados_router_id);
@@ -60,6 +45,7 @@ if(empty($routerId) and empty($_SESSION['ipRouter'])){
 		$_SESSION['usuarioRouter'] 			= $AdminRouters[0]['usuarioRouter'];
 		$_SESSION['claveRouter'] 			= $AdminRouters[0]['claveRouter'];
 		$_SESSION['puertoRouter'] 			= $AdminRouters[0]['puertoRouter'];
+		$_SESSION['versionRouter'] 			= $AdminRouters[0]['versionRouter'];
 		$_SESSION['reintentos_conexion'] 	= $AdminRouters[0]['reintentos_conexion'];
 		$_SESSION['retraso_conexion'] 		= $AdminRouters[0]['retraso_conexion'];
 		$_SESSION['tiempo_maximo_conexion'] = $AdminRouters[0]['tiempo_maximo_conexion'];
@@ -79,6 +65,7 @@ if(empty($routerId) and empty($_SESSION['ipRouter'])){
 		$_SESSION['usuarioRouter'] 			= $getRouterUserByRouterId[0]['usuarioRouter'];
 		$_SESSION['claveRouter'] 			= $getRouterUserByRouterId[0]['claveRouter'];
 		$_SESSION['puertoRouter'] 			= $getRouterUserByRouterId[0]['puertoRouter'];
+		$_SESSION['versionRouter'] 			= $getRouterUserByRouterId[0]['versionRouter'];
 		$_SESSION['reintentos_conexion'] 	= $getRouterUserByRouterId[0]['reintentos_conexion'];
 		$_SESSION['retraso_conexion'] 		= $getRouterUserByRouterId[0]['retraso_conexion'];
 		$_SESSION['tiempo_maximo_conexion'] = $getRouterUserByRouterId[0]['tiempo_maximo_conexion'];
@@ -95,28 +82,16 @@ $delay 			= $_SESSION['retraso_conexion']; // Delay between connection attempts 
 $timeout 		= $_SESSION['tiempo_maximo_conexion']; // Connection attempt timeout and data read timeout
 
 
-
-			// echo "<pre>";
-			// print_r($_SESSION);
-			// // echo "</pre>";
-			// // echo "<pre>";
-			// print_r($_REQUEST);
-			// print_r($_POST);
-			// echo "</pre>";
-// echo "kjhkjh".$router;
-
-
 if($imprimeMenu == 1){
-?> 
-
-		
-<?php 
-
 ?>
 	<form class="contacto" id="configura_router" action="#" method="POST" enctype="multipart/form-data"> 
 	
 		<div>
-			<h3 class="text-center text-success">Conectado al Router <h3><br />
+			<h3 class="text-center text-success">Conectado al Router</h3>
+		<h5 class="text-center text-success">
+		<?php echo $_SESSION['nombreRouter'].' IP: '.$_SESSION['ipRouter'].' Versión: '.$_SESSION['versionRouter'];
+		?>
+		</h5>
 		</div>
 		
 <?php 
@@ -141,6 +116,7 @@ if($imprimeMenu == 1){
 					</div>
 
 <?php
+	if(is_array($AdminRouters)){
 		foreach($AdminRouters as $llave=>$elmento){
 			$idRouter = $AdminRouters[$llave]['router_id'];
 			$nombreRouter = $AdminRouters[$llave]['nombreRouter'];
@@ -173,7 +149,8 @@ if($imprimeMenu == 1){
 					// </td>';
 					
 			echo '<tr>';
-		}			
+		}	
+	}
 ?>
 		</table>
 		<input type="hidden" id="action" name="action" value="getInfoRouter"/>
@@ -190,18 +167,16 @@ function buttonSendForm(router_id){
 <div id="resultado">
 <?php 
 }
-// if($contar){
-	// echo "Que hace aqui===???" .$ipRB . $UsernameRouter .$claveRouter. $api_puerto. $attempts. $delay. $timeout;
+
 	$ROUTERS = new Routers($ipRB , $UsernameRouter , $claveRouter, $api_puerto, $attempts, $delay, $timeout);
-// echo "<pre>";
-// print_r($ROUTERS);
-// echo "</pre>";
+
 	echo '<script>document.getElementById("div_menu").value = alex </script>';
 	
 	$first = $ROUTERS->systemResourcePrint();
 
-	echo '<div><label>Mikrotik RouterOs 4.16 Resources</label></div>';
-	echo '<table class="table table-hover" width=500 border=0 align=center>';
+	echo '<br><div align="center">
+	<h3 class="text-center text-success">Mikrotik: '.$_SESSION['nombreRouter'].' IP: '.$_SESSION['ipRouter'].' Versión:'.$_SESSION['versionRouter'].' <h3></div>';
+	echo '<table class="table table-hover" align=center>';
 	echo '<tr><td>Platform, board name and Ros version is:</td><td>' . $first['platform'] . ' - ' . $first['board-name'] . ' - '  . $first['version'] . ' - ' . $first['architecture-name'] . '</td></tr>';
 	echo '<tr><td>Cpu and available cores:</td><td>' . $first['cpu'] . ' at ' . $first['cpu-frequency'] . ' Mhz with ' . $first['cpu-count'] . ' core(s) '  . '</td></tr>';
 	echo '<tr><td>Uptime is:</td><td>' . $first['uptime'] . ' (hh/mm/ss)' . '</td></tr><br />';
@@ -210,7 +185,6 @@ function buttonSendForm(router_id){
 	echo '<tr><td>Total,free disk and disk % is:</td><td>' . $first['total-hdd-space'] . 'Kb - ' . $first['free-hdd-space'] . 'Kb - ' . number_format($first['hdd'],3) . '% </td></tr>';
 	echo '<tr><td>Sectors (write,since reboot,bad blocks):</td><td>' . $first['write-sect-total'] . ' - ' . $first['write-sect-since-reboot'] . ' - ' . $first['bad-blocks'] . '% </td></tr>';
 	echo '</table>';
-// }
 
 ?>
 </div>

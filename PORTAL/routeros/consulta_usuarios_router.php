@@ -21,10 +21,10 @@ $validaSesion->getPageByName($php_self);
 
 
 
-$ipRB			= $_SESSION['ip']; //IP de tu RB.
-$Username		= $_SESSION['usuario']; //Nombre de usuario con privilegios para acceder al RB
-$clave			= $_SESSION['clave']; //Clave del usuario con privilegios
-$api_puerto		= $_SESSION['puerto']; //Puerto que definimos el API en IP--->Services
+$ipRB			= $_SESSION['ipRouter']; //IP de tu RB.
+$Username		= $_SESSION['usuarioRouter']; //Nombre de usuario con privilegios para acceder al RB
+$clave			= $_SESSION['claveRouter']; //Clave del usuario con privilegios
+$api_puerto		= $_SESSION['puertoRouter']; //Puerto que definimos el API en IP--->Services
 $attempts 		= $_SESSION['reintentos_conexion']; // Connection attempt count
 $delay 			= $_SESSION['retraso_conexion']; // Delay between connection attempts in seconds
 $timeout 		= $_SESSION['tiempo_maximo_conexion']; // Connection attempt timeout and data read timeout
@@ -41,7 +41,11 @@ $ROUTERS = new Routers($ipRB , $Username , $clave, $api_puerto, $attempts, $dela
 ?> 
 <div class="container">
 	<div class="">
-		<h3 class="text-center text-success">Usuarios RouterOS<h3>
+		<h3 class="text-center text-success">Usuarios RouterOS</h3>
+	<h5 class="text-center text-success">
+	<?php echo $_SESSION['nombreRouter'].' IP: '.$_SESSION['ipRouter'].' Versión: '.$_SESSION['versionRouter'];
+	?>
+	</h5>
 	</div>
 	<form id="Usuarios" action="#" method="post">
 		<div class="form-group has-success">
@@ -80,7 +84,6 @@ if($action=="findUser"){
 							<th class="success"><label>Tiempo Uso</label></th>
 							<th class="success"><label>Profile</label></th>
 							<th class="success"><label>Tiempo Limite</label></th>
-							<th class="success"><label>Estado</label></th>
 							<th class="success"><label>Dirección IP</label></th>
 							<th class="success"><label>Mac</label></th>
 
@@ -108,7 +111,6 @@ if($action=="findUser"){
 						<td class="text-info">'.$tiempouso.'</td>
 						<td class="text-info">'.$valor['profile'].'</td>
 						<td class="text-info">'.$tiempoLimite.'</td>
-						<td class="text-info">'.$valor['disabled'].'</td>
 						<td class="text-info">'.$valor['address'].'</td>
 						<td class="text-info">'.$valor['mac-address'].'</td>
 					</tr>';

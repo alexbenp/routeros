@@ -8,7 +8,7 @@ $action	=	$_REQUEST['action'];
 $codigo_respuesta_exitosa = "00";
 
 $validaSesion = new Menus($_SESSION['getPerfilId']);
-$php_self = str_replace($ruta_instalacion,'',$_SERVER['REQUEST_URI']);
+$php_self = str_replace($ruta_instalacion,'',$_SERVER['PHP_SELF']);
 $validaSesion->getPageByName($php_self);
 
 

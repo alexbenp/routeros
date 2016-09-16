@@ -28,11 +28,11 @@ if($_POST)
             $usuario->guardarRegistrar();
             // echo $usuario->getUsuario() . ' se ha guardado correctamente con el id: ' . $usuario->getUsuarioId();
             //crea instancia de sesion segura
-             $_SESSION["usuario"]=$_POST['usuario'];//variable de sesion;
-			 $_SESSION["nombres"]=$this->nombres;//variable de sesion;
-			 $_SESSION["apellidos"]=$this->apellidos;//variable de sesion;
+             $_SESSION['usuario']=$_POST['usuario'];//variable de sesion;
+			 $_SESSION['nombres']=$this->nombres;//variable de sesion;
+			 $_SESSION['apellidos']=$this->apellidos;//variable de sesion;
             # si usuario existe -> redireccionar a nueva pagina 
-            // echo 'Exito: Usuario '.$_SESSION["usuario"].' logueado';
+            // echo 'Exito: Usuario '.$_SESSION['usuario'].' logueado';
 			$message = $usuario->getMensajeRespuesta();
 	}else{
 		$message = "Parametros Incompletos";
@@ -49,7 +49,7 @@ if($_POST)
 <?php
 //echo $this->nombres." ".$this->apellidos;
 
-//echo $_SESSION["nombres"];
+//echo $_SESSION['nombres'];
 ?>
 <form id="form" name="form" method="post" action="">
 <span>Usuario</span>

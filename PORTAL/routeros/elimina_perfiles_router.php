@@ -9,9 +9,6 @@ if($action=="profileRemove"){
 	$imprimeMenu = 0;
 }
 
-
-
-
 if($imprimeMenu == 1){
 	require_once("principal.php");	
 }
@@ -19,24 +16,21 @@ require_once ('clases/Routers.php');
 require_once ('clases/Menus.php');
 
 $validaSesion = new Menus($_SESSION['getPerfilId']);
-// echo "<pre>";
-// print_r($_REQUEST);
-// echo "</pre>";
-$php_self = str_replace($ruta_instalacion,'',$_SERVER['SCRIPT_NAME']);
+
+$php_self = str_replace($ruta_instalacion,'',$_SERVER['PHP_SELF']);
  $validaSesion->getPageByName($php_self);
  
- // echo $php_self;
 
 
 $profile		= $_REQUEST['id']; 
 
-$ipRB			= $_SESSION["ip"]; //IP de tu RB.
-$Username		= $_SESSION["usuario"]; //Nombre de usuario con privilegios para acceder al RB
-$clave			= $_SESSION["clave"]; //Clave del usuario con privilegios
-$api_puerto		= $_SESSION["puerto"]; //Puerto que definimos el API en IP--->Services
-$attempts 		= $_SESSION["reintentos_conexion"]; // Connection attempt count
-$delay 			= $_SESSION["retraso_conexion"]; // Delay between connection attempts in seconds
-$timeout 		= $_SESSION["tiempo_maximo_conexion"]; // Connection attempt timeout and data read timeout
+$ipRB			= $_SESSION['ipRouter']; //IP de tu RB.
+$Username		= $_SESSION['usuarioRouter']; //Nombre de usuario con privilegios para acceder al RB
+$clave			= $_SESSION['claveRouter']; //Clave del usuario con privilegios
+$api_puerto		= $_SESSION['puertoRouter']; //Puerto que definimos el API en IP--->Services
+$attempts 		= $_SESSION['reintentos_conexion']; // Connection attempt count
+$delay 			= $_SESSION['retraso_conexion']; // Delay between connection attempts in seconds
+$timeout 		= $_SESSION['tiempo_maximo_conexion']; // Connection attempt timeout and data read timeout
 
 
 $ROUTERS = new Routers($ipRB , $Username , $clave, $api_puerto, $attempts, $delay, $timeout);
@@ -53,7 +47,8 @@ $imprimeMenu = 0;
 
 if($imprimeMenu == 1){
 $info = $ROUTERS->ipHotspotUserProfileGetall();
-
+	$mensajeRespuestaProfileGetAll = $ROUTERS->getMensajeRespuesta();
+	$codigoRespuestaProfileGetAll = $ROUTERS->getCodigoRespuesta();
 
 
 ?>
@@ -63,13 +58,23 @@ $info = $ROUTERS->ipHotspotUserProfileGetall();
 		if($mensajeRespuestaProfileRemove!=''){
 			echo $codigoRespuestaProfileRemove."::".$mensajeRespuestaProfileRemove."::idProfile::".$profile."<br><br>";
 		}
+		
 ?>
 			</label>
 		</div>
 <div class="container">
   <div class="">
-	<h3 class="text-center text-success">Lista de Perfiles<h3><br />
+	<h3 class="text-center text-success">Eliminar Perfiles</h3>
+	<h5 class="text-center text-success">
+	<?php echo $_SESSION['nombreRouter'].' IP: '.$_SESSION['ipRouter'].' Versión: '.$_SESSION['versionRouter'];
+	?>
+	</h5>
   </div>
+  <?php 
+		if($mensajeRespuestaProfileGetAll!='' and $codigoRespuestaProfileGetAll!='00'){
+			echo $codigoRespuestaProfileGetAll."::".$mensajeRespuestaProfileGetAll."::idProfile::";
+		}
+	?>	
 <form id="Perfiles" action="#" method="post">
   <table class="table table-hover" id="tabla">
     <thead>
@@ -82,13 +87,12 @@ $info = $ROUTERS->ipHotspotUserProfileGetall();
 		<th class="success">&nbsp</th>
       </tr>
 <?php
-
+		if(is_array($info)){
 			foreach ($info as $i => $value) {
 				$valor	= $info[$i];
 				$id 	= $info[$i]['.id'];
 				$unidad = $valor['mac-cookie-timeout'];
 				$linea  = $ROUTERS->formateaUnidades($unidad);
-				// echo "ada".$id;
 				echo '<tr id="tr'.$id.'">
 						<td class="text-info">'.hexdec($id).'</td>
 						<td class="text-info">'.$valor['name'].'</td>
@@ -100,6 +104,7 @@ $info = $ROUTERS->ipHotspotUserProfileGetall();
 						</td>
 					</tr>';
 			}
+		}
 ?>
   </table>
   <input type="hidden" id="action" name="action" value="profileRemove"/>

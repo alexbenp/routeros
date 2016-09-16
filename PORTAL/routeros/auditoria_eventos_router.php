@@ -7,7 +7,7 @@ require_once ('clases/AuditoriaSysLog.php');
 $action	=	$_REQUEST['action']; 
 
 $validaSesion = new Menus($_SESSION['getPerfilId']);
-$php_self = str_replace($ruta_instalacion,'',$_SERVER['REQUEST_URI']);
+$php_self = str_replace($ruta_instalacion,'',$_SERVER['PHP_SELF']);
 $validaSesion->getPageByName($php_self);
 
 $fechaInicial 	= $_POST['fechaInicial'];
@@ -21,7 +21,11 @@ $estado 		= $_POST['estado'];
 
 <div class="container">
   <div class="">
-    <h3 class="text-center text-success">Auditoria RouterOS<h3>
+    <h3 class="text-center text-success">Auditoria RouterOS</h3>
+	<h5 class="text-center text-success">
+	<?php echo $_SESSION['nombreRouter'].' IP: '.$_SESSION['ipRouter'].' Versión: '.$_SESSION['versionRouter'];
+	?>
+	</h5>
   </div>
 
 <form id="auditoria" action="#" method="POST">
@@ -111,6 +115,7 @@ if(!empty($usuario)){
 ?>	
 
 <?php
+if(is_array($getSystemEvents)){
 	foreach ($getSystemEvents as $i => $value) {
 		$id    		= hexdec($getSystemEvents[$i]['ID']);
 		$FromHost	= $getSystemEvents[$i]['FromHost'];
@@ -132,6 +137,7 @@ if(!empty($usuario)){
 			
 		</tr>';
 	}
+}
 
 ?>
   </table>
