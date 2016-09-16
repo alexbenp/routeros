@@ -50,6 +50,7 @@ $cierra_linea = "";
 	echo '<div id="collapse navbar-collapse navbar-ex1-collapse">';
 		// echo '<ul class="nav nav-tabs">';
 		echo '<ul class="nav nav-tabs nav-justified">';
+
 	
 	// $menus = $_SESSION['menuPerfil'];
 	foreach($arreglo as $llave=>$elmento){
@@ -82,5 +83,7 @@ $cierra_linea = "";
 		}
 	 }
 		echo '</ul>';
-	echo '</div><br><br>';
+	echo '</div>';
+	// echo '<div id="div_menu" class="active">Usuario:'.$_SESSION['usuario'].' - Router:'.$_SESSION['nombreRouter'].'</div>';
+	echo '<br><br>';
 ?>

@@ -13,7 +13,7 @@ $action			= $_REQUEST['action'];
 $routerId		=$_REQUEST['router_id']; 
 $usuario_id 	= $_SESSION['usuario_id'];
 
-if($action=="getInfoRouter"){
+if($action=="sSgetInfoRouter"){
 	require_once ('clases/Menus.php');
 	$imprimeMenu = 0;
 }
@@ -53,10 +53,10 @@ if(empty($routerId) and empty($_SESSION['ipRouter'])){
 	if($getCodigoRespuestaRouter!='00'){
 		echo $getCodigoRespuestaRouter."::".$getMensajeRespuestaRouter."<br><br>";
 	}else{
-		echo "Por qaui aso<br>";
 		$contar = true;
-		$_SESSION['ipRouter'] 				= $AdminRouters[0]['router_id'];
+		$_SESSION['router_id'] 				= $AdminRouters[0]['router_id'];
 		$_SESSION['ipRouter'] 				= $AdminRouters[0]['ipRouter'];
+		$_SESSION['nombreRouter'] 			= $AdminRouters[0]['nombreRouter'];
 		$_SESSION['usuarioRouter'] 			= $AdminRouters[0]['usuarioRouter'];
 		$_SESSION['claveRouter'] 			= $AdminRouters[0]['claveRouter'];
 		$_SESSION['puertoRouter'] 			= $AdminRouters[0]['puertoRouter'];
@@ -64,7 +64,7 @@ if(empty($routerId) and empty($_SESSION['ipRouter'])){
 		$_SESSION['retraso_conexion'] 		= $AdminRouters[0]['retraso_conexion'];
 		$_SESSION['tiempo_maximo_conexion'] = $AdminRouters[0]['tiempo_maximo_conexion'];
 	}
-}elseif($routerId>0 and $action=='getInfoRouter'){
+}elseif($routerId>0){
 	$getRouterUserByRouterId = $ADMROUTERS->getRouterUserByRouterId($usuario_id,$routerId,$estados_router_id);
 	$getCodigoRespuestaRouterUser = $ADMROUTERS->getCodigoRespuesta();
 	$getMensajeRespuestaRouterUser = $ADMROUTERS->getMensajeRespuesta();
@@ -72,10 +72,10 @@ if(empty($routerId) and empty($_SESSION['ipRouter'])){
 	if($getCodigoRespuestaRouterUser!='00'){
 		echo $getCodigoRespuestaRouterUser."::".$getMensajeRespuestaRouterUser."<br><br>";
 	}else{
-		echo "Por este lado<br>";
 		$contar = true;
-		$_SESSION['ipRouter'] 				= $getRouterUserByRouterId[0]['router_id'];
+		$_SESSION['router_id'] 				= $getRouterUserByRouterId[0]['router_id'];
 		$_SESSION['ipRouter'] 				= $getRouterUserByRouterId[0]['ipRouter'];
+		$_SESSION['nombreRouter'] 			= $getRouterUserByRouterId[0]['nombreRouter'];
 		$_SESSION['usuarioRouter'] 			= $getRouterUserByRouterId[0]['usuarioRouter'];
 		$_SESSION['claveRouter'] 			= $getRouterUserByRouterId[0]['claveRouter'];
 		$_SESSION['puertoRouter'] 			= $getRouterUserByRouterId[0]['puertoRouter'];
@@ -96,18 +96,19 @@ $timeout 		= $_SESSION['tiempo_maximo_conexion']; // Connection attempt timeout 
 
 
 
-			echo "<pre>";
-			print_r($_SESSION);
-			// echo "</pre>";
 			// echo "<pre>";
+			// print_r($_SESSION);
+			// // echo "</pre>";
+			// // echo "<pre>";
 			// print_r($_REQUEST);
+			// print_r($_POST);
 			// echo "</pre>";
 // echo "kjhkjh".$router;
 
 
 if($imprimeMenu == 1){
 ?> 
-	<div id="resultado"></div>
+
 		
 <?php 
 
@@ -160,20 +161,33 @@ if($imprimeMenu == 1){
 			echo '<td class="text-info"><label>'.$puertoRouter.'</label></td>';
 			echo '<td class="text-info"><label>'.$versionRouter.'</label></td>';
 			echo '<td class="text-info"><label>'.$principalRouter.'</label></td>';
-			// echo '<td class="text-info">	
-			// <input class="btn btn-success" id="submit_button" type="submit" value="A" />
-						// <input name="router_id" type="hidden" value="'.$idRouter.'" />
-				  // </td>';
-			echo '<td class="text-info">
-						<a style="text-decoration:underline;cursor:pointer;"  onclick="sendInfo(\''.$idRouter.'\',\'configuracion_router.php\',\'tr\',\'resultado\',\'action\')">A</a>
-					</td>';
+			if($idRouter == $_SESSION['router_id']){
+				echo '<td class="text-info">Act</td>';
+			}else{
+				echo '<td class="text-info">	
+				<input class="btn btn-success" id="submit_button" onclick="buttonSendForm(\''.$idRouter.'\');" type="button" value="A" />
+				  </td>';
+			}
+			// echo '<td class="text-info">
+						// <a style="text-decoration:underline;cursor:pointer;"  onclick="sendInfo(\''.$idRouter.'\',\'configuracion_router.php\',\'tr\',\'resultado\',\'action\')">A</a>
+					// </td>';
 					
 			echo '<tr>';
 		}			
 ?>
 		</table>
 		<input type="hidden" id="action" name="action" value="getInfoRouter"/>
+		<input type="hidden" id="router_id" name="router_id" value=""/>
 	</form>
+<script>
+function buttonSendForm(router_id){
+	document.getElementById('router_id').value = router_id;
+    document.getElementById('configura_router').submit();
+}
+
+</script>
+
+<div id="resultado">
 <?php 
 }
 // if($contar){
@@ -182,6 +196,8 @@ if($imprimeMenu == 1){
 // echo "<pre>";
 // print_r($ROUTERS);
 // echo "</pre>";
+	echo '<script>document.getElementById("div_menu").value = alex </script>';
+	
 	$first = $ROUTERS->systemResourcePrint();
 
 	echo '<div><label>Mikrotik RouterOs 4.16 Resources</label></div>';
@@ -197,3 +213,5 @@ if($imprimeMenu == 1){
 // }
 
 ?>
+</div>
+<?php

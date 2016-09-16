@@ -53,6 +53,7 @@ function sendInfo(id,url_destino,origen,resultado,action){
 	divResultado = document.getElementById(resultado);
 	action		 = document.getElementById(action).value;
 	divOrigen	 = document.getElementById(origen+id);
+	var eliminar = confirm("Confirma Activar el Router?")
 		//instanciamos el objetoAjax
 		ajax=objetoAjax();
 		//uso del medotod GET
@@ -69,4 +70,7 @@ function sendInfo(id,url_destino,origen,resultado,action){
 		//colocamos null
 		ajax.send(null)
 }
+
+
+
 

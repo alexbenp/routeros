@@ -30,7 +30,6 @@ class RoutersDb extends Conexion {
 				$sql = $conexion->prepare('SELECT * FROM routers r INNER JOIN estados_router er ON (r.estados_router_id = er.estados_router_id) WHERE r.router_id = :router_id');
 				$sql->bindParam(':router_id', $this->router_id);
 			}elseif(!is_null($this->estados_router_id)){
-				//echo "entra qui".$this->estados_router_id;
 				$sql = $conexion->prepare('SELECT * FROM routers r INNER JOIN estados_router er ON (r.estados_router_id = er.estados_router_id) WHERE r.estados_router_id = :estados_router_id');
 				$sql->bindParam(':estados_router_id', $this->estados_router_id);
 			}else{
@@ -72,9 +71,6 @@ class RoutersDb extends Conexion {
 				$resultado = $sql->fetchAll();
 				$this->codigoRespuesta = "00";
 				$this->mensajeRespuesta = "Resultado Exitoso ";
-				// echo "<pre>";
-				// print_r($resultado);
-				// echo "</pre>";
 				return $resultado;				
 			}
 
@@ -102,7 +98,6 @@ class RoutersDb extends Conexion {
 				
 
 			}else{				
-			echo "entra qui11".$usuario_id;
 				$sql = $conexion->prepare('SELECT  r.router_id,r.nombre as nombreRouter,er.estado as estadoRouter,r.version as versionRouter,r.ip as ipRouter,r.puerto as puertoRouter,r.usuario as usuarioRouter,ru.principal,ru.estados_router_id,u.usuario,erc.estado as estado_router_usuario,r.clave as claveRouter,r.reintentos_conexion,r.retraso_conexion,r.tiempo_maximo_conexion FROM routers r inner join estados_router er on (r.estados_router_id = er.estados_router_id) inner join router_usuario ru on (r.router_id = ru.router_id) inner join estados_router erc on (ru.estados_router_id = erc.estados_router_id) inner join usuarios u on (ru.usuario_id = u.usuario_id)  WHERE u.usuario_id = :usuario_id and r.estados_router_id = ru.estados_router_id and r.estados_router_id = :estados_router_id AND r.router_id = :router_id');
 				$sql->bindParam(':router_id', $router_id);
 				$sql->bindParam(':estados_router_id', $estados_router_id);
@@ -130,33 +125,5 @@ class RoutersDb extends Conexion {
 		}
 		
 	}
-	// public function getAllRouter($estados_router_id){
-		// $this->estados_router_id = $estados_router_id;
-		// $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		// $this->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-		// try {
-			// $this->codigoRespuesta = "60";
-			// $this->mensajeRespuesta = "Router: ";
-			// if($this->estados_router_id > 0){
-				// $sql = $conexion->prepare('SELECT * FROM routers r INNER JOIN estados_router er ON (r.estados_router_id = er.estados_router_id) WHERE r.estados_router_id = :estados_router_id');
-				// $sql->bindParam(':estados_router_id', $this->estados_router_id);
-			// }else{
-				// $sql = $conexion->prepare('SELECT * FROM routers INNER JOIN estados_router er ON (r.estados_router_id = er.estados_router_id)');
-				// $sql->bindParam(':estados_router_id', $this->estados_router_id);				
-			// }
-			// $sql->execute();
-			// $resultado = $sql->fetchAll();
-			
-			// return $resultado;
-
-		// }catch (PDOException $e) {
-			// echo "<br>getAllRouter::DataBase Error: <br>".$e->getMessage();
-			// echo "<br>Error Code:<br> ".$e->getCode();
-			// exit;
-		// }catch (Exception $e) {
-			// echo "getAllRouter::General Error: The user could not be added.<br>".$e->getMessage();
-			// exit;
-		// }
-	// }
 }
 ?>
