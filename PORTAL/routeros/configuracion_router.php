@@ -108,6 +108,7 @@ if($imprimeMenu == 1){
 								<th class="success"><label>Nombre</label></th>
 								<th class="success"><label>IP</label></th>
 								<th class="success"><label>Puerto</label></th>
+								<th class="success"><label>Usuario</label></th>
 								<th class="success"><label>Version</label></th>
 								<th class="success"><label>Princial</label></th>
 								<th class="success"><label>Usar</label></th>
@@ -122,6 +123,7 @@ if($imprimeMenu == 1){
 			$nombreRouter = $AdminRouters[$llave]['nombreRouter'];
 			$ipRouter = $AdminRouters[$llave]['ipRouter'];
 			$puertoRouter = $AdminRouters[$llave]['puertoRouter'];
+			$usuarioRouter = $AdminRouters[$llave]['usuarioRouter'];
 			$versionRouter = $AdminRouters[$llave]['versionRouter'];
 			$principalRouter = $AdminRouters[$llave]['principal'];
 			// $listClaveRouter = $AdminRouters[$llave]['claveRouter'];
@@ -135,6 +137,7 @@ if($imprimeMenu == 1){
 			echo '<td class="text-info"><label>'.$nombreRouter.'</label></td>';
 			echo '<td class="text-info"><label>'.$ipRouter.'</label></td>';
 			echo '<td class="text-info"><label>'.$puertoRouter.'</label></td>';
+			echo '<td class="text-info"><label>'.$usuarioRouter.'</label></td>';
 			echo '<td class="text-info"><label>'.$versionRouter.'</label></td>';
 			echo '<td class="text-info"><label>'.$principalRouter.'</label></td>';
 			if($idRouter == $_SESSION['router_id']){
