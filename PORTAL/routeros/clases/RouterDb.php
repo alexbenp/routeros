@@ -125,5 +125,136 @@ class RoutersDb extends Conexion {
 		}
 		
 	}
+	
+	public function setRouter($router_id = null,$nameRouter,$estados_router_id,$ipRouter,$puertoRouter,$versionRouter,$usuarioRouter,$claveRouter,$reintentosCx,$retrasoCx,$tiempoMaximoCx){
+		$conexion = new Conexion();
+		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		try {
+			$this->codigoRespuesta = "40";
+			$this->mensajeRespuesta = "Router: ";
+			
+			// echo "nameRouter:".$nameRouter." ipRouter:".$ipRouter." usuarioRouter:".$usuarioRouter." claveRouter:".$claveRouter."$ puertoRouter:".$puertoRouter." versionRouter:".$versionRouter." reintentosCx:".$reintentosCx." retrasoCx:".$retrasoCx." tiempoMaximoCx:".$tiempoMaximoCx."<br>";
+			
+			if (($nameRouter=="")||($ipRouter=="")||($usuarioRouter=="")||($claveRouter=="")||($puertoRouter=="")||($versionRouter=="")||($reintentosCx=="")||($retrasoCx=="")||($tiempoMaximoCx=="")) 
+			{
+				$this->codigoRespuesta = "41";
+				$this->mensajeRespuesta = "Informacion Incompleta para Crear el Router ";
+			}else{
+				
+				if($router_id > 0){
+					$sql = $conexion->prepare('UPDATE '. self::TABLA .' SET nombre = :nameRouter, version = :versionRouter, ip = :ipRouter, puerto = :puertoRouter, usuario = :usuarioRouter, clave = :claveRouter, estados_router_id = :estados_router_id, reintentos_conexion = :reintentosCx, retraso_conexion = :retrasoCx, tiempo_maximo_conexion = :tiempoMaximoCx WHERE router_id = :router_id');
+					$sql->bindParam(':router_id', $router_id);
+					$sql->bindParam(':nameRouter', $nameRouter);
+					$sql->bindParam(':estados_router_id', $estados_router_id);
+					$sql->bindParam(':ipRouter', $ipRouter);
+					$sql->bindParam(':usuarioRouter', $usuarioRouter);
+					$sql->bindParam(':claveRouter', $claveRouter);
+					$sql->bindParam(':puertoRouter', $puertoRouter);
+					$sql->bindParam(':versionRouter', $versionRouter);
+					$sql->bindParam(':reintentosCx', $reintentosCx);
+					$sql->bindParam(':retrasoCx', $retrasoCx);
+					$sql->bindParam(':tiempoMaximoCx', $tiempoMaximoCx);
+					
+					$sql->execute();
+					// $resultado = $sql->fetchAll();
+					$this->codigoRespuesta = "00";
+					$this->mensajeRespuesta = "Resultado Actualización Exitoso: ";	
+				}else{
+					$sql = $conexion->prepare('INSERT INTO '. self::TABLA .' (nombre, version, ip, puerto, usuario, clave, estados_router_id, reintentos_conexion, retraso_conexion, tiempo_maximo_conexion) VALUES (:nameRouter,:versionRouter,:ipRouter,:puertoRouter,:usuarioRouter,:claveRouter,:estados_router_id,:reintentosCx,:retrasoCx,:tiempoMaximoCx)');
+					$sql->bindParam(':nameRouter', $nameRouter);
+					$sql->bindParam(':estados_router_id', $estados_router_id);
+					$sql->bindParam(':ipRouter', $ipRouter);
+					$sql->bindParam(':usuarioRouter', $usuarioRouter);
+					$sql->bindParam(':claveRouter', $claveRouter);
+					$sql->bindParam(':puertoRouter', $puertoRouter);
+					$sql->bindParam(':versionRouter', $versionRouter);
+					$sql->bindParam(':reintentosCx', $reintentosCx);
+					$sql->bindParam(':retrasoCx', $retrasoCx);
+					$sql->bindParam(':tiempoMaximoCx', $tiempoMaximoCx);
+					
+					
+					// $router_id = $conexion->lastInsertId();
+					// echo "<pre>";
+					// print_r($sql);
+					// echo "</pre>";
+
+					
+					$sql->execute();
+					$this->codigoRespuesta = "00";
+					$this->mensajeRespuesta = "Resultado Registro Exitoso: ";
+				}
+
+				 $conexion = null;
+			return $resultado;
+			}
+		}catch (PDOException $e) {
+			echo "<br>setRouter::DataBase Error: <br>".$e->getMessage();
+			echo "<br>Error Code:<br> ".$e->getCode();
+			exit;
+		}catch (Exception $e) {
+			echo "setRouter::General Error: The user could not be added.<br>".$e->getMessage();
+			exit;
+		}
+		
+	}
+	
+	public function getEstadosRouter(){
+		$conexion = new Conexion();
+		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		try {
+			$this->codigoRespuesta = "50";
+			$this->mensajeRespuesta = "Router: ";
+			$sql = $conexion->prepare('SELECT estados_router_id,estado as estado_router FROM estados_router');
+			$sql->execute();
+			$resultado = $sql->fetchAll();
+
+			return $resultado;
+
+		}catch (PDOException $e) {
+			echo "<br>getParametrosRouter::DataBase Error: <br>".$e->getMessage();
+			echo "<br>Error Code:<br> ".$e->getCode();
+			exit;
+		}catch (Exception $e) {
+			echo "getParametrosRouter::General Error: The user could not be added.<br>".$e->getMessage();
+			exit;
+		}
+		
+	}
+	
+	public function getAllRouters($router_id=null){
+		$conexion = new Conexion();
+		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		try {
+			$this->codigoRespuesta = "33";
+			$this->mensajeRespuesta = "Router: ";
+			if($router_id > 0){
+				$sql = $conexion->prepare('SELECT  r.router_id,r.nombre as nombreRouter,r.estados_router_id,er.estado as estadoRouter,r.version as versionRouter,r.ip as ipRouter,r.puerto as puertoRouter,r.usuario as usuarioRouter,r.clave as claveRouter,r.reintentos_conexion,r.retraso_conexion,r.tiempo_maximo_conexion FROM routers r inner join estados_router er on (r.estados_router_id = er.estados_router_id) WHERE router_id = :router_id ORDER BY r.router_id DESC' );
+				$sql->bindParam(':router_id', $router_id);
+				$sql->execute();
+				$resultado = $sql->fetchAll();
+				$this->codigoRespuesta = "00";
+				$this->mensajeRespuesta = "Resultado Exitoso ";
+				return $resultado;
+			}else{
+				$sql = $conexion->prepare('SELECT  r.router_id,r.nombre as nombreRouter,er.estado as estadoRouter,r.version as versionRouter,r.ip as ipRouter,r.puerto as puertoRouter,r.usuario as usuarioRouter,r.clave as claveRouter,r.reintentos_conexion,r.retraso_conexion,r.tiempo_maximo_conexion FROM routers r inner join estados_router er on (r.estados_router_id = er.estados_router_id) ORDER BY r.router_id DESC' );
+				$sql->execute();
+				$resultado = $sql->fetchAll();
+				$this->codigoRespuesta = "00";
+				$this->mensajeRespuesta = "Resultado Exitoso ";
+				return $resultado;				
+			}
+		}catch (PDOException $e) {
+			echo "<br>getAllRouter::DataBase Error: <br>".$e->getMessage();
+			echo "<br>Error Code:<br> ".$e->getCode();
+			exit;
+		}catch (Exception $e) {
+			echo "getAllRouter::General Error: The user could not be added.<br>".$e->getMessage();
+			exit;
+		}
+		
+	}
 }
 ?>

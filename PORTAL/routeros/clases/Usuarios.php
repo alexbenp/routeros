@@ -13,8 +13,7 @@
     private $clave;
     private $correo;
     private $perfil_id;
-	private $keyconfig = '$UjhY&743*#4#r1+u38s';
-	private $reintentos = 3;
+	private $keyconfig;
 	
     const TABLA = 'usuarios';
     
@@ -63,7 +62,43 @@
 	public function getMensajeRespuesta() {
 		return $this->mensajeRespuesta;
 	}
-	
+	public function getKeyConfig($descripcion=null) {
+		$conexion = new Conexion();
+		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		
+		if(empty($descripcion)){
+			$descripcion = 'LLAVE';
+		}
+		
+		try {
+			
+			
+			$sql = $conexion->prepare('SELECT configuracion_id,descripcion,valor FROM configuraciones WHERE descripcion = :descripcion');
+			$sql->bindParam(':descripcion', $descripcion);
+			$sql->execute();
+			$resultado = $sql->fetchAll();
+
+			$this->keyconfig =  $resultado[0]['valor'];
+			if(empty($this->keyconfig)){
+				$this->codigoRespuesta = "16";
+				$this->mensajeRespuesta = "Eror en traer la llave ";
+			}else{
+				$conexion = null;
+				return $this->keyconfig;
+			}
+			
+		}catch (PDOException $e) {
+			echo "<br>getKeyConfig::DataBase Error: ".$usuario_id." clave = ".$clave."<br>".$e->getMessage();
+			echo "<br>Error Code:<br> ".$e->getCode();
+			exit;
+		}catch (Exception $e) {
+			echo "getKeyConfig::General Error: The user could not be added.<br>".$e->getMessage();
+			exit;
+		}
+		
+		
+	}
 	public function __construct($usuario_id=null,$usuario,$identificacion=NULL,$nombres=NULL,$apellidos=NULL,$direccion=NULL,$telefono=NULL,$estados_usuario_id,$fecharegistro,$clave,$correo,$perfil_id) {
 		$this->usuario_id = $usuario_id;
 		$this->usuario = $usuario;
@@ -173,6 +208,8 @@
 		
 		if($this->usuario && $this->clave) {
 			try {
+				$this->getKeyConfig("REINTENTOS_FALLIDOS_USUARIO");
+				
 				$this->codigoRespuesta = "01";
 				$this->mensajeRespuesta = "USUARIO O CLAVE NO VALIDO:";
 				$sql = $conexion->prepare('SELECT usuario_id,nombres,apellidos,perfil_id,estados_usuario_id,intentos_fallidos FROM ' . self::TABLA .' WHERE usuario = :usuario');
@@ -198,18 +235,23 @@
 					}elseif($row['estados_usuario_id'] == 3){
 						$this->codigoRespuesta 		= "12";
 						$this->mensajeRespuesta 	= "Usuario Bloqueado";						
-					}elseif($this->intentos_fallidos >= $this->reintentos){
-						$this->setCambiaEstadoUsuario($this->usuario_id,$nuevo_estado_usuario);
-						$this->codigoRespuesta 		= "13";
-						$this->mensajeRespuesta 	= "Ha superado los ".$this->reintentos." Intentos maximos, Esta en ".$this->intentos_fallidos."";
-						
+					}elseif($this->intentos_fallidos >= $this->keyconfig){
 						$nuevo_estado_usuario = 3;
+						$this->setCambiaEstadoUsuario($this->usuario_id,$nuevo_estado_usuario);
+						
+						$this->codigoRespuesta 		= "13";
+						$this->mensajeRespuesta 	= ":Ha superado los ".$this->keyconfig." Intentos maximos, Esta en ".$this->intentos_fallidos."";
+						
+						
 						
 
 					}else{
-						
+						$this->getKeyConfig("LLAVE");
 						$this->codigoRespuesta = "02";
 						$this->mensajeRespuesta = "Clave no Valida:";
+						
+						
+						
 						$sql = $conexion->prepare('SELECT usuario_id,nombres,apellidos,perfil_id,estados_usuario_id,intentos_fallidos FROM ' . self::TABLA .' WHERE usuario = :usuario AND clave = AES_ENCRYPT(:clave,:keyconfig) ');
 						$sql->bindParam(':usuario', $this->usuario);
 						$sql->bindParam(':clave', $this->clave);
@@ -345,11 +387,10 @@
 			// $this->codigoRespuesta = "00";
 			$this->mensajeRespuesta = "Error Actualizando estado usuario: ";
 			$sql = $conexion->prepare('UPDATE usuarios SET estados_usuario_id = :estados_usuario_id WHERE usuario_id = :usuario_id');
-			$sql->bindParam(':usuario_id', $this->usuario_id);
-			$sql->bindParam(':estados_usuario_id', $this->estados_usuario_id);
+			$sql->bindParam(':usuario_id', $usuario_id);
+			$sql->bindParam(':estados_usuario_id', $estados_usuario_id);
 			$sql->execute();
 	
-			
 		}catch (PDOException $e) {
 			echo "<br>setCambiaEstadoUsuario::DataBase Error: <br>".$e->getMessage();
 			echo "<br>Error Code:<br> ".$e->getCode();
@@ -370,7 +411,7 @@
 			
 			
 			$this->mensajeRespuesta = "Error Actualizando estado usuario: ";
-
+			$this->getKeyConfig("LLAVE");
 			$sql = $conexion->prepare('UPDATE usuarios SET clave = AES_ENCRYPT(:clave,:keyconfig) WHERE usuario_id = :usuario_id');
 			$sql->bindParam(':clave', $clave);
 			$sql->bindParam(':keyconfig', $this->keyconfig);
@@ -384,11 +425,11 @@
 			return $resultado;
 			
 		}catch (PDOException $e) {
-			echo "<br>setCambiaEstadoUsuario::DataBase Error: ".$usuario_id." clave = ".$clave."<br>".$e->getMessage();
+			echo "<br>setClave::DataBase Error: ".$usuario_id."<br>".$e->getMessage();
 			echo "<br>Error Code:<br> ".$e->getCode();
 			exit;
 		}catch (Exception $e) {
-			echo "setCambiaEstadoUsuario::General Error: The user could not be added.<br>".$e->getMessage();
+			echo "setClave::General Error: The user could not be added.<br>".$e->getMessage();
 			exit;
 		}
 		$conexion = null;

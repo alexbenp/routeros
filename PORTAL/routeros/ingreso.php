@@ -48,7 +48,7 @@ $message = "";
 
 			 header("Location: ".$ruta_url);
 		}else{
-			$message = $usuario->getMensajeRespuesta().":".$usuario->getCodigoRespuesta() ;
+			$message = "Error:".$usuario->getCodigoRespuesta().":".$usuario->getMensajeRespuesta() ;
 			
 			if($usuario->getCodigoRespuesta() == '02'){
 				$usuario ->setIncrementaIntentosfallidos($usuario->getUsuarioId());

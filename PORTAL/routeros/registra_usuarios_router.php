@@ -86,9 +86,9 @@ if ($action=="userAdd")
 			</div>
 
 			 <div class="col-lg-6">
-				<select id="unid_uptime" name="unid_uptime" class="form-control">
+				<select id="estados_router_id" name="estados_router_id" class="form-control">
 					<?php 		
-						$info = $ROUTERS->unidadesTiempo();
+						$info = $ROUTERS->getEstadosRouter();
 						foreach ($info as $i => $value) {
 							echo '<option id="'.$i.'" value="'.$i.'">'.$value.'</option>';
 						}
@@ -114,7 +114,7 @@ if ($action=="userAdd")
 					<textarea id="comentario" class="input" name="comentario" rows="3" cols="30"></textarea><br />
 					<br /><br />
 					<input type="submit" class="btn btn-success" value="Agregar">
-					<input type="hidden" name="action" value="userAdd"/>
+					<input type="hidden" name="action" value="routerAdd"/>
 				 </div>
 		</div>
 
