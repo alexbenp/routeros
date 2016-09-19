@@ -487,7 +487,7 @@ CREATE TABLE `routers` (
 
 LOCK TABLES `routers` WRITE;
 /*!40000 ALTER TABLE `routers` DISABLE KEYS */;
-INSERT INTO `routers` VALUES (1,'Router Development','6.36','192.168.56.2','8728','admin','',1,'2016-08-23 18:03:22','2016-09-19 03:48:05','3','3','3'),(2,'Router QA','6.36','186.155.37.179','8728','admin','1234',1,'2016-08-23 23:03:22','2016-09-19 22:35:41','3','3','3'),(3,'Rounter QA Pruebas','6.36','186.155.37.179','8728','prueba','pruebas123',1,'2016-08-23 23:03:22','2016-09-19 00:49:29','3','3','3');
+INSERT INTO `routers` VALUES (1,'Router Development','6.36','192.168.56.2','8728','admin','',1,'2016-08-23 18:03:22','2016-09-19 03:48:05','3','3','3'),(2,'Router QA','6.36','186.155.37.179','8728','admin','sipltda2016',1,'2016-08-23 23:03:22','2016-09-19 22:35:41','3','3','3'),(3,'Rounter QA Pruebas','6.36','186.155.37.179','8728','prueba','pruebas123',1,'2016-08-23 23:03:22','2016-09-19 00:49:29','3','3','3');
 /*!40000 ALTER TABLE `routers` ENABLE KEYS */;
 UNLOCK TABLES;
 
