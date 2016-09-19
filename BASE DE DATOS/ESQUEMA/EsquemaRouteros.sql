@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `routeros` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
 USE `routeros`;
--- MySQL dump 10.13  Distrib 5.7.12, for Win32 (AMD64)
+-- MySQL dump 10.13  Distrib 5.6.24, for Win32 (x86)
 --
 -- Host: localhost    Database: routeros
 -- ------------------------------------------------------
--- Server version	5.7.14-log
+-- Server version	5.6.26-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,6 +16,108 @@ USE `routeros`;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `acciones`
+--
+
+DROP TABLE IF EXISTS `acciones`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `acciones` (
+  `accion_id` int(11) NOT NULL AUTO_INCREMENT,
+  `accion` varchar(45) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`accion_id`),
+  UNIQUE KEY `accion_UNIQUE` (`accion`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `acciones`
+--
+
+LOCK TABLES `acciones` WRITE;
+/*!40000 ALTER TABLE `acciones` DISABLE KEYS */;
+INSERT INTO `acciones` VALUES (2,'ACTUALIZACION'),(1,'CREACION'),(3,'ELIMINACION');
+/*!40000 ALTER TABLE `acciones` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auditoria_registro_perfil_router`
+--
+
+DROP TABLE IF EXISTS `auditoria_registro_perfil_router`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auditoria_registro_perfil_router` (
+  `auditoria_registro_perfil_id` int(11) NOT NULL AUTO_INCREMENT,
+  `router_id` int(11) NOT NULL,
+  `usuario_id` int(11) NOT NULL,
+  `fecharegistro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `accion_id` int(11) NOT NULL,
+  `id_perfil_usuario` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `profile_name` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `user_shared` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `rx` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `tx` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `add_mac_cookie` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `mac_uptime` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `respuesta` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`auditoria_registro_perfil_id`),
+  KEY `router_idfk_idx` (`router_id`),
+  KEY `usuario_idfk_idx` (`usuario_id`),
+  KEY `accion_idfk_idx` (`accion_id`),
+  CONSTRAINT `accion_aud_perfil_idfk` FOREIGN KEY (`accion_id`) REFERENCES `acciones` (`accion_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `router_aud_perfil_idfk` FOREIGN KEY (`router_id`) REFERENCES `routers` (`router_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `usuario_aud_perfil_idfk` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auditoria_registro_perfil_router`
+--
+
+LOCK TABLES `auditoria_registro_perfil_router` WRITE;
+/*!40000 ALTER TABLE `auditoria_registro_perfil_router` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auditoria_registro_perfil_router` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auditoria_registro_usuarios_router`
+--
+
+DROP TABLE IF EXISTS `auditoria_registro_usuarios_router`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auditoria_registro_usuarios_router` (
+  `auditoria_registro_id` int(11) NOT NULL AUTO_INCREMENT,
+  `router_id` int(11) NOT NULL,
+  `usuario_id` int(11) NOT NULL COMMENT 'Es el usuario que registra la informacion o la actualiza',
+  `fecharegistro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `accion_id` int(11) NOT NULL,
+  `id_usuario_router` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `usuario_router` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `clave_usuario_router` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `tiempo_unidad` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `perfil_usuario_router` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `comentario_registro` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `respuesta` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`auditoria_registro_id`),
+  KEY `router_idfk_idx` (`router_id`),
+  KEY `usuario_idfk_idx` (`usuario_id`),
+  CONSTRAINT `router_idfk` FOREIGN KEY (`router_id`) REFERENCES `routers` (`router_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `usuario_idfk` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auditoria_registro_usuarios_router`
+--
+
+LOCK TABLES `auditoria_registro_usuarios_router` WRITE;
+/*!40000 ALTER TABLE `auditoria_registro_usuarios_router` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auditoria_registro_usuarios_router` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `configuraciones`
@@ -30,7 +132,7 @@ CREATE TABLE `configuraciones` (
   `valor` varchar(45) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`configuracion_id`),
   UNIQUE KEY `descripcion_UNIQUE` (`descripcion`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +141,7 @@ CREATE TABLE `configuraciones` (
 
 LOCK TABLES `configuraciones` WRITE;
 /*!40000 ALTER TABLE `configuraciones` DISABLE KEYS */;
-INSERT INTO `configuraciones` VALUES (1,'LLAVE','$UjhY&743*#4#r1+u38s'),(2,'REINTENTOS_FALLIDOS_USUARIO','3');
+INSERT INTO `configuraciones` VALUES (1,'LLAVE','$UjhY&743*#4#r1+u38s'),(2,'REINTENTOS_FALLIDOS_USUARIO','3'),(3,'CANTIDAD_CARACTERES_CLAVE','8'),(4,'RUTA_PORTAL','/routeros/');
 /*!40000 ALTER TABLE `configuraciones` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -229,7 +331,7 @@ CREATE TABLE `menus_perfil` (
 
 LOCK TABLES `menus_perfil` WRITE;
 /*!40000 ALTER TABLE `menus_perfil` DISABLE KEYS */;
-INSERT INTO `menus_perfil` VALUES (1,1,1,1,1),(2,2,1,1,0),(3,3,1,1,0),(4,4,1,1,0),(5,5,1,1,0),(6,6,1,1,0),(7,7,1,1,0),(8,8,1,1,0),(9,1,2,1,1),(10,2,2,1,0),(11,5,2,1,0),(12,7,2,1,0),(13,9,1,1,0),(14,10,1,1,0),(15,11,1,1,0),(16,12,1,1,0),(17,13,1,1,0),(18,13,2,1,0),(19,3,2,1,0),(20,14,1,1,0),(21,14,2,1,0),(22,15,1,1,0),(23,16,1,1,0),(24,17,1,1,0),(25,18,1,1,0),(26,19,1,1,0);
+INSERT INTO `menus_perfil` VALUES (1,1,1,1,1),(2,2,1,1,0),(3,3,1,1,0),(4,4,1,1,0),(5,5,1,1,0),(6,6,1,1,0),(7,7,1,1,0),(8,8,1,1,0),(9,1,2,1,1),(10,2,2,1,0),(11,5,2,1,0),(12,7,2,1,0),(13,9,1,1,0),(14,10,1,1,0),(15,11,1,1,0),(17,13,1,1,0),(18,13,2,1,0),(19,3,2,1,0),(20,14,1,1,0),(21,14,2,1,0),(22,15,1,1,0),(23,16,1,1,0),(24,17,1,1,0),(25,18,1,1,0),(26,19,1,1,0);
 /*!40000 ALTER TABLE `menus_perfil` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -348,7 +450,7 @@ CREATE TABLE `router_usuario` (
 
 LOCK TABLES `router_usuario` WRITE;
 /*!40000 ALTER TABLE `router_usuario` DISABLE KEYS */;
-INSERT INTO `router_usuario` VALUES (1,1,1,1,1,'2016-09-15 15:28:25'),(2,2,1,0,1,'2016-09-15 15:28:37'),(3,3,1,0,1,'2016-09-15 15:28:37'),(4,1,2,1,1,'2016-09-15 15:28:38'),(5,2,2,0,1,'2016-09-15 15:28:38');
+INSERT INTO `router_usuario` VALUES (1,1,1,0,1,'2016-09-15 15:28:25'),(2,2,1,1,1,'2016-09-15 15:28:37'),(3,3,1,0,1,'2016-09-15 15:28:37'),(4,1,2,0,1,'2016-09-15 15:28:38'),(5,2,2,1,1,'2016-09-15 15:28:38');
 /*!40000 ALTER TABLE `router_usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -385,7 +487,7 @@ CREATE TABLE `routers` (
 
 LOCK TABLES `routers` WRITE;
 /*!40000 ALTER TABLE `routers` DISABLE KEYS */;
-INSERT INTO `routers` VALUES (1,'Router Development','6.36','192.168.56.2','8728','admin','',1,'2016-08-23 18:03:22','2016-09-19 03:48:05','3','3','3'),(2,'Router QA','6.36','186.155.37.179','8728','admin','sipltda2016',1,'2016-08-23 23:03:22','2016-09-19 00:49:29','3','3','3'),(3,'Rounter QA Pruebas','6.36','186.155.37.179','8728','prueba','pruebas123',1,'2016-08-23 23:03:22','2016-09-19 00:49:29','3','3','3');
+INSERT INTO `routers` VALUES (1,'Router Development','6.36','192.168.56.2','8728','admin','',1,'2016-08-23 18:03:22','2016-09-19 03:48:05','3','3','3'),(2,'Router QA','6.36','186.155.37.179','8728','admin','1234',1,'2016-08-23 23:03:22','2016-09-19 22:35:41','3','3','3'),(3,'Rounter QA Pruebas','6.36','186.155.37.179','8728','prueba','pruebas123',1,'2016-08-23 23:03:22','2016-09-19 00:49:29','3','3','3');
 /*!40000 ALTER TABLE `routers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -446,7 +548,8 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-19  0:10:18
+-- Dump completed on 2016-09-19 18:00:49
+
 
 
 
@@ -455,6 +558,6 @@ UPDATE routers SET usuario = 'admin', estados_router_id = 1, clave = '' WHERE ro
 UPDATE routers SET usuario = 'admin', estados_router_id = 1, clave = 'sipltda2016' WHERE router_id IN (2);
 UPDATE routers SET usuario = 'prueba', estados_router_id = 1, clave = 'pruebas123' WHERE router_id IN (3);
 
-update router_usuario set principal = 0;
+update router_usuario set principal = 0 where router_usuario_id>0;
 update router_usuario set principal = 1 where router_id = 2;
 delete from routers where router_id > 3;

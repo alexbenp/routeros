@@ -1,9 +1,12 @@
 <?php 
 include("control.php");
 include("principal.php");
-include("include/config.php");
+require_once("clases/Configuraciones.php");
 require_once ('clases/Routers.php');
 require_once ('clases/RouterDb.php');
+
+$Configuraciones = new Configuraciones ();
+$ruta_instalacion =  $Configuraciones->getKeyConfig("RUTA_PORTAL");
 
 $ADMROUTERS = new RoutersDb();
 $validaSesion = new Menus($_SESSION['getPerfilId']);
@@ -11,27 +14,12 @@ $php_self = str_replace($ruta_instalacion,'',$_SERVER['PHP_SELF']);
 $validaSesion->getPageByName($php_self);
 $action=$_REQUEST['action']; 
 $router_id=$_REQUEST['router_id'];
-// $idRouter =$_REQUEST['idRouter'];
-
-
-		
-		
-		
-// echo "<pre>";
-// print_r($_REQUEST);
-// echo "</pre>";
 
 $info = $ADMROUTERS->getEstadosRouter();
 
-
-			// echo "aqui voy <pre>";
-			// print_r($AdminRouters);
-			// echo "</pre>";
-			// exit();
 			
 if ($action=="routerAdd")
 {
-	// echo "Proceso registrado Exitosamente";
 	$router_id			=$_REQUEST['router_id'];
     $nameRouter			=$_REQUEST['nameRouter'];
 	$estados_router_id	=$_REQUEST['estados_router_id'];

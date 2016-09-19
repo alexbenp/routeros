@@ -256,5 +256,39 @@ class RoutersDb extends Conexion {
 		}
 		
 	}
+	public function ipHotspotUserAddDb(){
+		$conexion = new Conexion();
+		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		try {
+			$this->codigoRespuesta = "34";
+			$this->mensajeRespuesta = "Router: ";
+			if($router_id > 0){
+				$sql = $conexion->prepare('SELECT  r.router_id,r.nombre as nombreRouter,r.estados_router_id,er.estado as estadoRouter,r.version as versionRouter,r.ip as ipRouter,r.puerto as puertoRouter,r.usuario as usuarioRouter,r.clave as claveRouter,r.reintentos_conexion,r.retraso_conexion,r.tiempo_maximo_conexion FROM routers r inner join estados_router er on (r.estados_router_id = er.estados_router_id) WHERE router_id = :router_id ORDER BY r.router_id DESC' );
+				$sql->bindParam(':router_id', $router_id);
+				$sql->execute();
+				$resultado = $sql->fetchAll();
+				$this->codigoRespuesta = "00";
+				$this->mensajeRespuesta = "Resultado Exitoso ";
+				return $resultado;
+			}else{
+				$sql = $conexion->prepare('SELECT  r.router_id,r.nombre as nombreRouter,er.estado as estadoRouter,r.version as versionRouter,r.ip as ipRouter,r.puerto as puertoRouter,r.usuario as usuarioRouter,r.clave as claveRouter,r.reintentos_conexion,r.retraso_conexion,r.tiempo_maximo_conexion FROM routers r inner join estados_router er on (r.estados_router_id = er.estados_router_id) ORDER BY r.router_id DESC' );
+				$sql->execute();
+				$resultado = $sql->fetchAll();
+				$this->codigoRespuesta = "00";
+				$this->mensajeRespuesta = "Resultado Exitoso ";
+				return $resultado;				
+			}
+		}catch (PDOException $e) {
+			echo "<br>ipHotspotUserAddDb::DataBase Error: <br>".$e->getMessage();
+			echo "<br>Error Code:<br> ".$e->getCode();
+			exit;
+		}catch (Exception $e) {
+			echo "ipHotspotUserAddDb::General Error: The user could not be added.<br>".$e->getMessage();
+			exit;
+		}
+		
+	}
+	
 }
 ?>

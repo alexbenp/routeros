@@ -1,6 +1,8 @@
 <?php 
 include_once("control.php");
-include_once("include/config.php");
+require_once("clases/Configuraciones.php");
+$Configuraciones = new Configuraciones ();
+$ruta_instalacion =  $Configuraciones->getKeyConfig("RUTA_PORTAL");
 
 $imprimeMenu 	= 1;
 $action			= $_REQUEST['action']; 

@@ -1,12 +1,25 @@
 <?php 
 include("control.php");
 include("principal.php");
-include("include/config.php");
-//require_once ('clases/api.php'); //aqui incluimos la clase API para trabajar con ella
+require_once("clases/Configuraciones.php");
 require_once ('clases/Routers.php');
+require_once ('clases/AuditoriaRoutersDb.php');
+$Configuraciones = new Configuraciones ();
+
+$ruta_instalacion =  $Configuraciones->getKeyConfig("RUTA_PORTAL");
 $validaSesion = new Menus($_SESSION['getPerfilId']);
 $php_self = str_replace($ruta_instalacion,'',$_SERVER['PHP_SELF']);
 $validaSesion->getPageByName($php_self);
+
+
+$AuditoriaRoutersDB = new AuditoriaRoutersDb ($_SESSION['usuario_id'],$_SESSION['router_id']);
+
+
+// echo "<pre>";
+// print_r($_SESSION);
+// echo "</pre>";
+
+
 $action=$_REQUEST['action']; 
 $profile=$_REQUEST['profile'];
 
@@ -40,9 +53,54 @@ if ($action=="userAdd")
 		
 	}else{
 		// fin de crear perfil de usuario
-		$userAdd = $ROUTERS->ipHotspotUserAdd($name,$password,$uptime,$comentario,$profile_name);
-		$mensajeRespuestaUserAdd = $ROUTERS->getMensajeRespuesta();
-		$codigoRespuestaUserAdd = $ROUTERS->getCodigoRespuesta();
+
+		$accionAud = $AuditoriaRoutersDB->getAcciones('CREACION');
+		$accion_auditoria_id = $accionAud[0]['accion_id'];
+		if(empty($accion_auditoria_id)){
+			$mensajeRespuestaUserAdd = 'No se ha definido que accion ejecutar';
+			$codigoRespuestaUserAdd = '24';
+		}else{
+			
+			$regAuditoriaId = $AuditoriaRoutersDB->ipHotspotUserAddDB($accion_auditoria_id,$id_usuario_router,$name,$password,$uptime,$profile_name,$comentario);
+			
+			$mensajeRespuestaAuditUserAddDB = $AuditoriaRoutersDB->getMensajeRespuesta();
+			$codigoRespuestaAuditUserAddDB = $AuditoriaRoutersDB->getCodigoRespuesta();
+			
+			if($codigoRespuestaAuditUserAddDB == '00'){
+				if($regAuditoriaId>0){
+					$userAdd = $ROUTERS->ipHotspotUserAdd($name,$password,$uptime,$comentario,$profile_name);
+					$mensajeRespuestaUserAdd = $ROUTERS->getMensajeRespuesta();
+					$codigoRespuestaUserAdd = $ROUTERS->getCodigoRespuesta();
+					
+					if($codigoRespuestaUserAdd == '00'){
+						$validaExistencia = $ROUTERS->ipHotspotUserPrint($name,$estado,$perfil);
+						if(is_array($validaExistencia)){
+							$id_usuario_router = $validaExistencia[0]['.id'];
+							// echo "que tiene??<br>";
+							// echo "$regAuditoriaId -- $id_usuario_router -- $name<br>";
+							$regAuditoria = $AuditoriaRoutersDB->ipHotspotUserAddDBUpdate($regAuditoriaId,$id_usuario_router,$codigoRespuestaUserAdd.":".$mensajeRespuestaUserAdd);
+							$mensajeRespuestaUserAddBDUpdate = $AuditoriaRoutersDB->getMensajeRespuesta();
+							$codigoRespuestaUserAddBDUpdate = $AuditoriaRoutersDB->getCodigoRespuesta();
+							
+						}else{
+							$mensajeRespuestaUserAdd = 'No encuentra usuario registrado';
+							$codigoRespuestaUserAdd = '25';
+						}
+					}else{
+							$regAuditoria = $AuditoriaRoutersDB->ipHotspotUserAddDBUpdate($regAuditoriaId,$id_usuario_router,$codigoRespuestaUserAdd.":".$mensajeRespuestaUserAdd);
+							$mensajeRespuestaUserAddBDUpdate = $AuditoriaRoutersDB->getMensajeRespuesta();
+							$codigoRespuestaUserAddBDUpdate = $AuditoriaRoutersDB->getCodigoRespuesta();
+						
+					}
+				}else{
+					$mensajeRespuestaUserAdd = 'Error identificando registro Auditoria::'.$codigoRespuestaAuditUserAddDB;
+					$codigoRespuestaUserAdd = '27';
+				}
+			}else{
+				$mensajeRespuestaUserAdd = 'Error registro Auditoria::'.$codigoRespuestaAuditUserAddDB;
+				$codigoRespuestaUserAdd = '26';
+			}
+		}
 	} 
 }
 ?> 
@@ -57,7 +115,7 @@ if ($action=="userAdd")
 		<label>
 <?php 		
 	if($mensajeRespuestaUserAdd!=''){
-		echo $codigoRespuestaUserAdd."::".$mensajeRespuestaUserAdd."<br><br>";
+		echo $codigoRespuestaUserAdd."::".$mensajeRespuestaUserAdd."::".$codigoRespuestaUserAddBDUpdate."<br><br>";
 	}
 		$mensajeRespuestaConnect = $ROUTERS->getMensajeRespuesta();
 		$codigoRespuestaConnect = $ROUTERS->getCodigoRespuesta();

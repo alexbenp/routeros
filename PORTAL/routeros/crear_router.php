@@ -1,9 +1,11 @@
 <?php 
 include("control.php");
 include("principal.php");
-include("include/config.php");
+require_once("clases/Configuraciones.php");
 require_once ('clases/Routers.php');
 require_once ('clases/RouterDb.php');
+$Configuraciones = new Configuraciones ();
+$ruta_instalacion =  $Configuraciones->getKeyConfig("RUTA_PORTAL");
 
 $ADMROUTERS = new RoutersDb();
 $validaSesion = new Menus($_SESSION['getPerfilId']);

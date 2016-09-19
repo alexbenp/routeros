@@ -1,6 +1,5 @@
 <?php 
 include("control.php"); 
-include("include/config.php");
 require_once 'clases/Menus.php';
 
 error_reporting(E_ALL ^ E_NOTICE);

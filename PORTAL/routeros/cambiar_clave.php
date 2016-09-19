@@ -1,18 +1,21 @@
 <?php 
 include("control.php");
-include("include/config.php");
+require_once("clases/Configuraciones.php");
 require_once("principal.php");
 require_once 'clases/Usuarios.php';
 require_once ('clases/AuditoriaSysLog.php');
 $action	=	$_REQUEST['action']; 
 $codigo_respuesta_exitosa = "00";
 
+$Configuraciones = new Configuraciones ();
+$ruta_instalacion =  $Configuraciones->getKeyConfig("RUTA_PORTAL");
+
 $validaSesion = new Menus($_SESSION['getPerfilId']);
 $php_self = str_replace($ruta_instalacion,'',$_SERVER['PHP_SELF']);
 $validaSesion->getPageByName($php_self);
 
 
-		
+$cantidadCaracteres = $Configuraciones->getKeyConfig("CANTIDAD_CARACTERES_CLAVE");
 		
 ?>
 
@@ -98,12 +101,12 @@ if($action =="1" ){
 				<input type="password" class="input-lg form-control" name="password1" id="password1" placeholder="Nueva Clave" autocomplete="off">
 				<div class="row">
 					<div class="col-sm-6">
-						<span id="8char" class="glyphicon glyphicon-remove" style="color:#FF0004;"></span> Minimo XX Caracteres<br>
+						<span id="8char" class="glyphicon glyphicon-remove" style="color:#FF0004;"></span> Minimo <?php echo $cantidadCaracteres; ?> Caracteres<br>
 						<span id="ucase" class="glyphicon glyphicon-remove" style="color:#FF0004;"></span> Un Caracter en Mayuscula
 					</div>
 					<div class="col-sm-6">
 						<span id="lcase" class="glyphicon glyphicon-remove" style="color:#FF0004;"></span>Una Caracter en Minuscula<br>
-						<span id="num" class="glyphicon glyphicon-remove" style="color:#FF0004;"></span> Minimo XX Numeros
+						<span id="num" class="glyphicon glyphicon-remove" style="color:#FF0004;"></span> Minimo Numeros
 					</div>
 				</div>
 				
@@ -128,7 +131,7 @@ $("input[type=password]").keyup(function(){
 	var lcase = new RegExp("[a-z]+");
 	var num = new RegExp("[0-9]+");
 
-	if($("#password1").val().length >= 8){
+	if($("#password1").val().length >= <?php echo $cantidadCaracteres;  ?>){
 		$("#8char").removeClass("glyphicon-remove");
 		$("#8char").addClass("glyphicon-ok");
 		$("#8char").css("color","#00A41E");

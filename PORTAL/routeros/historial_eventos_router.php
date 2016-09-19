@@ -1,8 +1,10 @@
 <?php 
 include("control.php");
-include("include/config.php");
+require_once("clases/Configuraciones.php");
 require_once("principal.php");
 require_once ('clases/Routers.php');
+$Configuraciones = new Configuraciones ();
+$ruta_instalacion =  $Configuraciones->getKeyConfig("RUTA_PORTAL");
 $validaSesion = new Menus($_SESSION['getPerfilId']);
 $php_self = str_replace($ruta_instalacion,'',$_SERVER['PHP_SELF']);
 $validaSesion->getPageByName($php_self);

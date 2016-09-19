@@ -1,9 +1,11 @@
 <?php 
 include("control.php");
 include("principal.php");
-include("include/config.php");
+require_once("clases/Configuraciones.php");
 require_once ('clases/Routers.php');
 require_once ('clases/RouterDb.php');
+$Configuraciones = new Configuraciones ();
+$ruta_instalacion =  $Configuraciones->getKeyConfig("RUTA_PORTAL");
 
 $ADMROUTERS = new RoutersDb();
 $validaSesion = new Menus($_SESSION['getPerfilId']);
@@ -12,23 +14,11 @@ $validaSesion->getPageByName($php_self);
 $action=$_REQUEST['action']; 
 $profile=$_REQUEST['profile'];
 
-		
-		
-		
-// echo "<pre>";
-// print_r($_REQUEST);
-// echo "</pre>";
-
 $info = $ADMROUTERS->getEstadosRouter();
-			// echo "aqui voy <pre>";
-			// print_r($info);
-			// echo "</pre>";
-			// exit();
-			
+
 			
 if ($action=="routerAdd")
 {
-	// echo "Proceso registrado Exitosamente";
 
     $nameRouter			=$_REQUEST['nameRouter'];
 	$estados_router_id	=$_REQUEST['estados_router_id'];
@@ -71,11 +61,7 @@ if ($action=="routerAdd")
 	if($mensajeRespuestaSetRouter!=''){
 		echo $codigoRespuestaSetRouter."::".$mensajeRespuestaSetRouter."<br><br>";
 	}
-		// $mensajeRespuestaConnect = $ROUTERS->getMensajeRespuesta();
-		// $codigoRespuestaConnect = $ROUTERS->getCodigoRespuesta();
-	// if($mensajeRespuestaConnect!='' and $codigoRespuestaConnect!='00'){
-		// echo $codigoRespuestaConnect."::".$mensajeRespuestaConnect."::idUser::".$user."<br><br>";
-	// }
+
 ?>
 		</label>
 	</div>

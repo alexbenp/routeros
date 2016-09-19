@@ -1,8 +1,12 @@
 <?php 
 include("control.php");
 include("principal.php");
-include("include/config.php");
+require_once("clases/Configuraciones.php");
 require_once ('clases/Routers.php');
+require_once ('clases/AuditoriaRoutersDb.php');
+$Configuraciones = new Configuraciones ();
+$ruta_instalacion =  $Configuraciones->getKeyConfig("RUTA_PORTAL");
+
 $validaSesion = new Menus($_SESSION['getPerfilId']);
 $php_self = str_replace($ruta_instalacion,'',$_SERVER['PHP_SELF']);
 $validaSesion->getPageByName($php_self);
@@ -20,6 +24,7 @@ $timeout 		= $_SESSION['tiempo_maximo_conexion']; // Connection attempt timeout 
 
 $ROUTERS = new Routers($ipRB , $Username , $clave, $api_puerto, $attempts, $delay, $timeout);
 
+$AuditoriaRoutersDB = new AuditoriaRoutersDb ($_SESSION['usuario_id'],$_SESSION['router_id']);
 
 if ($action=="profileAdd")
 {
@@ -40,17 +45,57 @@ if ($action=="profileAdd")
 	{
 		echo "<br>Todos los campos son obligatorios, por favor completa <a href=\"\">el formulario</a> nuevamente.";
 	}else{
-		$profileAdd = $ROUTERS->ipHotspotUserProfileAdd($profile_name,$user_shared,$rx,$tx,$add_mac_cookie,$mac_uptime);
-		$mensajeRespuestaProfileAdd = $ROUTERS->getMensajeRespuesta();
-		$codigoRespuestaProfileAdd = $ROUTERS->getCodigoRespuesta();
+		
+		$accionAud = $AuditoriaRoutersDB->getAcciones('CREACION');
+		$accion_auditoria_id = $accionAud[0]['accion_id'];
+		if(empty($accion_auditoria_id)){
+			$mensajeRespuestaProfileAdd = 'No se ha definido que accion ejecutar';
+			$codigoRespuestaProfileAdd = '34';
+		}else{
+			
+			$regAuditoriaProfileId = $AuditoriaRoutersDB->ipHotspotUserProfileAddDB($accion_auditoria_id,$profile_name,$user_shared,$rx,$tx,$add_mac_cookie,$mac_uptime);
+			
+			$mensajeRespuestaAuditProfileAddDB = $AuditoriaRoutersDB->getMensajeRespuesta();
+			$codigoRespuestaAuditProfileAddDB = $AuditoriaRoutersDB->getCodigoRespuesta();
+			if($codigoRespuestaAuditProfileAddDB == '00'){
+				if($regAuditoriaProfileId>0){
+					
+					$profileAdd = $ROUTERS->ipHotspotUserProfileAdd($profile_name,$user_shared,$rx,$tx,$add_mac_cookie,$mac_uptime);
+					$mensajeRespuestaProfileAdd = $ROUTERS->getMensajeRespuesta();
+					$codigoRespuestaProfileAdd = $ROUTERS->getCodigoRespuesta();
+					
+					if($codigoRespuestaProfileAdd == '00'){
+						$validaExistencia = $ROUTERS->ipHotspotUserProfilePrint($profile_name,$estado);
+						if(is_array($validaExistencia)){
+							$id_perfil_usuario_router = $validaExistencia[0]['.id'];
+							// echo "que tiene??<br>";
+							// echo "$regAuditoriaId -- $id_usuario_router -- $name<br>";
+							$regAuditoriaProfile = $AuditoriaRoutersDB->ipHotspotUserProfileAddDBUpdate($regAuditoriaProfileId,$id_perfil_usuario_router,$codigoRespuestaProfileAdd.":".$mensajeRespuestaProfileAdd);
+							$mensajeRespuestaUserProfileAddBDUpdate = $AuditoriaRoutersDB->getMensajeRespuesta();
+							$codigoRespuestaUserProfileAddBDUpdate = $AuditoriaRoutersDB->getCodigoRespuesta();
+							
+						}else{
+							$mensajeRespuestaProfileAdd = 'No encuentra usuario registrado::'.$codigoRespuestaUserProfileAddBDUpdate;
+							$codigoRespuestaProfileAdd = '35';
+						}
+					}
+				}else{
+					$mensajeRespuestaProfileAdd = 'Error identificando registro Auditoria::'.$codigoRespuestaAuditProfileAddDB;
+					$codigoRespuestaProfileAdd = '37';
+				}
+			}else{
+				$mensajeRespuestaProfileAdd = 'Error registro Auditoria::'.$codigoRespuestaAuditProfileAddDB;
+				$codigoRespuestaProfileAdd = '36';
+			}
+			
+
+			
+			
+			
+			
+		}	
+		
 	}
-}elseif($action=="profileDel"){
-	// echo "Amtes ".$profile;
-	// $profile = str_replace($profile,'*','');
-	// echo "despues ".$profile;
-	$profileRemove = $ROUTERS->ipHotspotUserProfileRemove($profile);
-	$mensajeRespuestaProfileRemove = $ROUTERS->getMensajeRespuesta();
-	$codigoRespuestaProfileRemove = $ROUTERS->getCodigoRespuesta();
 }
 
 $info = $ROUTERS->ipHotspotUserProfileGetall();

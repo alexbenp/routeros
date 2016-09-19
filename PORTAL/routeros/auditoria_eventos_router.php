@@ -1,9 +1,11 @@
 <?php 
 include("control.php");
-include("include/config.php");
+require_once("clases/Configuraciones.php");
 include("principal.php");
-// require_once ('clases/Routers.php');
 require_once ('clases/AuditoriaSysLog.php');
+$Configuraciones = new Configuraciones ();
+$ruta_instalacion =  $Configuraciones->getKeyConfig("RUTA_PORTAL");
+
 $action	=	$_REQUEST['action']; 
 
 $validaSesion = new Menus($_SESSION['getPerfilId']);

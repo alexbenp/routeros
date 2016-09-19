@@ -1,6 +1,6 @@
 <?php
  require_once 'Conexion.php';
- class Usuarios {
+ class Usuarios extends Conexion {
     private $usuario_id;
     private $usuario;
     private $identificacion;

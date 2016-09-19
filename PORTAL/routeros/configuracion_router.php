@@ -1,11 +1,10 @@
 <?php 
 include("control.php");
-include("include/config.php");
-// require_once("principal.php");
-//require_once ('clases/api.php'); //aqui incluimos la clase API para trabajar con ella
+require_once("clases/Configuraciones.php");
 require_once ('clases/RouterDb.php');
 require_once ('clases/Routers.php');
-
+$Configuraciones = new Configuraciones ();
+$ruta_instalacion =  $Configuraciones->getKeyConfig("RUTA_PORTAL");
 
 $imprimeMenu 	= 1;
 $estados_router_id = 1;

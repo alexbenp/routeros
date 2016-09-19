@@ -1,7 +1,13 @@
 <?php 
 include_once("control.php");
-include_once("include/config.php");
+require_once("clases/Configuraciones.php");
 require_once ('clases/Routers.php');
+require_once ('clases/AuditoriaRoutersDb.php');
+$Configuraciones = new Configuraciones ();
+
+$ruta_instalacion =  $Configuraciones->getKeyConfig("RUTA_PORTAL");
+$AuditoriaRoutersDB = new AuditoriaRoutersDb ($_SESSION['usuario_id'],$_SESSION['router_id']);
+
 
 $imprimeMenu 	= 1;
 $action			= $_REQUEST['action']; 
@@ -47,9 +53,63 @@ if($action=="userRemove"){
 		{ 
 			echo "Todos los campos son obligatorios, por favor completa <a href=\"\">el formulario</a> nuevamente.";
 		}else{
-			$userRemove = $ROUTERS->ipHotspotUserRemove($usuario_id);
-			$mensajeRespuestaUserRemove = $ROUTERS->getMensajeRespuesta();
-			$codigoRespuestaUserRemove = $ROUTERS->getCodigoRespuesta();
+			
+			
+		$accionAud = $AuditoriaRoutersDB->getAcciones('ELIMINACION');
+		$accion_auditoria_id = $accionAud[0]['accion_id'];
+		if(empty($accion_auditoria_id)){
+			$mensajeRespuestaUserRemove = 'No se ha definido que accion ejecutar';
+			$codigoRespuestaUserRemove = '44';
+		}else{
+			
+			$validaExistencia = $ROUTERS->ipHotspotUserPrintById($usuario_id);
+			
+			if(is_array($validaExistencia)){
+				$id_usuario_router = $validaExistencia[0]['.id'];
+				$name = $validaExistencia[0]['name'];
+				$password = $validaExistencia[0]['password'];
+				$uptime = $validaExistencia[0]['uptime'];
+				$profile_name = $validaExistencia[0]['profile_name'];
+				$comentario = $validaExistencia[0]['comentario'];
+
+				$regAuditoriaId = $AuditoriaRoutersDB->ipHotspotUserAddDB($accion_auditoria_id,$id_usuario_router,$name,$password,$uptime,$profile_name,$comentario);
+				
+				$mensajeRespuestaAuditUserAddDB = $AuditoriaRoutersDB->getMensajeRespuesta();
+				$codigoRespuestaAuditUserAddDB = $AuditoriaRoutersDB->getCodigoRespuesta();
+				if($codigoRespuestaAuditUserAddDB == '00'){
+					if($regAuditoriaId>0){
+						$userRemove = $ROUTERS->ipHotspotUserRemove($usuario_id);
+						$mensajeRespuestaUserRemove = $ROUTERS->getMensajeRespuesta();
+						$codigoRespuestaUserRemove = $ROUTERS->getCodigoRespuesta();
+
+						if($codigoRespuestaUserRemove == '00'){
+								$regAuditoria = $AuditoriaRoutersDB->ipHotspotUserAddDBUpdate($regAuditoriaId,$id_usuario_router,$codigoRespuestaUserRemove.":".$mensajeRespuestaUserRemove);
+								$mensajeRespuestaUserAddBDUpdate = $AuditoriaRoutersDB->getMensajeRespuesta();
+								$codigoRespuestaUserAddBDUpdate = $AuditoriaRoutersDB->getCodigoRespuesta();
+						}else{
+								$regAuditoria = $AuditoriaRoutersDB->ipHotspotUserAddDBUpdate($regAuditoriaId,$id_usuario_router,$codigoRespuestaUserRemove.":".$mensajeRespuestaUserRemove);
+								$mensajeRespuestaUserAddBDUpdate = $AuditoriaRoutersDB->getMensajeRespuesta();
+								$codigoRespuestaUserAddBDUpdate = $AuditoriaRoutersDB->getCodigoRespuesta();
+						}
+						
+					}else{
+						$mensajeRespuestaUserRemove = 'Error identificando registro Auditoria::'.$codigoRespuestaAuditUserAddDB;
+						$codigoRespuestaUserRemove = '47';
+					}
+					
+				}else{
+					$mensajeRespuestaUserRemove = 'Error registro Auditoria::'.$codigoRespuestaAuditUserAddDB;
+					$codigoRespuestaUserRemove = '46';
+				}
+			}else{
+				$mensajeRespuestaUserRemove = 'No encuentra usuario registrado';
+				$codigoRespuestaUserRemove = '45';
+			}		
+		}
+			
+
+			
+			
 
 		}
 		
@@ -61,9 +121,14 @@ if($imprimeMenu == 1){
 ?> 
 	<div id="resultado"></div>
 		
-<?php 		
+<?php 	
 	if($mensajeRespuestaUserRemove!=''){
-		echo $codigoRespuestaUserRemove."::".$mensajeRespuestaUserRemove."<br><br>";
+		echo $codigoRespuestaUserRemove."::".$mensajeRespuestaUserRemove."::".$codigoRespuestaUserAddBDUpdate."<br><br>";
+	}
+		$mensajeRespuestaConnect = $ROUTERS->getMensajeRespuesta();
+		$codigoRespuestaConnect = $ROUTERS->getCodigoRespuesta();
+	if($mensajeRespuestaConnect!='' and $codigoRespuestaConnect!='00'){
+		echo $codigoRespuestaConnect."::".$mensajeRespuestaConnect."::idUser::".$user."<br><br>";
 	}
 ?>
 <div class="container">

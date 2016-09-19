@@ -288,10 +288,39 @@ class Routers extends routeros_api {
 			return $resultado;
 		}else{
 			$this->codigoRespuesta = "100";
-			$this->mensajeRespuesta = "ipHotspotUserGetall::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." en el puerto: ".$this->puertorouter;
+			$this->mensajeRespuesta = "ipHotspotUserPrint::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." en el puerto: ".$this->puertorouter;
 		}
 	}
-	
+	public function ipHotspotUserPrintById($id){
+		if ($this->connect($this->iprouter , $this->usuariorouter , $this->claverouter, $this->puertorouter, $this->attemptsrouter, $this->delayrouter, $this->timeoutrouter)) {
+			$comando = "";
+			if(!empty($id)){
+				$resultado = $this->comm('/ip/hotspot/user/print',array('?.id' => $id));
+				
+			}
+			$this->disconnect();
+			return $resultado;
+		}else{
+			$this->codigoRespuesta = "100";
+			$this->mensajeRespuesta = "ipHotspotUserPrint::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." en el puerto: ".$this->puertorouter;
+		}
+	}
+	public function ipHotspotUserProfilePrint($profile,$estado){
+		if ($this->connect($this->iprouter , $this->usuariorouter , $this->claverouter, $this->puertorouter, $this->attemptsrouter, $this->delayrouter, $this->timeoutrouter)) {
+			$comando = "";
+			if(!empty($profile)){
+				$resultado = $this->comm('/ip/hotspot/user/profile/print',array('?name' => $profile));
+				
+			}else{
+				$resultado = $this->comm('/ip/hotspot/user/profile/print'.$commando);
+			}
+			$this->disconnect();
+			return $resultado;
+		}else{
+			$this->codigoRespuesta = "100";
+			$this->mensajeRespuesta = "ipHotspotUserProfilePrint::No se puede conectar al Routerboard con IP:".$this->iprouter." con el usuario ".$this->usuariorouter." en el puerto: ".$this->puertorouter;
+		}
+	}
 }
 	  
  
