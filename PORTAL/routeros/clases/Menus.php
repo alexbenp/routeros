@@ -5,11 +5,13 @@ class Menus {
 	private $nivel_uno 	= 1;
 	private $nivel_dos 	= 2;
 	private $nivel_tres = 3;
+	private $conexion;
 	// private $principal;
 	// private $url_principal;
 	
 	public function __construct($perfil_id) {
 		$this->perfil_id = $perfil_id;
+		$this->conexion = new Conexion();
 		// $this->menu_id = $menu_id;
 		// $this->menu = $menu;
 		// $this->orden_menu = $orden_menu;
@@ -21,16 +23,16 @@ class Menus {
 	
 
 	public function getMenusNivelUno(){
-		$conexion = new Conexion();
+
 		
-		  // echo 'client version: ', $conexion->getAttribute(PDO::ATTR_CLIENT_VERSION), "\n";
-		  // echo 'server version: ', $conexion->getAttribute(PDO::ATTR_SERVER_VERSION), "\n";
-		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		  // echo 'client version: ', $this->conexion->getAttribute(PDO::ATTR_CLIENT_VERSION), "\n";
+		  // echo 'server version: ', $this->conexion->getAttribute(PDO::ATTR_SERVER_VERSION), "\n";
+		$this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 			try {
 				$this->codigoRespuesta = "11";
 				$this->mensajeRespuesta = "Menu no valido:";
-				$sql = $conexion->prepare('SELECT * FROM menus_perfil mp INNER JOIN menus m ON (mp.menu_id = m.menu_id) WHERE mp.perfil_id = :perfil_id AND m.nivel = :nivel_id AND m.estados_menu_id = 1 AND mp.estados_menu_id = 1 order by nivel,orden');
+				$sql = $this->conexion->prepare('SELECT * FROM menus_perfil mp INNER JOIN menus m ON (mp.menu_id = m.menu_id) WHERE mp.perfil_id = :perfil_id AND m.nivel = :nivel_id AND m.estados_menu_id = 1 AND mp.estados_menu_id = 1 order by nivel,orden');
 				$sql->bindParam(':perfil_id', $this->perfil_id);
 				$sql->bindParam(':nivel_id',  $this->nivel_uno);
 
@@ -50,17 +52,17 @@ class Menus {
 	}
 	
 	public function getMenusNivelDos($menu_id){
-		$conexion = new Conexion();
+
 		$this->menu_id = $menu_id;
 		
-		  // echo 'client version: ', $conexion->getAttribute(PDO::ATTR_CLIENT_VERSION), "\n";
-		  // echo 'server version: ', $conexion->getAttribute(PDO::ATTR_SERVER_VERSION), "\n";
-		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		  // echo 'client version: ', $this->conexion->getAttribute(PDO::ATTR_CLIENT_VERSION), "\n";
+		  // echo 'server version: ', $this->conexion->getAttribute(PDO::ATTR_SERVER_VERSION), "\n";
+		$this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 			try {
 				$this->codigoRespuesta = "12";
 				$this->mensajeRespuesta = "SubMenu no valido:";
-				$sql = $conexion->prepare('SELECT * FROM menus_perfil mp INNER JOIN menus m ON (mp.menu_id = m.menu_id) WHERE mp.perfil_id = :perfil_id AND m.nivel = :nivel_id AND m.submenu_id = :menu_id AND m.estados_menu_id = 1 AND mp.estados_menu_id = 1 order by nivel,orden');
+				$sql = $this->conexion->prepare('SELECT * FROM menus_perfil mp INNER JOIN menus m ON (mp.menu_id = m.menu_id) WHERE mp.perfil_id = :perfil_id AND m.nivel = :nivel_id AND m.submenu_id = :menu_id AND m.estados_menu_id = 1 AND mp.estados_menu_id = 1 order by nivel,orden');
 				$sql->bindParam(':perfil_id', $this->perfil_id);
 				$sql->bindParam(':menu_id', $this->menu_id);
 				$sql->bindParam(':nivel_id',  $this->nivel_dos);
@@ -115,16 +117,15 @@ class Menus {
 
 	public function getPageByName($ruta_url){
 		$this->ruta_url = $ruta_url;
-		$conexion 		= new Conexion();
 		
-		  // echo 'client version: ', $conexion->getAttribute(PDO::ATTR_CLIENT_VERSION), "\n";
-		  // echo 'server version: ', $conexion->getAttribute(PDO::ATTR_SERVER_VERSION), "\n";
-		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		  // echo 'client version: ', $this->conexion->getAttribute(PDO::ATTR_CLIENT_VERSION), "\n";
+		  // echo 'server version: ', $this->conexion->getAttribute(PDO::ATTR_SERVER_VERSION), "\n";
+		$this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 			try {
 				$this->codigoRespuesta = "13";
 				$this->mensajeRespuesta = "Menu no valido:";
-				$sql = $conexion->prepare('SELECT count(*) AS VALIDA FROM menus_perfil mp INNER JOIN menus m ON (mp.menu_id = m.menu_id) WHERE mp.perfil_id = :perfil_id AND m.estados_menu_id = 1 AND mp.estados_menu_id = 1 AND m.ruta_url = :ruta_url order by nivel,orden');
+				$sql = $this->conexion->prepare('SELECT count(*) AS VALIDA FROM menus_perfil mp INNER JOIN menus m ON (mp.menu_id = m.menu_id) WHERE mp.perfil_id = :perfil_id AND m.estados_menu_id = 1 AND mp.estados_menu_id = 1 AND m.ruta_url = :ruta_url order by nivel,orden');
 				$sql->bindParam(':perfil_id', $this->perfil_id);
 				$sql->bindParam(':ruta_url', $this->ruta_url);
 
@@ -154,6 +155,6 @@ class Menus {
 			}
 		
 	}
-	
+
 }
 ?>

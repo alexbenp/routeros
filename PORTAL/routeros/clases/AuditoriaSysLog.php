@@ -1,20 +1,21 @@
 <?php
 require_once 'ConexionSysLog.php';
 class AuditoriaSysLog {
+	private $conexion;
 	
 	public function __construct() {
-
+		$this->conexion = new ConexionSysLog();
     }
 	
 	public function getSystemEvents($fechaInicio,$fechaFinal){
 		$conexion = new ConexionSysLog();
 
-		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		$this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 			try {
 				$this->codigoRespuesta = "01";
 				$this->mensajeRespuesta = "No existe Información de Auditoria:";
-				$sql = $conexion->prepare('SELECT * FROM SystemEvents WHERE ReceivedAt BETWEEN  :fechaInicio AND :fechaFinal ORDER BY ReceivedAt DESC');
+				$sql = $this->conexion->prepare('SELECT * FROM SystemEvents WHERE ReceivedAt BETWEEN  :fechaInicio AND :fechaFinal ORDER BY ReceivedAt DESC');
 				$sql->bindParam(':fechaInicio', $fechaInicio);
 				$sql->bindParam(':fechaFinal',  $fechaFinal);
 
@@ -38,8 +39,8 @@ class AuditoriaSysLog {
 	public function getHotspotUserEvents($usuario){
 		$conexion = new ConexionSysLog();
 
-		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		$this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		
 			try {
 				$this->codigoRespuesta = "02";
@@ -54,7 +55,7 @@ FROM Syslog.SystemEvents group by SUBSTRING_INDEX(SysLogTag,'[',1)) AS log
 INNER JOIN Syslog.SystemEvents s ON (SUBSTRING_INDEX(SysLogTag,'[',1) = log.UniqueSysLogTar) 
 WHERE upper(UniqueSysLogTar) like upper('%hotspot%') AND trim(SUBSTRING_INDEX(Message,'(',1)) = :usuario ORDER BY ReceivedAt DESC) AS respuesta";
 
-				$sql = $conexion->prepare($sql_final);
+				$sql = $this->conexion->prepare($sql_final);
 				$sql->bindParam(':usuario',  $usuario);
 
 				$sql->execute();
@@ -75,8 +76,8 @@ WHERE upper(UniqueSysLogTar) like upper('%hotspot%') AND trim(SUBSTRING_INDEX(Me
 	public function getHotspotDateEvents($fechaInicio,$fechaFinal){
 		$conexion = new ConexionSysLog();
 
-		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		$this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		
 		
 			try {
@@ -85,7 +86,7 @@ WHERE upper(UniqueSysLogTar) like upper('%hotspot%') AND trim(SUBSTRING_INDEX(Me
 				
 				$sql_final = "SELECT ID,SysLogTag,FromHost,ReceivedAt,trim( substring_index(substring_index(Message,': ',1),'(',1 ) ) as Usuario,trim( substring_index(substring_index(substring_index(Message,': ',1),' (',-1),')',1)) as IpMac,trim( SUBSTR(Message,INSTR(Message,': ')+1, LENGTH(Message)) )  as Mensaje FROM (SELECT SUBSTRING_INDEX(SysLogTag,'[',1) AS UniqueSysLogTar FROM Syslog.SystemEvents group by SUBSTRING_INDEX(SysLogTag,'[',1)) AS log INNER JOIN Syslog.SystemEvents s ON (SUBSTRING_INDEX(SysLogTag,'[',1) = log.UniqueSysLogTar) WHERE upper(UniqueSysLogTar) like upper('%hotspot%')  AND ReceivedAt BETWEEN :fechaInicio AND :fechaFinal ORDER BY ReceivedAt DESC";
 				
-				$sql = $conexion->prepare($sql_final);
+				$sql = $this->conexion->prepare($sql_final);
 				$sql->bindParam(':fechaInicio', $fechaInicio);
 				$sql->bindParam(':fechaFinal',  $fechaFinal);
 
@@ -107,8 +108,8 @@ WHERE upper(UniqueSysLogTar) like upper('%hotspot%') AND trim(SUBSTRING_INDEX(Me
 	public function getHotspotUserDateEvents($usuario,$fechaInicio,$fechaFinal){
 		$conexion = new ConexionSysLog();
 
-		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		$this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		
 		
 			try {
@@ -117,7 +118,7 @@ WHERE upper(UniqueSysLogTar) like upper('%hotspot%') AND trim(SUBSTRING_INDEX(Me
 				
 				$sql_final = "SELECT ID,SysLogTag,FromHost,ReceivedAt,trim( substring_index(substring_index(Message,': ',1),'(',1 ) ) as Usuario,trim( substring_index(substring_index(substring_index(Message,': ',1),' (',-1),')',1)) as IpMac,trim( SUBSTR(Message,INSTR(Message,': ')+1, LENGTH(Message)) )  as Mensaje FROM (SELECT SUBSTRING_INDEX(SysLogTag,'[',1) AS UniqueSysLogTar FROM Syslog.SystemEvents group by SUBSTRING_INDEX(SysLogTag,'[',1)) AS log INNER JOIN Syslog.SystemEvents s ON (SUBSTRING_INDEX(SysLogTag,'[',1) = log.UniqueSysLogTar) WHERE upper(UniqueSysLogTar) like upper('%hotspot%') AND trim(SUBSTRING_INDEX(Message,'(',1)) = :usuario AND ReceivedAt BETWEEN :fechaInicio AND :fechaFinal ORDER BY ReceivedAt DESC";
 				
-				$sql = $conexion->prepare($sql_final);
+				$sql = $this->conexion->prepare($sql_final);
 				$sql->bindParam(':fechaInicio', $fechaInicio);
 				$sql->bindParam(':fechaFinal',  $fechaFinal);
 				$sql->bindParam(':usuario',  $usuario);

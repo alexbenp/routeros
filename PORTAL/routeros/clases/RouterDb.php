@@ -4,6 +4,7 @@ class RoutersDb extends Conexion {
 	private $router_id;
 	private $usuario_id;
 	private $estados_router_id;
+	private $conexion;
 	const TABLA = 'routers';
 	
 	public function getCodigoRespuesta() {
@@ -16,26 +17,27 @@ class RoutersDb extends Conexion {
 	public function __construct($router_id=null,$usuario_id=null) {
 		$this->router_id = $router_id;
 		$this->usuario_id = $usuario_id;
+		$this->conexion = new Conexion();
 	}
 	
 	public function getParametrosRouter($estados_router_id){
-		$conexion = new Conexion();
+
 		$this->estados_router_id = $estados_router_id;
-		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		$this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		try {
 			$this->codigoRespuesta = "10";
 			$this->mensajeRespuesta = "Router: ";
 			if(!is_null($this->router_id)){
-				$sql = $conexion->prepare('SELECT * FROM routers r INNER JOIN estados_router er ON (r.estados_router_id = er.estados_router_id) WHERE r.router_id = :router_id');
+				$sql = $this->conexion->prepare('SELECT * FROM routers r INNER JOIN estados_router er ON (r.estados_router_id = er.estados_router_id) WHERE r.router_id = :router_id');
 				$sql->bindParam(':router_id', $this->router_id);
 			}elseif(!is_null($this->estados_router_id)){
 				$this->codigoRespuesta = "00";
-				$sql = $conexion->prepare('SELECT * FROM routers r INNER JOIN estados_router er ON (r.estados_router_id = er.estados_router_id) WHERE r.estados_router_id = :estados_router_id');
+				$sql = $this->conexion->prepare('SELECT * FROM routers r INNER JOIN estados_router er ON (r.estados_router_id = er.estados_router_id) WHERE r.estados_router_id = :estados_router_id');
 				$sql->bindParam(':estados_router_id', $this->estados_router_id);
 			}else{
 				$this->codigoRespuesta = "00";
-				$sql = $conexion->prepare('SELECT * FROM routers INNER JOIN estados_router er ON (r.estados_router_id = er.estados_router_id) ');
+				$sql = $this->conexion->prepare('SELECT * FROM routers INNER JOIN estados_router er ON (r.estados_router_id = er.estados_router_id) ');
 			}
 			$sql->execute();
 			$resultado = $sql->fetchAll();
@@ -54,9 +56,8 @@ class RoutersDb extends Conexion {
 	}
 
 	public function getRouterUser($usuario_id,$estados_router_id){
-		$conexion = new Conexion();
-		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		$this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		try {
 			$this->codigoRespuesta = "20";
 			$this->mensajeRespuesta = "Router: ";
@@ -66,7 +67,7 @@ class RoutersDb extends Conexion {
 				$this->mensajeRespuesta = "Informacion Incompleta para Generar Resultado: ";
 			}else{
 				// echo "WEEntra qui11".$usuario_id;
-				$sql = $conexion->prepare('SELECT  r.router_id,r.nombre as nombreRouter,er.estado as estadoRouter,r.version as versionRouter,r.ip as ipRouter,r.puerto as puertoRouter,r.usuario as usuarioRouter,ru.principal,ru.estados_router_id,u.usuario,erc.estado as estado_router_usuario,r.clave as claveRouter,r.reintentos_conexion,r.retraso_conexion,r.tiempo_maximo_conexion FROM routers r inner join estados_router er on (r.estados_router_id = er.estados_router_id) inner join router_usuario ru on (r.router_id = ru.router_id) inner join estados_router erc on (ru.estados_router_id = erc.estados_router_id) inner join usuarios u on (ru.usuario_id = u.usuario_id)  WHERE u.usuario_id = :usuario_id and r.estados_router_id = ru.estados_router_id and r.estados_router_id = :estados_router_id ORDER BY ru.principal DESC' );
+				$sql = $this->conexion->prepare('SELECT  r.router_id,r.nombre as nombreRouter,er.estado as estadoRouter,r.version as versionRouter,r.ip as ipRouter,r.puerto as puertoRouter,r.usuario as usuarioRouter,ru.principal,ru.estados_router_id,u.usuario,erc.estado as estado_router_usuario,r.clave as claveRouter,r.reintentos_conexion,r.retraso_conexion,r.tiempo_maximo_conexion FROM routers r inner join estados_router er on (r.estados_router_id = er.estados_router_id) inner join router_usuario ru on (r.router_id = ru.router_id) inner join estados_router erc on (ru.estados_router_id = erc.estados_router_id) inner join usuarios u on (ru.usuario_id = u.usuario_id)  WHERE u.usuario_id = :usuario_id and r.estados_router_id = ru.estados_router_id and r.estados_router_id = :estados_router_id ORDER BY ru.principal DESC' );
 				$sql->bindParam(':estados_router_id', $estados_router_id);
 				$sql->bindParam(':usuario_id', $usuario_id);
 				$sql->execute();
@@ -88,9 +89,8 @@ class RoutersDb extends Conexion {
 	}
 	
 	public function getRouterUserByRouterId($usuario_id,$router_id,$estados_router_id){
-		$conexion = new Conexion();
-		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		$this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		try {
 			$this->codigoRespuesta = "30";
 			$this->mensajeRespuesta = "Router: ";
@@ -100,7 +100,7 @@ class RoutersDb extends Conexion {
 				
 
 			}else{				
-				$sql = $conexion->prepare('SELECT  r.router_id,r.nombre as nombreRouter,er.estado as estadoRouter,r.version as versionRouter,r.ip as ipRouter,r.puerto as puertoRouter,r.usuario as usuarioRouter,ru.principal,ru.estados_router_id,u.usuario,erc.estado as estado_router_usuario,r.clave as claveRouter,r.reintentos_conexion,r.retraso_conexion,r.tiempo_maximo_conexion FROM routers r inner join estados_router er on (r.estados_router_id = er.estados_router_id) inner join router_usuario ru on (r.router_id = ru.router_id) inner join estados_router erc on (ru.estados_router_id = erc.estados_router_id) inner join usuarios u on (ru.usuario_id = u.usuario_id)  WHERE u.usuario_id = :usuario_id and r.estados_router_id = ru.estados_router_id and r.estados_router_id = :estados_router_id AND r.router_id = :router_id');
+				$sql = $this->conexion->prepare('SELECT  r.router_id,r.nombre as nombreRouter,er.estado as estadoRouter,r.version as versionRouter,r.ip as ipRouter,r.puerto as puertoRouter,r.usuario as usuarioRouter,ru.principal,ru.estados_router_id,u.usuario,erc.estado as estado_router_usuario,r.clave as claveRouter,r.reintentos_conexion,r.retraso_conexion,r.tiempo_maximo_conexion FROM routers r inner join estados_router er on (r.estados_router_id = er.estados_router_id) inner join router_usuario ru on (r.router_id = ru.router_id) inner join estados_router erc on (ru.estados_router_id = erc.estados_router_id) inner join usuarios u on (ru.usuario_id = u.usuario_id)  WHERE u.usuario_id = :usuario_id and r.estados_router_id = ru.estados_router_id and r.estados_router_id = :estados_router_id AND r.router_id = :router_id');
 				$sql->bindParam(':router_id', $router_id);
 				$sql->bindParam(':estados_router_id', $estados_router_id);
 				$sql->bindParam(':usuario_id', $usuario_id);
@@ -129,9 +129,8 @@ class RoutersDb extends Conexion {
 	}
 	
 	public function setRouter($router_id = null,$nameRouter,$estados_router_id,$ipRouter,$puertoRouter,$versionRouter,$usuarioRouter,$claveRouter,$reintentosCx,$retrasoCx,$tiempoMaximoCx){
-		$conexion = new Conexion();
-		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		$this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		try {
 			$this->codigoRespuesta = "40";
 			$this->mensajeRespuesta = "Router: ";
@@ -145,7 +144,7 @@ class RoutersDb extends Conexion {
 			}else{
 				
 				if($router_id > 0){
-					$sql = $conexion->prepare('UPDATE '. self::TABLA .' SET nombre = :nameRouter, version = :versionRouter, ip = :ipRouter, puerto = :puertoRouter, usuario = :usuarioRouter, clave = :claveRouter, estados_router_id = :estados_router_id, reintentos_conexion = :reintentosCx, retraso_conexion = :retrasoCx, tiempo_maximo_conexion = :tiempoMaximoCx WHERE router_id = :router_id');
+					$sql = $this->conexion->prepare('UPDATE '. self::TABLA .' SET nombre = :nameRouter, version = :versionRouter, ip = :ipRouter, puerto = :puertoRouter, usuario = :usuarioRouter, clave = :claveRouter, estados_router_id = :estados_router_id, reintentos_conexion = :reintentosCx, retraso_conexion = :retrasoCx, tiempo_maximo_conexion = :tiempoMaximoCx WHERE router_id = :router_id');
 					$sql->bindParam(':router_id', $router_id);
 					$sql->bindParam(':nameRouter', $nameRouter);
 					$sql->bindParam(':estados_router_id', $estados_router_id);
@@ -163,7 +162,7 @@ class RoutersDb extends Conexion {
 					$this->codigoRespuesta = "00";
 					$this->mensajeRespuesta = "Resultado Actualización Exitoso: ";	
 				}else{
-					$sql = $conexion->prepare('INSERT INTO '. self::TABLA .' (nombre, version, ip, puerto, usuario, clave, estados_router_id, reintentos_conexion, retraso_conexion, tiempo_maximo_conexion) VALUES (:nameRouter,:versionRouter,:ipRouter,:puertoRouter,:usuarioRouter,:claveRouter,:estados_router_id,:reintentosCx,:retrasoCx,:tiempoMaximoCx)');
+					$sql = $this->conexion->prepare('INSERT INTO '. self::TABLA .' (nombre, version, ip, puerto, usuario, clave, estados_router_id, reintentos_conexion, retraso_conexion, tiempo_maximo_conexion) VALUES (:nameRouter,:versionRouter,:ipRouter,:puertoRouter,:usuarioRouter,:claveRouter,:estados_router_id,:reintentosCx,:retrasoCx,:tiempoMaximoCx)');
 					$sql->bindParam(':nameRouter', $nameRouter);
 					$sql->bindParam(':estados_router_id', $estados_router_id);
 					$sql->bindParam(':ipRouter', $ipRouter);
@@ -176,7 +175,7 @@ class RoutersDb extends Conexion {
 					$sql->bindParam(':tiempoMaximoCx', $tiempoMaximoCx);
 					
 					
-					// $router_id = $conexion->lastInsertId();
+					// $router_id = $this->conexion->lastInsertId();
 					// echo "<pre>";
 					// print_r($sql);
 					// echo "</pre>";
@@ -202,13 +201,12 @@ class RoutersDb extends Conexion {
 	}
 	
 	public function getEstadosRouter(){
-		$conexion = new Conexion();
-		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		$this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		try {
 			$this->codigoRespuesta = "50";
 			$this->mensajeRespuesta = "Router: ";
-			$sql = $conexion->prepare('SELECT estados_router_id,estado as estado_router FROM estados_router');
+			$sql = $this->conexion->prepare('SELECT estados_router_id,estado as estado_router FROM estados_router');
 			$sql->execute();
 			$resultado = $sql->fetchAll();
 
@@ -226,14 +224,13 @@ class RoutersDb extends Conexion {
 	}
 	
 	public function getAllRouters($router_id=null){
-		$conexion = new Conexion();
-		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		$this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		try {
 			$this->codigoRespuesta = "33";
 			$this->mensajeRespuesta = "Router: ";
 			if($router_id > 0){
-				$sql = $conexion->prepare('SELECT  r.router_id,r.nombre as nombreRouter,r.estados_router_id,er.estado as estadoRouter,r.version as versionRouter,r.ip as ipRouter,r.puerto as puertoRouter,r.usuario as usuarioRouter,r.clave as claveRouter,r.reintentos_conexion,r.retraso_conexion,r.tiempo_maximo_conexion FROM routers r inner join estados_router er on (r.estados_router_id = er.estados_router_id) WHERE router_id = :router_id ORDER BY r.router_id DESC' );
+				$sql = $this->conexion->prepare('SELECT  r.router_id,r.nombre as nombreRouter,r.estados_router_id,er.estado as estadoRouter,r.version as versionRouter,r.ip as ipRouter,r.puerto as puertoRouter,r.usuario as usuarioRouter,r.clave as claveRouter,r.reintentos_conexion,r.retraso_conexion,r.tiempo_maximo_conexion FROM routers r inner join estados_router er on (r.estados_router_id = er.estados_router_id) WHERE router_id = :router_id ORDER BY r.router_id DESC' );
 				$sql->bindParam(':router_id', $router_id);
 				$sql->execute();
 				$resultado = $sql->fetchAll();
@@ -241,7 +238,7 @@ class RoutersDb extends Conexion {
 				$this->mensajeRespuesta = "Resultado Exitoso ";
 				return $resultado;
 			}else{
-				$sql = $conexion->prepare('SELECT  r.router_id,r.nombre as nombreRouter,er.estado as estadoRouter,r.version as versionRouter,r.ip as ipRouter,r.puerto as puertoRouter,r.usuario as usuarioRouter,r.clave as claveRouter,r.reintentos_conexion,r.retraso_conexion,r.tiempo_maximo_conexion FROM routers r inner join estados_router er on (r.estados_router_id = er.estados_router_id) ORDER BY r.router_id DESC' );
+				$sql = $this->conexion->prepare('SELECT  r.router_id,r.nombre as nombreRouter,er.estado as estadoRouter,r.version as versionRouter,r.ip as ipRouter,r.puerto as puertoRouter,r.usuario as usuarioRouter,r.clave as claveRouter,r.reintentos_conexion,r.retraso_conexion,r.tiempo_maximo_conexion FROM routers r inner join estados_router er on (r.estados_router_id = er.estados_router_id) ORDER BY r.router_id DESC' );
 				$sql->execute();
 				$resultado = $sql->fetchAll();
 				$this->codigoRespuesta = "00";
@@ -259,14 +256,13 @@ class RoutersDb extends Conexion {
 		
 	}
 	public function ipHotspotUserAddDb(){
-		$conexion = new Conexion();
-		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		$this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		try {
 			$this->codigoRespuesta = "34";
 			$this->mensajeRespuesta = "Router: ";
 			if($router_id > 0){
-				$sql = $conexion->prepare('SELECT  r.router_id,r.nombre as nombreRouter,r.estados_router_id,er.estado as estadoRouter,r.version as versionRouter,r.ip as ipRouter,r.puerto as puertoRouter,r.usuario as usuarioRouter,r.clave as claveRouter,r.reintentos_conexion,r.retraso_conexion,r.tiempo_maximo_conexion FROM routers r inner join estados_router er on (r.estados_router_id = er.estados_router_id) WHERE router_id = :router_id ORDER BY r.router_id DESC' );
+				$sql = $this->conexion->prepare('SELECT  r.router_id,r.nombre as nombreRouter,r.estados_router_id,er.estado as estadoRouter,r.version as versionRouter,r.ip as ipRouter,r.puerto as puertoRouter,r.usuario as usuarioRouter,r.clave as claveRouter,r.reintentos_conexion,r.retraso_conexion,r.tiempo_maximo_conexion FROM routers r inner join estados_router er on (r.estados_router_id = er.estados_router_id) WHERE router_id = :router_id ORDER BY r.router_id DESC' );
 				$sql->bindParam(':router_id', $router_id);
 				$sql->execute();
 				$resultado = $sql->fetchAll();
@@ -274,7 +270,7 @@ class RoutersDb extends Conexion {
 				$this->mensajeRespuesta = "Resultado Exitoso ";
 				return $resultado;
 			}else{
-				$sql = $conexion->prepare('SELECT  r.router_id,r.nombre as nombreRouter,er.estado as estadoRouter,r.version as versionRouter,r.ip as ipRouter,r.puerto as puertoRouter,r.usuario as usuarioRouter,r.clave as claveRouter,r.reintentos_conexion,r.retraso_conexion,r.tiempo_maximo_conexion FROM routers r inner join estados_router er on (r.estados_router_id = er.estados_router_id) ORDER BY r.router_id DESC' );
+				$sql = $this->conexion->prepare('SELECT  r.router_id,r.nombre as nombreRouter,er.estado as estadoRouter,r.version as versionRouter,r.ip as ipRouter,r.puerto as puertoRouter,r.usuario as usuarioRouter,r.clave as claveRouter,r.reintentos_conexion,r.retraso_conexion,r.tiempo_maximo_conexion FROM routers r inner join estados_router er on (r.estados_router_id = er.estados_router_id) ORDER BY r.router_id DESC' );
 				$sql->execute();
 				$resultado = $sql->fetchAll();
 				$this->codigoRespuesta = "00";
