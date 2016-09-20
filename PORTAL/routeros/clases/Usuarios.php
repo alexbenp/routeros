@@ -62,6 +62,12 @@
 	public function getMensajeRespuesta() {
 		return $this->mensajeRespuesta;
 	}
+	public function getCodigoRespuestaSession() {
+		return $this->codigoRespuestaSession;
+	}
+	public function getMensajeRespuestaSession() {
+		return $this->mensajeRespuestaSession;
+	}
 	public function getKeyConfig($descripcion=null) {
 		$conexion = new Conexion();
 		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -219,57 +225,67 @@
 
 				$sql->execute();
 				$resultado = $sql->fetchAll();
+				
+				$cantidad = count($resultado);
+				if($cantidad>0){
+					
+				
 //exit;
-				foreach ($resultado as $row) {
-					$this->usuario_id 		= $row['usuario_id'];
-					$this->perfil_id 		= $row['perfil_id'];
-					$this->nombres 			= $row['nombres'];
-					$this->apellidos 		= $row['apellidos'];
-					$this->estados_usuario_id = $row['estados_usuario_id'];
-					$this->intentos_fallidos = $row['intentos_fallidos'];
-					// // echo $this->intentos_fallidos."--- ";
-					// exit();
-					if($row['estados_usuario_id'] == 2){
-						$this->codigoRespuesta 		= "11";
-						$this->mensajeRespuesta 	= "Usuario Inactivo";
-					}elseif($row['estados_usuario_id'] == 3){
-						$this->codigoRespuesta 		= "12";
-						$this->mensajeRespuesta 	= "Usuario Bloqueado";						
-					}elseif($this->intentos_fallidos >= $this->keyconfig){
-						$nuevo_estado_usuario = 3;
-						$this->setCambiaEstadoUsuario($this->usuario_id,$nuevo_estado_usuario);
-						
-						$this->codigoRespuesta 		= "13";
-						$this->mensajeRespuesta 	= ":Ha superado los ".$this->keyconfig." Intentos maximos, Esta en ".$this->intentos_fallidos."";
-						
-						
-						
+					foreach ($resultado as $row) {
+						echo "entra<br>";
+						$this->usuario_id 		= $row['usuario_id'];
+						$this->perfil_id 		= $row['perfil_id'];
+						$this->nombres 			= $row['nombres'];
+						$this->apellidos 		= $row['apellidos'];
+						$this->estados_usuario_id = $row['estados_usuario_id'];
+						$this->intentos_fallidos = $row['intentos_fallidos'];
+						// // echo $this->intentos_fallidos."--- ";
+						// exit();
+						if($row['estados_usuario_id'] == 2){
+							$this->codigoRespuesta 		= "11";
+							$this->mensajeRespuesta 	= "Usuario Inactivo";
+						}elseif($row['estados_usuario_id'] == 3){
+							$this->codigoRespuesta 		= "12";
+							$this->mensajeRespuesta 	= "Usuario Bloqueado";						
+						}elseif($this->intentos_fallidos >= $this->keyconfig){
+							$nuevo_estado_usuario = 3;
+							$this->setCambiaEstadoUsuario($this->usuario_id,$nuevo_estado_usuario);
+							
+							$this->codigoRespuesta 		= "13";
+							$this->mensajeRespuesta 	= ":Ha superado los ".$this->keyconfig." Intentos maximos, Esta en ".$this->intentos_fallidos."";
+							
+							
+							
 
-					}else{
-						$this->getKeyConfig("LLAVE");
-						$this->codigoRespuesta = "02";
-						$this->mensajeRespuesta = "Clave no Valida:";
-						
-						
-						
-						$sql = $conexion->prepare('SELECT usuario_id,nombres,apellidos,perfil_id,estados_usuario_id,intentos_fallidos FROM ' . self::TABLA .' WHERE usuario = :usuario AND clave = AES_ENCRYPT(:clave,:keyconfig) ');
-						$sql->bindParam(':usuario', $this->usuario);
-						$sql->bindParam(':clave', $this->clave);
-						$sql->bindParam(':keyconfig', $this->keyconfig);
-						$sql->execute();
-						$informacion = $sql->fetchAll();
-						
-						foreach ($informacion as $linea){
-							$this->codigoRespuesta 	= "00";
-							$this->mensajeRespuesta = "Usuario valido";
-							$this->usuario_id 		= $linea['usuario_id'];
-							$this->perfil_id 		= $linea['perfil_id'];
-							$this->nombres 			= $linea['nombres'];
-							$this->apellidos 		= $linea['apellidos'];
-							$this->estados_usuario_id = $linea['estados_usuario_id'];
-							$this->intentos_fallidos = $linea['intentos_fallidos'];
+						}else{
+							$this->getKeyConfig("LLAVE");
+							$this->codigoRespuesta = "02";
+							$this->mensajeRespuesta = "Clave no Valida:";
+							
+							
+							
+							$sql = $conexion->prepare('SELECT usuario_id,nombres,apellidos,perfil_id,estados_usuario_id,intentos_fallidos FROM ' . self::TABLA .' WHERE usuario = :usuario AND clave = AES_ENCRYPT(:clave,:keyconfig) ');
+							$sql->bindParam(':usuario', $this->usuario);
+							$sql->bindParam(':clave', $this->clave);
+							$sql->bindParam(':keyconfig', $this->keyconfig);
+							$sql->execute();
+							$informacion = $sql->fetchAll();
+							
+							foreach ($informacion as $linea){
+								$this->codigoRespuesta 	= "00";
+								$this->mensajeRespuesta = "Usuario valido";
+								$this->usuario_id 		= $linea['usuario_id'];
+								$this->perfil_id 		= $linea['perfil_id'];
+								$this->nombres 			= $linea['nombres'];
+								$this->apellidos 		= $linea['apellidos'];
+								$this->estados_usuario_id = $linea['estados_usuario_id'];
+								$this->intentos_fallidos = $linea['intentos_fallidos'];
+							}
 						}
 					}
+				}else{
+					$this->codigoRespuesta = "04";
+					$this->mensajeRespuesta = "Usuario no Existe:";
 				}
 				// echo $this->usuario." ".$this->clave."".$this->intentos_fallidos;
 				// exit();
@@ -359,7 +375,6 @@
 		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		try {
 			
-			$this->codigoRespuesta = "45";
 			$this->mensajeRespuesta = "Error Actualizando los reintentos: ";
 			$sql = $conexion->prepare('UPDATE usuarios SET intentos_fallidos = 0 WHERE usuario_id = :usuario_id');
 			$sql->bindParam(':usuario_id', $this->usuario_id);
@@ -435,6 +450,77 @@
 		$conexion = null;
 		
 	}
+	
+	public function setSessionUsuario($session_id,$usuario_id,$usuario,$perfil_id,$nombres,$apellidos,$ip,$navegador,$respuesta){
+		$conexion = new Conexion();
+		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		try {
+			
+			$this->codigoRespuestaSession = "55";
+			$this->mensajeRespuestaSession = "Error registrando session: ";
+			$sql = $conexion->prepare('INSERT INTO ingresos (session_id, usuario_id, perfil_id, usuario, nombres, apellidos, ip, navegador,mensaje_ingreso) VALUES (:session_id, :usuario_id, :perfil_id, :usuario, :nombres, :apellidos, :ip, :navegador, :mensaje_ingreso)');
+			$sql->bindParam(':session_id', $session_id);
+			$sql->bindParam(':usuario_id', $usuario_id);
+			$sql->bindParam(':perfil_id', $perfil_id);
+			$sql->bindParam(':usuario', $usuario);
+			$sql->bindParam(':nombres', $nombres);
+			$sql->bindParam(':apellidos', $apellidos);
+			$sql->bindParam(':ip', $ip);
+			$sql->bindParam(':navegador', $navegador);
+			$sql->bindParam(':mensaje_ingreso', $respuesta);
+			$sql->execute();
+
+			$resultado = '00';
+			return $resultado;
+			
+		}catch (PDOException $e) {
+			echo "<br>setSessionUsuario::DataBase Error: ".$usuario_id."<br>".$e->getMessage();
+			echo "<br>Error Code:<br> ".$e->getCode();
+			exit;
+		}catch (Exception $e) {
+			echo "setSessionUsuario::General Error: The user could not be added.<br>".$e->getMessage();
+			exit;
+		}
+		$conexion = null;
+		
+	}
+	
+	public function getAllUsers($estados_usuario_id){
+		$conexion = new Conexion();
+		$conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		try {
+			$this->codigoRespuesta = "56";
+			$this->mensajeRespuesta = "Error Consultado los usuarios: ";
+			if($estados_usuario_id > 0){
+				$sql = $conexion->prepare('SELECT u.usuario_id, u.usuario, u.identificacion, u.nombres, u.apellidos, u.direccion, u.telefono, u.estados_usuario_id, eu.estado, u.fecharegistro, u.correo, u.perfil_id, p.perfil, u.intentos_fallidos FROM ' . self::TABLA .' u INNER JOIN perfiles p ON (u.perfil_id = p.perfil_id) INNER JOIN estados_usuario eu ON (u.estados_usuario_id = eu.estados_usuario_id) WHERE u.estados_usuario_id = :estados_usuario_id');
+				$sql->bindParam(':estados_usuario_id', $estados_usuario_id);
+				$sql->execute();				
+				$resultado = $sql->fetchAll();
+				$this->codigoRespuesta = "00";
+				$this->mensajeRespuesta = "Consulta Exitosa.: ";
+			}else{
+				$sql = $conexion->prepare('SELECT u.usuario_id, u.usuario, u.identificacion, u.nombres, u.apellidos, u.direccion, u.telefono, u.estados_usuario_id, eu.estado, u.fecharegistro, u.correo, u.perfil_id, p.perfil, u.intentos_fallidos FROM ' . self::TABLA .' u INNER JOIN perfiles p ON (u.perfil_id = p.perfil_id) INNER JOIN estados_usuario eu ON (u.estados_usuario_id = eu.estados_usuario_id)');
+				$sql->execute();				
+				$resultado = $sql->fetchAll();
+				$this->codigoRespuesta = "00";
+				$this->mensajeRespuesta = "Consulta Exitosa: ";
+			}
+			$conexion = null;
+			return $resultado;
+			
+		}catch (PDOException $e) {
+			echo "<br>getAllUsers::DataBase Error: <br>".$e->getMessage();
+			echo "<br>Error Code:<br> ".$e->getCode();
+			exit;
+		}catch (Exception $e) {
+			echo "getAllUsers::General Error: The user could not be added.<br>".$e->getMessage();
+			exit;
+		}
+		
+		
+	}	
 			
  }
 ?>

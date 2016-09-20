@@ -25,9 +25,9 @@
 		<div class="form-group has-success">
 			<form class="form-horizontal" role="form">
 				<div class="form-group">
-					<label for="inputSuccess"  class="col-lg-1 control-label" >Contraseña</label>
+					<label for="inputSuccess"  class="col-lg-1 control-label" >Clave</label>
 					<div class="col-lg-4">
-						<input type="password" class="form-control" name="clave" id="clave" placeholder="Contraseña">
+						<input type="password" class="form-control" name="clave" id="clave" placeholder="CLAVE">
 					</div>
 				</div>
 		</div>

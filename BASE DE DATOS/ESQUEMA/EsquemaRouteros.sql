@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `routeros` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
 USE `routeros`;
--- MySQL dump 10.13  Distrib 5.6.24, for Win32 (x86)
+-- MySQL dump 10.13  Distrib 5.7.12, for Win32 (AMD64)
 --
 -- Host: localhost    Database: routeros
 -- ------------------------------------------------------
--- Server version	5.6.26-log
+-- Server version	5.7.14-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -249,16 +249,20 @@ DROP TABLE IF EXISTS `ingresos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ingresos` (
-  `ingresos_id` bigint(20) NOT NULL,
-  `usuario_id` int(11) NOT NULL,
-  `perfil_id` int(11) NOT NULL,
+  `ingresos_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `session_id` varchar(45) CHARACTER SET utf8 NOT NULL,
+  `usuario_id` int(11) DEFAULT NULL,
+  `perfil_id` int(11) DEFAULT NULL,
   `usuario` varchar(45) COLLATE utf8_bin NOT NULL,
   `nombres` varchar(45) COLLATE utf8_bin DEFAULT NULL,
   `apellidos` varchar(45) COLLATE utf8_bin DEFAULT NULL,
   `fechaingreso` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `fechamaximaingreso` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `ip` varchar(45) CHARACTER SET utf8 NOT NULL,
+  `navegador` varchar(200) CHARACTER SET utf8 NOT NULL,
+  `mensaje_ingreso` varchar(200) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`ingresos_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -267,6 +271,7 @@ CREATE TABLE `ingresos` (
 
 LOCK TABLES `ingresos` WRITE;
 /*!40000 ALTER TABLE `ingresos` DISABLE KEYS */;
+INSERT INTO `ingresos` VALUES (1,'an4p16cj2dosv0de1d0lpe4h51',1,1,'admin','admin','ADMINISTRADOR','2016-09-20 03:58:29','ADMIN','127.0.0.1','Mozilla/5.0 (Windows NT 6.1; rv:48.0) Gecko/20100101 Firefox/48.0'),(2,'an4p16cj2dosv0de1d0lpe4h51',1,1,'admin','ADMINISTRADOR','ADMIN','2016-09-20 04:00:25','127.0.0.1','Mozilla/5.0 (Windows NT 6.1; rv:48.0) Gecko/20100101 Firefox/48.0','45'),(3,'an4p16cj2dosv0de1d0lpe4h51',1,1,'admin','ADMINISTRADOR','ADMIN','2016-09-20 04:01:40','127.0.0.1','Mozilla/5.0 (Windows NT 6.1; rv:48.0) Gecko/20100101 Firefox/48.0','00'),(4,'49l196ggeqs07g1u6gjd2ff9v6',1,1,'admin','ADMINISTRADOR','ADMIN','2016-09-20 04:02:00','::1','Mozilla/5.0 (Windows NT 6.1; rv:48.0) Gecko/20100101 Firefox/48.0','00'),(5,'49l196ggeqs07g1u6gjd2ff9v6',1,1,'admin','admin','ADMINISTRADOR','2016-09-20 04:02:59','ADMIN','::1','Mozilla/5.0 (Windows NT 6.1; rv:48.0) Gecko/20100101 Firefox/48.0'),(6,'49l196ggeqs07g1u6gjd2ff9v6',1,1,'admin','ADMINISTRADOR','ADMIN','2016-09-20 04:04:02','::1','Mozilla/5.0 (Windows NT 6.1; rv:48.0) Gecko/20100101 Firefox/48.0','00'),(7,'49l196ggeqs07g1u6gjd2ff9v6',1,1,'admin','ADMINISTRADOR','ADMIN','2016-09-20 04:04:12','::1','Mozilla/5.0 (Windows NT 6.1; rv:48.0) Gecko/20100101 Firefox/48.0','Error:02:Clave no Valida:'),(8,'rr35fe3cnhlfcnp9mlv82q1pu6',1,1,'admin','ADMINISTRADOR','ADMIN','2016-09-20 05:18:22','::1','Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36','00');
 /*!40000 ALTER TABLE `ingresos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -548,7 +553,8 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-19 18:00:49
+-- Dump completed on 2016-09-20  0:31:49
+
 
 
 
@@ -561,3 +567,4 @@ UPDATE routers SET usuario = 'prueba', estados_router_id = 1, clave = 'pruebas12
 update router_usuario set principal = 0 where router_usuario_id>0;
 update router_usuario set principal = 1 where router_id = 2;
 delete from routers where router_id > 3;
+delete from ingresos where ingresos_id > 0;

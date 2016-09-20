@@ -1,128 +1,115 @@
 <?php 
 include("control.php");
-include("principal.php");
 require_once("clases/Configuraciones.php");
-require_once ('clases/Routers.php');
 require_once ('clases/RouterDb.php');
+require_once ('clases/Routers.php');
+require_once 'clases/Usuarios.php';
 $Configuraciones = new Configuraciones ();
 $ruta_instalacion =  $Configuraciones->getKeyConfig("RUTA_PORTAL");
 
+$imprimeMenu 		= 1;
+$estados_router_id = 1;
+$action			= $_REQUEST['action']; 
+$routerId		= $_REQUEST['router_id']; 
+$usuario_id 	= $_SESSION['usuario_id'];
+$usuario	 	= $_SESSION['usuario'];
+
+
+
+$users = new Usuarios($usuario_id,$usuario,$identificacion,$nombres,$apellidos,$direccion,$telefono,$estados_usuario_id,$fecharegistro,$password3,$correo,$perfil_id);
+					
+			
+
+			
+if($action=="sSgetInfoRouter"){
+	require_once ('clases/Menus.php');
+	$imprimeMenu = 0;
+}
+
+if($imprimeMenu == 1){
+	require_once("principal.php");	
+}
+
 $ADMROUTERS = new RoutersDb();
+
 $validaSesion = new Menus($_SESSION['getPerfilId']);
 $php_self = str_replace($ruta_instalacion,'',$_SERVER['PHP_SELF']);
 $validaSesion->getPageByName($php_self);
-$action=$_REQUEST['action']; 
-$profile=$_REQUEST['profile'];
 
-$info = $ADMROUTERS->getEstadosRouter();
 
-			
-if ($action=="routerAdd")
-{
+$AdminRouters = $ADMROUTERS->getParametrosRouter($estados_router_id);
+$getCodigoRespuestaRouter = $ADMROUTERS->getCodigoRespuesta();
+$getMensajeRespuestaRouter = $ADMROUTERS->getMensajeRespuesta();
 
-    $nameRouter			=$_REQUEST['nameRouter'];
-	$estados_router_id	=$_REQUEST['estados_router_id'];
-    $ipRouter			=$_REQUEST['ipRouter'];
-    $puertoRouter		=$_REQUEST['puertoRouter'];
-    $versionRouter		=$_REQUEST['versionRouter'];
-    $userRouter			=$_REQUEST['userRouter'];
-    $claveRouter		=$_REQUEST['claveRouter'];
-    $reintentosCx		=$_REQUEST['reintentosCx'];
-    $retrasoCx			=$_REQUEST['retrasoCx'];
-    $tiempoMaximoCx		=$_REQUEST['tiempoMaximoCx'];
+// echo "<pre>";
+// // print_r($_POST);
+// echo "</pre>";
 
+$lista_usuarios = $users->getAllUsers($estados_router_id);
+$getCodigoRespuestaAllUsers = $users->getCodigoRespuesta();
+$getMensajeRespuestaAllUsers = $users->getMensajeRespuesta();
+
+if($imprimeMenu == 1){
+?>
+	<form class="contacto" id="asocia_router_usuario" action="#" method="POST" enctype="multipart/form-data"> 
 	
-	if (($nameRouter=="")||($ipRouter=="")||($userRouter=="")||($claveRouter=="")||($puertoRouter=="")||($versionRouter=="")||($reintentosCx=="")||($retrasoCx=="")||($tiempoMaximoCx=="")) 
-	{
-		$mensajeRespuestaSetRouter = 'Todos los campos son obligatorios';
-		$codigoRespuestaSetRouter  = '99';
-		
-	}else{
-		
-
-
-		// fin de crear perfil de usuario
-		$userAdd = $ADMROUTERS->setRouter($router_id,$nameRouter,$estados_router_id,$ipRouter,$puertoRouter,$versionRouter,$userRouter,$claveRouter,$reintentosCx,$retrasoCx,$tiempoMaximoCx);
-		$mensajeRespuestaSetRouter = $ADMROUTERS->getMensajeRespuesta();
-		$codigoRespuestaSetRouter = $ADMROUTERS->getCodigoRespuesta();
-	} 
-}
-?> 
-<div class="container">
-  <div class="">
-		<h3 class="text-center text-success"> CREACIÓN DE ROUTERS EN BD</h3>
+		<div>
+			<h3 class="text-center text-success">Registro Routers a Usuarios</h3>
 		<h5 class="text-center text-success">
-		<?php echo $_SESSION['nombreRouter'].' IP: '.$_SESSION['ipRouter'].' Versión: '.$_SESSION['versionRouter'];
+		<?php //echo $_SESSION['nombreRouter'].' IP: '.$_SESSION['ipRouter'].' Versión: '.$_SESSION['versionRouter'];
 		?>
-	</h5>
-	<div>
-		<label>
-<?php 		
-	if($mensajeRespuestaSetRouter!=''){
-		echo $codigoRespuestaSetRouter."::".$mensajeRespuestaSetRouter."<br><br>";
-	}
+		</h5>
+		</div>
+		
+<?php 
+		if($getMensajeRespuestaRouter!='' and $getCodigoRespuestaRouter!='00'){
+			echo $getCodigoRespuestaRouter."::".$getMensajeRespuestaRouter."<br><br>";
+		}
+		if($getMensajeRespuestaAllUsers!='' and $getCodigoRespuestaAllUsers!='00'){
+			echo $getCodigoRespuestaAllUsers."::".$getMensajeRespuestaAllUsers."<br><br>";
+		}
+?>		
+		
+		<table class="table table-hover">
+			<div class="container">
+				<select multiple name="usuarios[]">
+				<?php
+					foreach($lista_usuarios as $llave=>$elmento){
+						echo '<option value="'.$lista_usuarios[$llave]['usuario'].'" >'.$lista_usuarios[$llave]['usuario'].'</option>';
+					}
+				
+				?>
+
+				</select>
+
+				<select multiple name="routers[]">
+				<?php
+					foreach($AdminRouters as $llave=>$elmento){
+						echo '<option value="'.$AdminRouters[$llave]['router_id'].'" >'.$AdminRouters[$llave]['nombre'].'-'.$AdminRouters[$llave]['nombre'].'</option>';
+					}
+				
+				?>
+
+				</select>
+			</div>
+		</table>
+		<input type="hidden" id="action" name="action" value="setRouterUser"/>
+		<input type="submit" id="1" name="Registrar" value="Registrar"/>
+	</form>
+<script>
+function buttonSendForm(router_id){
+	document.getElementById('router_id').value = router_id;
+    document.getElementById('asocia_router_usuario').submit();
+}
+
+</script>
+
+<div id="resultado">
+<?php 
+}
+
+
 
 ?>
-		</label>
-	</div>
-	
-
-	<form class="contacto" id="addRouters" action="#" method="POST" enctype="multipart/form-data"> 
-		<div class="form-group has-success">
-			<label for="inputSuccess" class="col-lg-12 control-label">Nombre Router </label>
-			<div class="col-lg-4">
-				<input type="text" name="nameRouter" id="nameRouter" class="form-control" value=""  placeholder=" Nombre Router" />
-			</div>
-			
-			<label for="inputSuccess" class="col-lg-12 control-label">IP </label>
-			<div class="col-lg-4">
-				<input type="text" name="ipRouter" id="ipRouter" class="form-control" value=""  placeholder=" Digite la IP" />
-			</div>
-			<label for="inputSuccess" class="col-lg-12 control-label">Puerto </label>
-			<div class="col-lg-4">
-				<input type="text" name="puertoRouter" id="puertoRouter" class="form-control" value="8728"  placeholder="Digite el Puerto" />
-			</div>
-			<label for="inputSuccess" class="col-lg-12 control-label">Estado </label>
-			 <div class="col-lg-4">
-				<select id="estados_router_id" name="estados_router_id" class="form-control">
-					<?php 		
-						$info = $ADMROUTERS->getEstadosRouter();
-						foreach ($info as $i => $value) {
-							echo '<option id="'.$info[$i]['estados_router_id'].'" value="'.$info[$i]['estados_router_id'].'">'.$info[$i]['estado_router'].'</option>';
-						}
-					?>
-				</select> 
-			</div>
-			<label for="inputSuccess" class="col-lg-12 control-label">Versión </label>
-			<div class="col-lg-4">
-				<input type="text" name="versionRouter" id="versionRouter" class="form-control" value=""  placeholder="Versión Router" />
-			</div>
-			<label for="inputSuccess" class="col-lg-12 control-label">Usuario </label>
-			<div class="col-lg-4">
-				<input type="text" name="userRouter" id="userRouter" class="form-control" value=""  placeholder="Digite el usuario" />
-			</div>
-			<label for="inputSuccess" class="col-lg-12 control-label">Clave </label>
-			<div class="col-lg-4">
-				<input type="password" name="claveRouter" id="claveRouter" class="form-control" value=""  placeholder="Digite la Clave" />
-			</div>
-			<label for="inputSuccess" class="col-lg-12 control-label">Reintentos Conexión </label>
-			<div class="col-lg-4">
-				<input type="text" name="reintentosCx" id="reintentosCx" class="form-control" value="3"  placeholder="Reintentos Conexión" />
-			</div>
-			<label for="inputSuccess" class="col-lg-12 control-label">Retraso Conexión </label>
-			<div class="col-lg-4">
-				<input type="text" name="retrasoCx" id="retrasoCx" class="form-control" value="3"  placeholder="Retraso Conexión" />
-			</div>
-			<label for="inputSuccess" class="col-lg-12 control-label">Tiempo Maximo espera Conexión </label>
-			<div class="col-lg-4">
-				<input type="text" name="tiempoMaximoCx" id="tiempoMaximoCx" class="form-control" value="3"  placeholder="Tiempo Maximo Conexión" />
-			</div>
-		</div>
-
-					<input type="submit" class="btn btn-success" value="Agregar">
-					<input type="hidden" name="action" value="routerAdd"/>
-	</form>	
-
 </div>
-
-
+<?php
