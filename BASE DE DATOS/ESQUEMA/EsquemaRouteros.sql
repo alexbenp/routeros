@@ -70,7 +70,7 @@ CREATE TABLE `auditoria_registro_perfil_router` (
   CONSTRAINT `accion_aud_perfil_idfk` FOREIGN KEY (`accion_id`) REFERENCES `acciones` (`accion_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `router_aud_perfil_idfk` FOREIGN KEY (`router_id`) REFERENCES `routers` (`router_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `usuario_aud_perfil_idfk` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -261,7 +261,7 @@ CREATE TABLE `ingresos` (
   `navegador` varchar(200) CHARACTER SET utf8 NOT NULL,
   `mensaje_ingreso` varchar(200) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`ingresos_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -270,7 +270,6 @@ CREATE TABLE `ingresos` (
 
 LOCK TABLES `ingresos` WRITE;
 /*!40000 ALTER TABLE `ingresos` DISABLE KEYS */;
-INSERT INTO `ingresos` VALUES (9,'pe9palsdv8nvoj6c7tb68iu671',NULL,NULL,'adin','','','2016-09-20 14:54:45','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','Error:04:Usuario no Existe:'),(10,'pe9palsdv8nvoj6c7tb68iu671',1,1,'admin','ADMINISTRADOR','ADMIN','2016-09-20 14:54:54','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','00'),(11,'om8bk8gkpd1kemqi99clq5loh2',NULL,NULL,'fernando','321321','321321','2016-09-20 21:13:17','::1','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36','Error:02:Clave no Valida:'),(12,'pe9palsdv8nvoj6c7tb68iu671',NULL,NULL,'fernando','321321','321321','2016-09-20 21:13:25','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','Error:02:Clave no Valida:'),(13,'pe9palsdv8nvoj6c7tb68iu671',1,1,'admin','ADMINISTRADOR','ADMIN','2016-09-20 21:13:30','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','00'),(14,'pe9palsdv8nvoj6c7tb68iu671',NULL,NULL,'xxx','321','321','2016-09-20 21:15:19','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','Error:02:Clave no Valida:'),(15,'pe9palsdv8nvoj6c7tb68iu671',1,1,'admin','ADMINISTRADOR','ADMIN','2016-09-20 21:18:40','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','00'),(16,'pe9palsdv8nvoj6c7tb68iu671',NULL,NULL,'111','111','111','2016-09-20 21:57:21','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','Error:02:Clave no Valida:'),(17,'pe9palsdv8nvoj6c7tb68iu671',1,1,'admin','ADMINISTRADOR','ADMIN','2016-09-20 21:59:19','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','00'),(18,'pe9palsdv8nvoj6c7tb68iu671',16,1,'222','222','222','2016-09-20 22:07:05','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','00'),(19,'pe9palsdv8nvoj6c7tb68iu671',1,1,'admin','ADMINISTRADOR','ADMIN','2016-09-20 22:07:27','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','00'),(20,'pe9palsdv8nvoj6c7tb68iu671',NULL,NULL,'admin','ADMINISTRADOR','ADMIN','2016-09-20 22:24:03','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','Error:13::Ha superado los  Intentos maximos, Esta en 0'),(21,'pe9palsdv8nvoj6c7tb68iu671',NULL,NULL,'admin','ADMINISTRADOR','ADMIN','2016-09-20 22:24:30','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','Error:13::Ha superado los  Intentos maximos, Esta en 0'),(22,'pe9palsdv8nvoj6c7tb68iu671',NULL,NULL,'admin','ADMINISTRADOR','ADMIN','2016-09-20 22:26:25','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','Error:02:Clave no Valida:'),(23,'pe9palsdv8nvoj6c7tb68iu671',NULL,NULL,'admin','ADMINISTRADOR','ADMIN','2016-09-20 22:26:30','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','Error:02:Clave no Valida:'),(24,'pe9palsdv8nvoj6c7tb68iu671',1,1,'admin','ADMINISTRADOR','ADMIN','2016-09-20 22:28:13','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','00'),(25,'pe9palsdv8nvoj6c7tb68iu671',18,1,'donny','321','321','2016-09-20 22:30:36','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','00'),(26,'pe9palsdv8nvoj6c7tb68iu671',NULL,NULL,'donny','321','321','2016-09-20 22:31:37','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','Error:02:Clave no Valida:'),(27,'pe9palsdv8nvoj6c7tb68iu671',18,1,'donny','321','321','2016-09-20 22:31:47','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','00'),(28,'pe9palsdv8nvoj6c7tb68iu671',1,1,'admin','ADMINISTRADOR','ADMIN','2016-09-20 22:34:00','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','00'),(29,'pe9palsdv8nvoj6c7tb68iu671',1,1,'admin','ADMINISTRADOR','ADMIN','2016-09-20 22:36:23','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','00'),(30,'pe9palsdv8nvoj6c7tb68iu671',1,1,'admin','ADMINISTRADOR','ADMIN','2016-09-20 22:41:10','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0','00');
 /*!40000 ALTER TABLE `ingresos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -482,7 +481,7 @@ CREATE TABLE `routers` (
   PRIMARY KEY (`router_id`),
   KEY `estados_router_idfk_idx` (`estados_router_id`),
   CONSTRAINT `estados_router_idfk` FOREIGN KEY (`estados_router_id`) REFERENCES `estados_router` (`estados_router_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -491,7 +490,7 @@ CREATE TABLE `routers` (
 
 LOCK TABLES `routers` WRITE;
 /*!40000 ALTER TABLE `routers` DISABLE KEYS */;
-INSERT INTO `routers` VALUES (1,'Router Development','6.36','192.168.56.2','8728','admin','',1,'2016-08-23 18:03:22','2016-09-19 03:48:05','3','3','3'),(2,'Router QA','6.36','186.155.37.179','8728','admin','sipltda2016',1,'2016-08-23 23:03:22','2016-09-19 22:35:41','3','3','3'),(3,'Rounter QA Pruebas','6.36','186.155.37.179','8728','prueba','pruebas123',1,'2016-08-23 23:03:22','2016-09-19 00:49:29','3','3','3'),(4,'Router','4654','10.212.12.','8728','5454','654654',1,'2016-09-20 22:34:55','2016-09-20 22:34:55','654','3','3');
+INSERT INTO `routers` VALUES (1,'Router Development','6.36','192.168.56.2','8728','admin','',1,'2016-08-23 18:03:22','2016-09-19 03:48:05','3','3','3'),(2,'Router QA','6.36','186.155.37.179','8728','admin','sipltda2016',1,'2016-08-23 23:03:22','2016-09-19 22:35:41','3','3','3'),(3,'Rounter QA Pruebas','6.36','186.155.37.179','8728','prueba','pruebas123',1,'2016-08-23 23:03:22','2016-09-19 00:49:29','3','3','3');
 /*!40000 ALTER TABLE `routers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -527,7 +526,7 @@ CREATE TABLE `usuarios` (
   CONSTRAINT `estado_usuario_fk1` FOREIGN KEY (`estados_usuario_id`) REFERENCES `estados_usuario` (`estados_usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `perfil_usuario_idfk` FOREIGN KEY (`perfil_id`) REFERENCES `perfiles` (`perfil_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `usuario_registro_idfk` FOREIGN KEY (`usuario_registro_id`) REFERENCES `usuarios` (`usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -536,7 +535,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'ADMIN',NULL,'ADMINISTRADOR','ADMIN','PORTAL WEB','TELEFONO',1,'2016-08-22 04:30:18','󮼫AƬհfyϖ','corre@portalrouteros.com',1,0),(2,'USUARIO',NULL,'NOMBRE USUARIO','APELLIDO USUARIO','PORTAL ROUTEROS','TELEFONO',1,'2016-08-23 05:26:06','󮼫AƬհfyϖ','usuario@portalrouteros.com',2,0);
+INSERT INTO `usuarios` VALUES (1,'ADMIN',NULL,'ADMINISTRADOR','ADMIN','PORTAL WEB','TELEFONO',1,'2016-08-22 04:30:18','󮼫AƬհfyϖ','corre@portalrouteros.com',1,0,NULL),(2,'222USUARIO','222','222','222','222','222',1,'2016-08-23 05:26:06','󮼫AƬհfyϖ','222usuario@portalrouteros.com',2,0,1);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -557,7 +556,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-20 18:25:21
+-- Dump completed on 2016-09-21 10:27:37
 
 
 
@@ -573,3 +572,11 @@ update router_usuario set principal = 0 where router_usuario_id>0;
 update router_usuario set principal = 1 where router_id = 2;
 delete from routers where router_id > 3;
 delete from ingresos where ingresos_id > 0;
+delete from usuarios where usuario_id > 2;
+delete from auditoria_registro_usuarios_router where auditoria_registro_id > 0;
+delete from auditoria_registro_perfil_router where auditoria_registro_perfil_id > 0;
+ALTER TABLE usuarios AUTO_INCREMENT = 3 ;
+ALTER TABLE ingresos AUTO_INCREMENT = 1 ;
+ALTER TABLE routers AUTO_INCREMENT = 4 ;
+ALTER TABLE auditoria_registro_usuarios_router AUTO_INCREMENT = 1 ;
+ALTER TABLE auditoria_registro_perfil_router AUTO_INCREMENT = 4 ;

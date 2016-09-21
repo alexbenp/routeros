@@ -555,14 +555,14 @@
 			}
 			
 			if($consulta == 1){
-				$sql = $this->conexion->prepare('SELECT u.usuario_id, u.usuario, u.identificacion, u.nombres, u.apellidos, u.direccion, u.telefono, u.estados_usuario_id, u.fecharegistro, u.correo, u.perfil_id, u.intentos_fallidos  FROM usuarios u WHERE usuario = :usuario');
+				$sql = $this->conexion->prepare('SELECT u.usuario_id, u.usuario, u.identificacion, u.nombres, u.apellidos, u.direccion, u.telefono, u.estados_usuario_id, eu.estado, u.fecharegistro, u.correo, u.perfil_id, p.perfil, u.intentos_fallidos FROM usuarios u INNER JOIN perfiles p ON (u.perfil_id = p.perfil_id) INNER JOIN estados_usuario eu ON (u.estados_usuario_id = eu.estados_usuario_id) WHERE u.usuario = :usuario');
 				$sql->bindParam(':usuario', $usuario);
 				$sql->execute();
 				$resultado = $sql->fetchAll();
 				$this->codigoRespuesta = "00";
 				$this->mensajeRespuesta = "Consulta Usuario: ";
 			}elseif($consulta == 2){
-				$sql = $this->conexion->prepare('SELECT SELECT u.usuario_id, u.usuario, u.identificacion, u.nombres, u.apellidos, u.direccion, u.telefono, u.estados_usuario_id, u.fecharegistro, u.correo, u.perfil_id, u.intentos_fallidos FROM usuarios u WHERE usuario = :usuario AND correo = :correo');
+				$sql = $this->conexion->prepare('SELECT u.usuario_id, u.usuario, u.identificacion, u.nombres, u.apellidos, u.direccion, u.telefono, u.estados_usuario_id, eu.estado, u.fecharegistro, u.correo, u.perfil_id, p.perfil, u.intentos_fallidos  FROM usuarios u INNER JOIN perfiles p ON (u.perfil_id = p.perfil_id) INNER JOIN estados_usuario eu ON (u.estados_usuario_id = eu.estados_usuario_id) WHERE u.usuario = :usuario AND u.correo = :correo');
 				$sql->bindParam(':usuario', $usuario);
 				$sql->bindParam(':correo', $correo);
 				$sql->execute();
@@ -570,7 +570,7 @@
 				$this->codigoRespuesta = "00";
 				$this->mensajeRespuesta = "Consulta Usuario: ";
 			}elseif($consulta == 3){
-				$sql = $this->conexion->prepare('SELECT SELECT u.usuario_id, u.usuario, u.identificacion, u.nombres, u.apellidos, u.direccion, u.telefono, u.estados_usuario_id, u.fecharegistro, u.correo, u.perfil_id, u.intentos_fallidos FROM usuarios u WHERE correo = :correo');
+				$sql = $this->conexion->prepare('SELECT u.usuario_id, u.usuario, u.identificacion, u.nombres, u.apellidos, u.direccion, u.telefono, u.estados_usuario_id, eu.estado, u.fecharegistro, u.correo, u.perfil_id, p.perfil, u.intentos_fallidos FROM usuarios u INNER JOIN perfiles p ON (u.perfil_id = p.perfil_id) INNER JOIN estados_usuario eu ON (u.estados_usuario_id = eu.estados_usuario_id) WHERE u.correo = :correo');
 				$sql->bindParam(':correo', $correo);
 				$sql->execute();
 				$resultado = $sql->fetchAll();
